@@ -1,0 +1,212 @@
+{% extends 'admin/admin_base.html'%}
+{% load custom_filters %}
+{% block content %}
+<span  id="my-div-id">
+<div class="bg-white">
+    <div class="container  py-5 "  >
+        <h2 class="card-title m-0 text-secondary pb-4"><i class="fa-solid fa-file-signature"></i> Agreement</h2>
+        <div class="container-fluid shadow-sm p-0  m-1  bg-body rounded-0 border border-danger" style="width: 7rem; height:9rem;">
+            <a href="{% url 'agreement_create_admin' %}" style="text-decoration: none" class=" ">
+                <div class="card text-center vstack w-100 h-100 border-0" >
+
+                    <span class=" d-block   text-muted  fw-light fw-semibold  m-auto " style=" font-size:10px; ">
+                     <i class="bi bi-file-earmark" style="font-size:40px; color:#CB4335;"></i>
+                    </span>
+                    <span class="d-block p-2 text-bg-danger">Create</span>
+
+                </div>
+            </a>
+        </div>
+
+        <div class="row container m-0 p-0 ">
+            {% if contract_pending %}
+            <p class="mt-3 m-0 mb-1" >Latest</p>
+            {% for contract_pending in contract_pending %}
+            <div class="container-fluid shadow-sm  m-1  bg-body rounded-0  p-0 position-relative border border-danger"  style="width: 7rem; height:9rem;" id="contract_pending">
+
+                <a href="{% url 'agreement_detail_admin' id=contract_pending.id %}"  class="h-100" style="text-decoration: none;  height:9rem;" >
+                    <div class="text-truncate  text-muted  fw-light p-2  pb-1 ps-2 fw-semibold h-auto mx-1" style=" font-size:10px; ">
+                        {{contract_pending.tenant.first_name}} {{contract_pending.tenant.last_name}}
+                    </div>
+                    <div class="overflow-hidden    h-50 text-muted mx-1  pb-1 px-1" style=" font-size:9px;  ">
+                        <ol class="p-0 ps-3" style="font-size:6px;">
+                            {% for rule in contract_pending.body|strip_char:'-'|split_by_dash %}
+                            {% if rule %}
+                            <li>{{ rule }}</li>
+                            {% endif %}
+                            {% endfor %}
+                        </ol>
+                    </div>
+                    <div class="align-text-bottom  h-auto text-muted  bg-danger p-1 m-0 mt-2">
+                      <span class="text-white">
+                          <span  class="ps-1">
+                              {{contract_pending.id}}
+                          </span>
+                          <span style="font-size:8px;">
+                              No Signature
+                          </span>
+                      </span>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+            {% endif  %}
+
+
+
+
+
+            {% if contract_latest %}
+            {% for contract_latest in contract_latest %}
+            <div class="container-fluid shadow-sm p-1  m-1  bg-body rounded-0 position-relative border border-secondary "  style="width: 7rem; height:9rem;" id="contract_latest">
+          <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+          </span>
+                <a href="{% url 'agreement_detail_admin' id=contract_latest.id %}" style="text-decoration: none">
+                    <div class="card vstack w-100 h-100 border-0" >
+                        <div class="text-truncate  text-muted  fw-light p-1 ps-0 fw-semibold h-auto mx-1" style=" font-size:10px; ">
+                            {{contract_latest.tenant.first_name}} {{contract_latest.tenant.last_name}}
+                        </div>
+                        <div class="overflow-hidden    h-50 text-muted mx-1" style=" font-size:9px;  ">
+                            <ol class="p-0 ps-3" style="font-size:6px;">
+                                {% for rule in contract_latest.body|strip_char:'-'|split_by_dash %}
+                                {% if rule %}
+                                <li>{{ rule }}</li>
+                                {% endif %}
+                                {% endfor %}
+                            </ol>
+                        </div>
+                        <hr class="p-0 m-0 mt-3 h-auto color=black">
+                        <div class="align-text-bottom  h-auto text-muted mx-1">
+                            {{contract_latest.id}}
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+            {% endif  %}
+        </div>
+
+
+
+
+    </div>
+</div>
+
+
+<div class="container   mt-3 "   >
+    <div class="row container m-0 p-0 ">
+
+        <nav aria-label="Page navigation example ">
+            <ul class="pagination justify-content-end ">
+                {% if contract.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'agreement_admin' %}?page={{contract.previous_page_number}}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for number in contract.paginator.page_range %}
+                <li class="page-item"><a class="page-link" href="{% url 'agreement_admin' %}?page={{number}}">{{number}}</a></li>
+                {% endfor %}
+
+                {% if contract.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'agreement_admin' %}?page={{contract.next_page_number}}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+
+
+        <hr class="m-2 p-0">
+        {% for contract in contract %}
+        <div class="container-fluid shadow-sm p-1  m-1  bg-body rounded-0 border border-secondary" style="width: 7rem; height:9rem;" id="contract">
+            <a href="{% url 'agreement_detail_admin' id=contract.id %}" style="text-decoration: none">
+                <div class="card vstack w-100 h-100 border-0" >
+                    <div class="text-truncate  text-muted  fw-light p-1 ps-0 fw-semibold h-auto mx-1" style=" font-size:10px; ">
+                        {{contract.tenant.first_name}} {{contract.tenant.last_name}}
+                    </div>
+                    <div class="overflow-hidden    h-50 text-muted mx-1" style=" font-size:9px;  ">
+                        <ol class="p-0 ps-3" style="font-size:6px;">
+                            {% for rule in contract.body|strip_char:'-'|split_by_dash %}
+                            {% if rule %}
+                            <li>{{ rule }}</li>
+                            {% endif %}
+                            {% endfor %}
+                        </ol>
+                    </div>
+                    <hr class="p-0 m-0 mt-3 h-auto color=black">
+                    <div class="align-text-bottom  h-auto text-muted mx-1">
+                        {{contract.id}}
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+
+
+
+    </div>
+
+
+
+
+</div>
+</span>
+
+
+
+<style>
+    #contract_latest:hover  {
+        transform: scale(1.3);
+        z-index: 1;
+        position:relative;
+    }
+
+    #contract_pending:hover  {
+        transform: scale(1.3);
+        z-index: 1;
+        position:relative;
+    }
+
+    #contract:hover  {
+        transform: scale(1.3);
+        z-index: 1;
+        position:relative;
+    }
+</style>
+
+<script>
+var div = $('#my-div-id');
+$.get(location.href, function(data) {
+    div.html($(data).find('#my-div-id').html());
+});
+
+setInterval(function() {
+    var div = $('#my-div-id');
+    div.load(location.href + ' #my-div-id');
+}, 10000);
+
+</script>
+
+
+{% endblock %}
+
+
+
+

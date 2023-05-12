@@ -1,0 +1,55 @@
+{% extends 'user/base.html'%}
+
+{% block content %}
+<div class="bg-white">
+    <div class="container  py-5"   >
+        <div class="row justify-content-between">
+            <div class="col-auto">
+                <h2 class=" m-0 text-secondary pb-4"><i class="fa-solid fa-list-ol"></i> Rules</h2>
+            </div>
+            <div class="col-auto">
+            </div>
+        </div>
+        <div class="row">
+            <em>The following is a set of rules that a tenant must follow;</em>
+        </div>
+    </div>
+</div>
+<span  id="my-div-id">
+<div class="container card  p-0 mt-3 mb-5 bg-body "   >
+    <div class="container p-0">
+
+        <ol class="m-4" >
+            {% for rule in rules_show %}
+                <div class=" " style="width: auto;"  >
+                    <p class="text-dark m-0 " >
+                        <small>
+                            <li class="float-start me-1" ></li>
+                            <strong>
+                                <small class="d-inline">{{ rule.description }}</small>
+                            </strong>
+                        </small>
+                    </p>
+                </div>
+            <hr>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
+</span>
+
+
+<script>
+var div = $('#my-div-id');
+$.get(location.href, function(data) {
+    div.html($(data).find('#my-div-id').html());
+});
+
+setInterval(function() {
+    var div = $('#my-div-id');
+    div.load(location.href + ' #my-div-id');
+}, 10000);
+
+</script>
+
+{% endblock %}

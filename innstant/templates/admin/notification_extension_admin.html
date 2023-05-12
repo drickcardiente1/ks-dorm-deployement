@@ -1,0 +1,198 @@
+{% extends 'admin/admin_base.html'%}
+
+{% block content %}
+
+
+<div class="container-sm    py-0   mb-5   "  >
+    <span  id="my-div-id">
+    <div class="row card border-0 rounded-0  p-3"    >
+        <h2 class=" m-0 text-secondary py-4"><i class="fa-solid fa-bell"></i> Notifications   </h2>
+    </div>
+    <div class="row  bg-white p-0">
+        <div class="col p-0 content-justify-center  ">
+            <a type="button p-0" class="btn btn-white text-secondary d-block  rounded-0" href="{% url 'notification_admin' %}">
+                <strong>Payment</strong>
+
+                {% if unread_notification_count_admin > 0 %}
+                <span class=" badge rounded-pill bg-danger">
+                {{ unread_notification_count_admin }}<span class="visually-hidden">unread messages</span>
+                </span>
+                {% endif %}
+
+            </a>
+        </div>
+        <div class="col p-0 content-justify-center    " style="border-bottom: 3px solid #2E4053; ">
+            <a type="button p-0" class="btn btn-white text-secondary d-block  rounded-0">
+                <strong>Extension</strong>
+                {% if extend_notification_count_admin > 0 %}
+                <span class=" badge rounded-pill bg-danger">
+                    {{ extend_notification_count_admin }}<span class="visually-hidden">unread messages</span>
+                    </span>
+                {% endif %}
+            </a>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <div class="container p-0" id="notifications-container">
+        {% for extend in extend_notif %}
+        <a href="{% url 'users_detail_admin' id=extend.tenant.id %}" style="text-decoration: none;  ">
+            <div class="row bg-white justify-content-start border p-2" >
+
+                <div class="col-1 p-0 m-0 d-flex align-items-center justify-content-center ps-3 pe-3">
+                    {% if extend.status == 'Pending' %}
+                    <span class="">
+                            <i class="fa-regular fa-hourglass-half" style="font-size:30px; color:#F1C40F"></i>
+                        </span>
+                    {% elif extend.status == 'Processing' %}
+                    <span>
+                            <i class="fa-solid fa-spinner"  style="font-size:30px; color:#2874A6"></i>
+                        </span>
+                    {% elif extend.status == 'Complete' %}
+                    <span>
+                            <i class="fa-solid fa-circle-check" style="font-size:30px; color:#2ECC71"></i>
+                        </span>
+                    {% else %}
+                    <span>
+                            <i class="fa-regular fa-circle-xmark" style="font-size:30px; color:#B03A2E"></i>
+                        </span>
+                    {% endif %}
+                </div>
+
+                <div class="col ms-0 ps-0 p-0 ps-3">
+                <span class="m-0 text-muted d-block">
+
+
+                    {% if extend.status == 'Pending' %}
+                        <strong class="text-break"> {{ extend.tenant.first_name }} {{ extend.tenant.last_name }} </strong>
+                     <span class="ms-1">   requested extension.</span>
+
+                    {% elif extend.status == 'Processing' %}
+                   <strong class="text-break"> {{ extend.tenant.first_name }} {{ extend.tenant.last_name }} </strong>
+                     <span class="ms-1">   requested in process.</span>
+
+                    {% elif extend.status == 'Complete' %}
+                        <strong class="text-break"> {{ extend.tenant.first_name }} {{ extend.tenant.last_name }}'s </strong>
+                     <span class="ms-1"> request is Accepted.</span>
+                    {% else %}
+                        <strong class="text-break"> {{ extend.tenant.first_name }} {{ extend.tenant.last_name }}'s </strong>
+                    <span class="ms-1"> request is denied.</span>
+                    {% endif %}
+
+
+                    <span class="d-block">
+                        <span class="text-end   me-2"><i class="fa-solid fa-clock"></i> Duration: {{ extend.get_duration_display }}</span>
+                    </span>
+                    <span class="d-block">
+                        <span class="text-end   me-2"><i class="fa-solid fa-door-closed"></i> Room: {{ extend.room }}</span>
+                    </span>
+
+
+                    <small class="row text-primary mt-2">
+                        <span class="col">
+                            {{ extend.updated|timesince }} ago
+                        </span>
+                        <span class="col text-end fw-lighter position-relative" style="font-size:10px;">
+                    {% if extend.status == 'Pending' %}
+                        <form method="post" action="{% url 'extend_stay_processing' id=extend.id %}" class="d-inline">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-outline-success btn-sm"><i class="fa-regular fa-circle-check"></i> Accept</button>
+                        </form>
+                        <form method="post" action="{% url 'extend-stay-deny' id=extend.id %}"   class="d-inline">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-outline-danger btn-sm "><i class="fa-regular fa-circle-xmark"></i> Deny</button>
+                        </form>
+                    {% elif extend.status == 'Processing' %}
+                        <form method="post" action="{% url 'extend_stay_processing' id=extend.id %}" class="d-inline">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-outline-success btn-sm"><i class="fa-regular fa-circle-check"></i> Accept</button>
+                        </form>
+                        <form method="post" action="{% url 'extend-stay-deny' id=extend.id %}"   class="d-inline">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-outline-danger btn-sm "><i class="fa-regular fa-circle-xmark"></i> Deny</button>
+                        </form>
+                    {% elif extend.status == 'Complete' %}
+                    {% else %}
+                    {% endif %}
+                        </span>
+                    </small>
+                </span>
+
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+    <!--
+    <div class="row bg-white"><button id="see-more-btn" class="btn rounded-0">See More</button></div>
+    -->
+
+
+
+
+
+
+
+
+
+
+    <div  class="container p-0" id="extensions-container" style="display:none">
+        <p>dwdw</p>
+    </div>
+        </span>
+</div>
+<!--
+<script>
+
+
+    const notificationsContainer = document.getElementById('notifications-container');
+    const seeMoreBtn = document.getElementById('see-more-btn');
+    const notifications = notificationsContainer.children;
+
+    // Show only the first 5 notifications by default
+    for (let i = 0; i < notifications.length; i++) {
+        if (i >= 5) {
+            notifications[i].style.display = 'none';
+        }
+    }
+
+    let numNotificationsToShow = 5;
+
+    // When the "See More" button is clicked, show the next 5 notifications
+    seeMoreBtn.addEventListener('click', () => {
+        let numNotificationsShown = 0;
+        for (let i = 0; i < notifications.length; i++) {
+            if (numNotificationsShown >= numNotificationsToShow) {
+                break;
+            }
+            if (notifications[i].style.display === 'none') {
+                notifications[i].style.display = 'block';
+                numNotificationsShown++;
+            }
+        }
+        if (numNotificationsShown < numNotificationsToShow) {
+            seeMoreBtn.style.display = 'none';
+        }
+    });
+</script>
+-->
+
+<script>
+var div = $('#my-div-id');
+$.get(location.href, function(data) {
+    div.html($(data).find('#my-div-id').html());
+});
+
+setInterval(function() {
+    var div = $('#my-div-id');
+    div.load(location.href + ' #my-div-id');
+}, 2000);
+
+</script>
+{% endblock %}

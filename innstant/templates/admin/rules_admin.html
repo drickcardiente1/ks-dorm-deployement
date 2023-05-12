@@ -1,0 +1,86 @@
+{% extends 'admin/admin_base.html'%}
+{% block content %}
+<div class="bg-white">
+    <div class="container  py-5" >
+        <div class="row justify-content-between">
+            <div class="col-auto">
+                <h2 class=" m-0 text-secondary pb-4"><i class="fa-solid fa-list-ol"></i> Rules</h2>
+            </div>
+            <div class="col-auto">
+                <a class="btn btn-outline-secondary   d-inline float-end " href="{% url 'rule_create_admin'%}">
+                    <i class="fa-solid fa-plus"></i>
+                    <strong class="">Create Rule</strong>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <em>The following is a set of rules that a tenant must follow;</em>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<div class="container card  p-0 mt-3 mb-5 bg-body "   >
+    <div class="container p-0">
+
+        <ol class="m-4 mx-1">
+            {% for rules_show in rules_show %}
+            <div class="" style="width: auto;">
+                <small>
+                    <li class="float-start me-1"></li>
+                    <strong>
+                        <small class="d-inline">{{ rules_show.description }}</small>
+                    </strong>
+                    <br class="mt-3">
+                    <span class="d-block mt-1 text-end me-2">
+            <a href="{% url 'rule_edit_admin' id=rules_show.id %}" class="btn btn-sm me-2 text-info" style="text-decoration: none;">
+                <i class="fa-solid fa-pen-nib"></i> Edit
+            </a>
+            <button type="button" class="btn btn-sm text-danger" style="text-decoration: none;" data-bs-toggle="modal" data-bs-target="#exampleModal-{{rules_show.id}}">
+                <i class="fa-regular fa-trash-can"></i> Delete
+            </button>
+        </span>
+                </small>
+            </div>
+            <hr class="mx-1">
+            <div class="modal fade" id="exampleModal-{{rules_show.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">
+                                <i class="fa-solid fa-trash"></i>
+                                Delete Rule
+                            </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body border-0">
+                        <span style="font-size:14px;">
+                            <small class="text-muted d-block">Description</small>
+                            <span class="fw-bold">{{rules_show.description}} </span>
+                        </span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <a type="button" class="btn btn-primary" href="{% url 'rule_delete_admin' id=rules_show.id %}">Confirm</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </ol>
+
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}

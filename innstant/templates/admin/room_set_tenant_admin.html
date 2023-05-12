@@ -1,0 +1,169 @@
+{% block content %}
+<form class="container "   id="submit_form" method="POST">
+    {% csrf_token %}
+    <div class="row ">
+        <div class="col bg-white p-3 border">
+            <div class="box" >
+                <h3 class="alert alert-warning">Assign Tenant</h3>
+
+                <hr>
+                <div class="bg-light p-2 border">
+                    <div class="mb-1 row">
+                        <label  class="col-sm-2 col-form-label"> Room:  </label>
+                        <div class="col-sm-10">
+                            <input type="number"  class="form-control rounded-0" name="room"  readonly  value="{{ room.id }}">
+                        </div>
+                    </div>
+
+
+                    <div class="mb-1 row">
+                        <label  class="col-sm-2 col-form-label"> Floor:  </label>
+                        <div class="col-sm-10">
+                            <input type="number"  class="form-control rounded-0" name="room_floor"  readonly  value="{{ room.Floor_Number }}">
+                        </div>
+                    </div>
+
+                    <div class="mb-1 row">
+                        <label  class="col-sm-2 col-form-label"> Type:  </label>
+                        <div class="col-sm-10">
+
+
+                            <textarea class="form-control" rows="1" oninput="auto_grow(this)" maxlength="500" name="room_type"
+                                      style=" resize:none; overflow:hidden; " readonly>{{ room.Room_Type.Room_Description }}</textarea>
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-light p-2 border my-3">
+                <div class="mb-1 row ">
+                    <label class="col-sm-2 col-form-label"> Admin:  </label>
+                    <div class="col-sm-10">
+                        <input class="form-control rounded-0" type="text" value="{{request.user}}" aria-label="readonly input example" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-light p-2 border my-3">
+                <div class="mb-1 row ">
+                    <label   class="col-sm-2 col-form-label"> Tenant:  </label>
+                    <div class="col-sm-10">
+                        {{form.tenant}}
+                    </div>
+                </div>
+
+                {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{form.errors}}
+                </div>
+                {% endif %}
+
+            </div>
+            <div class="bg-light p-2 border my-3">
+                <div class="mb-1 row ">
+                    <div class="col-lg-6 my-2">
+                        <label class="control-label" for="duration">Duration</label>
+                        <select class="form-select" id="duration" aria-label="Default select example">
+                            <option value="30">1 month</option>
+                            <option value="7">1 week</option>
+                            <option value="1">1 day</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6 my-2"></div>
+                    <div class="col-lg-6 my-2">
+                        <label class="control-label" for="date1">Start Date</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="fa fa-calendar-o"></i></div>
+                            <input class="form-control" id="date1" name="date" placeholder="MM/DD/YYYY" type="text" required onchange="updateDueDate()"/>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 my-2">
+                        <label class="control-label" for="date2">Due Date</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="fa fa-calendar-o"></i></div>
+                            <input class="form-control" id="date2" name="payment_due_date" placeholder="MM/DD/YYYY" type="text" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="bg-light p-2 border my-3">
+                <div class="mb-1 row ">
+                    <label class="col-sm-2 col-form-label"> Status:  </label>
+                    <div class="col-sm-10">
+                        {{form.status}}
+                    </div>
+                </div>
+                <div class="mb-1 row ">
+                    <label   class="col-sm-2 col-form-label"> Price:  </label>
+                    <div class="col-sm-10">
+                        <input type="number"  class="form-control rounded-0   bg-opacity-25 "
+                               name="amount" value="{{ room.Room_Type.Room_Price|floatformat:2 }}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col d-grid">
+                <button class="btn btn-success  my-3" form="submit_form" type="submit" > Confirm</button>
+            </div>
+        </div>
+    </div>
+    </div>
+</form>
+
+
+
+<script>
+function updateDueDate() {
+    // Get the value of the duration of stay select element
+    var duration = document.getElementById("duration").value;
+
+    // Get the value of the start date input element
+    var startDateString = document.getElementById("date1").value;
+
+    // Parse the start date into a date object
+    var startDate = new Date(startDateString);
+
+    // Calculate the due date based on the selected duration of stay
+    var dueDate = new Date(startDate.getTime() + duration * 24 * 60 * 60 * 1000);
+
+    // Format the due date as MM/DD/YYYY
+    var dueDateString = (dueDate.getMonth() + 1) + "/" + dueDate.getDate() + "/" + dueDate.getFullYear();
+
+    // Update the value of the due date input element
+    document.getElementById("date2").value = dueDateString;
+    }
+
+    // Listen for changes to the duration and start date select elements
+    document.getElementById("duration").addEventListener("change", updateDueDate);
+    document.getElementById("date1").addEventListener("change", updateDueDate);
+
+
+
+function auto_grow(element) {
+      element.style.height = "5px";
+      element.style.height = (element.scrollHeight) + "px";
+    }
+
+    // Resize textareas on page load
+    var textareas = document.querySelectorAll("textarea");
+    textareas.forEach(function(textarea) {
+      auto_grow(textarea);
+    });
+
+    // Resize textareas on input change
+    document.addEventListener("input", function(event) {
+      if (event.target.tagName.toLowerCase() !== "textarea") return;
+      auto_grow(event.target);
+    });
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,88 @@
+{% load custom_filters %}
+{% block content %}
+<h1 style="font-size:18px;">{{ title }} <span style="color: gray;">Report</span></h1>
+<table class="table">
+  <thead>
+  <tr>
+    <th scope="col"  >PAY-ID</th>
+    <th scope="col"  >Tenant</th>
+    <th scope="col"  >Room</th>
+    <th scope="col" >Start Date</th>
+    <th scope="col" >End Date</th>
+    <th scope="col"  >Amount</th>
+    <th scope="col"  >Status</th>
+  </tr>
+  </thead>
+  <tbody id="firstt">
+
+  {% for payment in payment%}
+  <tr>
+    <th scope="row">{{ payment.id }}</th>
+    <td>{{ payment.tenant.first_name }} {{ payment.tenant.last_name }}</td>
+    <td>{{ payment.room }}</td>
+    <td>{{ payment.date }}</td>
+    <td>{{ payment.payment_due_date }}</td>
+    <td>{{ payment.amount }}</td>
+    <td>{{ payment.status }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<br><br>
+
+<table>
+  <tbody id="secondt" style="font-size:13px;">
+  <tr>
+    <td>No. of Payments:</td>
+    <th scope="row"> {{ number  }}</th>
+    <td> </td>
+    <td> </td>
+  </tr>
+    <tr style="padding-top:3px;">
+    <td>Total Amount:</td>
+    <th scope="row">{{ total  }}</th>
+    <td> </td>
+    <td> </td>
+  </tr>
+  <tr>
+    <td>Unpaid Amount:</td>
+    <th scope="row">{{ unpaid_sum_decimal  }}</th>
+    <td> </td>
+    <td> </td>
+  </tr>
+  <tr  style="padding-top:3px;">
+    <td>Paid Amount:</td>
+    <th scope="row">{{ paid_sum_decimal  }}</th>
+    <td> </td>
+    <td> </td>
+  </tr>
+  <hr>
+
+    </tbody>
+</table>
+<hr>
+{% endblock %}
+
+
+
+<style>
+    table { -pdf-keep-with-next: true; }
+    p { margin: 0; -pdf-keep-with-next: true; }
+    p.separator { -pdf-keep-with-next: false; font-size: 6pt; }
+
+
+
+thead tr {
+  background-color:#D5D8DC;
+  padding:3px;
+}
+
+#firstt tr {
+  background-color: #f1f1f1;
+  padding:3px;
+}
+th {
+  text-align: left;
+}
+</style>

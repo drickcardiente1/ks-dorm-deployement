@@ -1,0 +1,258 @@
+{% block content %}
+
+
+<div class="container"  >
+
+
+    <div class="row bg-white p-3 px-0 border">
+        <div class="col ">
+            <div class="box" >
+                <h3 class="alert alert-warning"><i class="fa-solid fa-receipt"></i> Payment ID: {{payment.id}}</h3>
+                <hr>
+            </div>
+
+
+
+            <div class="bg-light p-2 border mb-3 ">
+                <div class="mb-1 row ">
+                    <div class="col-lg-6 my-2">
+                        <label class="control-label" for="date1">Landlord</label>
+                        <div class="input-group">
+                            <input class="form-control" value=" {{payment.admin}}"
+                                   type="text" readonly />
+                        </div>
+                    </div>
+                    <div class="col-6 my-2">
+
+                    </div>
+                </div>
+            </div>
+
+            <form  id="submit_form" method="POST">
+                {% csrf_token %}
+                <div class="bg-light p-2 border  ">
+                    <div class="mb-1 row justify-content-end ">
+                        <div class="col-auto ">
+                            <a class="btn  text-end " role="button" id="edit_date">
+                                <i class="fa-solid fa-pen-nib"></i>
+                                edit
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mb-1 row pb-1">
+                        <div class="col-lg-6 my-2">
+                            <label class="control-label" for="date1">Start Date</label>
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-calendar-o"></i></div>
+                                <input class="form-control" id="date1" name="date" value="{{payment.date}}"
+                                       placeholder="MM/DD/YYYY" type="text"  readonly required onchange="updateDueDate()"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 my-2">
+                            <label class="control-label" for="date2">Due Date</label>
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-calendar-o"></i></div>
+                                <input class="form-control" id="date2" name="payment_due_date"  value="{{payment.payment_due_date}}"
+                                       placeholder="MM/DD/YYYY" type="text" readonly required />
+                            </div>
+                        </div>
+                        <div class="col-lg-6 my-2">
+                            <label class="control-label" for="date1">Your stay ends in.</label>
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-calendar-o"></i></div>
+                                <input class="form-control" id="ends" type="text" readonly >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-light p-2 border py-4 ">
+                    <div class="mb-1 row ">
+                        <label class="col-sm-2 col-form-label"> Status:  </label>
+                        <div class="col-sm-10">
+                            <input type="text"  class="form-control rounded-0   bg-opacity-25 "
+                                   name="amount" value=" {{payment.status}}" id="pay_status" readonly>
+                        </div>
+                    </div>
+                    <div class="mb-1 row ">
+                        <label   class="col-sm-2 col-form-label"> Price:  </label>
+                        <div class="col-sm-10">
+                            <input type="number"  class="form-control rounded-0   bg-opacity-25 "
+                                   name="amount" value="{{ payment.amount }}" id="amount" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-grid gap-2   mx-auto">
+                    <button class="form-floating btn btn-secondary my-5" form="submit_form" type="submit"
+                            style="display:none;" id="btn_save" >Save
+                    </button>
+                </div>
+            </form>
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<div class="row bg-white p-3 m-0 border mt-2">
+    <div class="col ">
+        <h3>Extend</h3>
+        <hr>
+        {% if extend_button_displayed %}
+        <form class="m-0 p-0" method="POST" action="{% url 'extend_stay_admin' id=payment.id %}">
+            {% csrf_token %}
+            <div class="row mb-3">
+                <div class="col">
+                    <label class="control-label" for="duration">Duration</label>
+                    <select class="form-select" id="duration" name="duration" aria-label="Default select example">
+                        <option value="30">1 month</option>
+                        <option value="7">1 week</option>
+                        <option value="1">1 day</option>
+                    </select>
+                </div>
+                <div class="col d-grid">
+                    <label class="control-label" for="duration">.</label>
+
+
+                    <button type="submit"  class="btn btn-outline-success px-2 ">Extend Stay</button>
+
+
+                </div>
+            </div>
+        </form>
+        {% else %}
+        <em>Accept Extend request in notification first to be able to extend.</em>
+        {% endif %}
+    </div>
+</div>
+
+
+
+
+
+
+<script type="text/javascript">
+document.getElementById('edit_date').onclick = function() {
+    document.getElementById('date1').removeAttribute('readonly');
+    document.getElementById('date2').removeAttribute('readonly');
+    document.getElementById('amount').removeAttribute('readonly');
+
+    document.getElementById('btn_save').style.display = "block";
+};
+
+
+</script>
+
+
+<script>
+function auto_grow(element) {
+      element.style.height = "5px";
+      element.style.height = (element.scrollHeight) + "px";
+    }
+
+    // Resize textareas on page load
+    var textareas = document.querySelectorAll("textarea");
+    textareas.forEach(function(textarea) {
+      auto_grow(textarea);
+    });
+
+    // Resize textareas on input change
+    document.addEventListener("input", function(event) {
+      if (event.target.tagName.toLowerCase() !== "textarea") return;
+      auto_grow(event.target);
+    });
+</script>
+
+<script>
+var startDateInput = document.getElementById("date1");
+var dueDateInput = document.getElementById("date2");
+
+
+var startDate = new Date(startDateInput.value);
+var dueDate = new Date(dueDateInput.value);
+var currentDate = new Date();
+
+
+var diffTime = dueDate - currentDate;
+var diffSeconds = Math.floor(diffTime / 1000);
+var diffMinutes = Math.floor(diffSeconds / 60);
+var diffHours = Math.floor(diffMinutes / 60);
+var diffDays = Math.floor(diffHours / 24);
+
+var remainingHours = diffHours % 24;
+var remainingMinutes = diffMinutes % 60;
+var remainingSeconds = diffSeconds % 60;
+
+
+var stayEndsInput = document.getElementById("ends");
+
+
+function updateRemainingTime() {
+
+
+  if (currentDate >= startDate) {
+    diffTime = dueDate - currentDate;
+    var diffHours = Math.floor(diffTime / (1000 * 60 * 60)); // calculate the difference in hours
+    if (diffTime <= 0) {
+      stayEndsInput.value = "Stay has ended"; // stay has ended
+    } else if (diffDays <= 1) {
+      stayEndsInput.value = diffHours + " hours"; // update the input field with the remaining hours
+    } else {
+      stayEndsInput.value = diffDays + " days, " + remainingHours + " hours"; // update the input field with the remaining days
+    }
+
+    // check if 3 days remain and display the notification
+    displayNotification(diffDays);
+  }
+}
+
+
+
+
+function displayNotification(days) {
+  var stayEndsInput = document.getElementById("ends");
+
+  if (stayEndsInput.value === "Stay has ended") {
+    // Hide both buttons
+    document.getElementById("notif_0").style.display = "none";
+    document.getElementById("notif_1").style.display = "block";
+  }
+  else if (days <= 3) {
+    // Display the "3 Send Email" button
+    document.getElementById("notif_0").style.display = "block";
+    document.getElementById("notif_1").style.display = "none";
+  }
+  else if (days == 0) {
+    // Display the "0 Send Email" button
+    document.getElementById("notif_0").style.display = "none";
+    document.getElementById("notif_1").style.display = "block";
+  }
+  else {
+    // Hide both buttons
+    document.getElementById("notif_0").style.display = "none";
+    document.getElementById("notif_1").style.display = "none";
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+updateRemainingTime(); // call the function on page load
+
+window.addEventListener('load', function() {
+  setInterval(updateRemainingTime, 1000); // call the function every second to update the remaining time
+});
+</script>
+
+
+{% endblock %}

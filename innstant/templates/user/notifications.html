@@ -1,0 +1,165 @@
+{% extends 'user/base.html'%}
+
+{% block content %}
+<div class="container-sm    py-0   mb-5   " >
+    <span  id="my-div-id">
+    <div class="row card border-0 rounded-0  p-3"    >
+        <h2 class=" m-0 text-secondary py-4"><i class="fa-solid fa-bell"></i> Notifications   </h2>
+    </div>
+    <div class="row  bg-white p-0">
+        <div class="col p-0 content-justify-center     " style="border-bottom: 3px solid #2E4053; ">
+            <a type="button p-0" class="btn btn-white text-secondary d-block  rounded-0">
+                <strong>Payment</strong>
+                {% if unread_notification_count_tenant > 0 %}
+                <span class=" badge rounded-pill bg-danger">
+                {{ unread_notification_count_tenant }}<span class="visually-hidden">unread messages</span>
+                </span>
+                {% endif %}
+            </a>
+        </div>
+        <div class="col p-0 content-justify-center  ">
+            <a type="button p-0" class="btn btn-white text-secondary d-block  rounded-0" href="{% url 'notification_extension' %}">
+                <strong>Extension</strong>
+                {% if extend_notification_count_tenant > 0 %}
+                    <span class=" badge rounded-pill bg-danger">
+                    {{ extend_notification_count_tenant }}<span class="visually-hidden">unread messages</span>
+                    </span>
+                {% endif %}
+            </a>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <div class="container p-0" id="notifications-container">
+        {% for notif in notifications %}
+        <a href="{% url 'payment' id=notif.payment.id %}" style="text-decoration: none;  ">
+            <div class="row bg-white justify-content-start border p-2" >
+
+                <div class="col-1 p-0 m-0 d-flex align-items-center justify-content-center ps-3 pe-3">
+                    {% if notif.payment.status == 'Paid' %}
+                    <span class="">
+                    <i class="fa-solid fa-circle-check" style="font-size:30px; color:#28B463"></i>
+                </span>
+                    {% else %}
+                    <span>
+                    <i class="fa-solid fa-circle-xmark" style="font-size:30px; color:#566573"></i>
+                </span>
+                    {% endif %}
+                </div>
+                <div class="col ms-0 ps-0 p-0 ps-3">
+                        <span class=" m-0 text-muted  d-block ">
+
+                        {% if notif.payment.status == 'Paid' %}
+                            <strong class="text-break">Payment for <span class=" text-dark ">Room {{ notif.payment.room }}</span>
+                            has been completed!
+                            </strong>
+                                {% if notif.is_read_tenant == False %}
+                                <span class=" float-end">
+                                <i class="fa-solid fa-circle" style=" color:#CB4335"></i>
+                                </span>
+                              {% else %}
+                              {% endif %}
+                        {% else %}
+                            <strong class="text-break">Payment for <span class=" text-dark ">Room {{ notif.payment.room }}</span>!</strong>
+                                {% if notif.poke == True %}
+                                <span class="ms-3 ">
+                                <i class="fa-solid fa-hand-point-right" style=" color:currentColor"></i>
+                                    You are Poked! by Admin.
+                                </span>
+                                {% else %}
+                                {% endif %}
+                                <span class=" float-end">
+                                {% if notif.is_read_tenant == False %}
+
+                                <i class="fa-solid fa-circle" style=" color:#CB4335"></i>
+
+                                {% else %}
+                                {% endif %}
+                                </span>
+                        {% endif %}
+                            <span class="d-block">
+                                <span class="text-end   me-2">Pay-ID: {{ notif.payment.id }}</span>
+                                 ₱ {{ notif.payment.amount }}
+                            </span>
+                            <small class="d-block text-primary">
+                                <span>{{ notif.updated|timesince }} ago</span>
+                            </small>
+
+                        </span>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    <!--
+    <div class="row bg-white"><button id="see-more-btn" class="btn rounded-0">See More</button></div>
+    -->
+
+
+
+
+
+
+
+
+</span>
+</div>
+
+<!--
+<script>
+
+
+    const notificationsContainer = document.getElementById('notifications-container');
+    const seeMoreBtn = document.getElementById('see-more-btn');
+    const notifications = notificationsContainer.children;
+
+    // Show only the first 10 notifications by default
+    for (let i = 0; i < notifications.length; i++) {
+        if (i >= 10) {
+            notifications[i].style.display = 'none';
+        }
+    }
+
+    let numNotificationsToShow = 10;
+
+    // When the "See More" button is clicked, show the next 10 notifications
+    seeMoreBtn.addEventListener('click', () => {
+        let numNotificationsShown = 0;
+        for (let i = 0; i < notifications.length; i++) {
+            if (numNotificationsShown >= numNotificationsToShow) {
+                break;
+            }
+            if (notifications[i].style.display === 'none') {
+                notifications[i].style.display = 'block';
+                numNotificationsShown++;
+            }
+        }
+        if (numNotificationsShown < numNotificationsToShow) {
+            seeMoreBtn.style.display = 'none';
+        }
+    });
+</script>
+-->
+
+
+<script>
+var div = $('#my-div-id');
+$.get(location.href, function(data) {
+    div.html($(data).find('#my-div-id').html());
+});
+
+setInterval(function() {
+    var div = $('#my-div-id');
+    div.load(location.href + ' #my-div-id');
+}, 2000);
+
+</script>
+
+
+
+{% endblock %}

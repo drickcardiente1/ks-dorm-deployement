@@ -1,0 +1,66 @@
+{% load custom_filters %}
+{% block content %}
+<h1 style="font-size:18px;">{{ title }} <span style="color: gray;">Room Occupied Report</span></h1>
+<table class="table-fluid">
+  <thead>
+  <tr>
+    <th scope="col-auto"  >Room</th>
+    <th scope="col"  >Floor</th>
+    <th scope="col"  >Room Type</th>
+    <th scope="col"  >Price</th>
+
+    <th scope="col"  >Tenant</th>
+  </tr>
+  </thead>
+  <tbody id="firstt">
+
+  {% for queryset in queryset %}
+  <tr>
+    <th scope="row">{{ queryset.id }}</th>
+    <td>{{ queryset.Floor_Number }} </td>
+    <td>{{ queryset.Room_Type.room_legend }} </td>
+    <td>{{ queryset.Room_Type.Room_Price }} </td>
+    <td>{{ queryset.user.first_name }} {{ queryset.user.last_name }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<br><br>
+
+<table>
+  <tbody id="secondt" style="font-size:13px;">
+  <tr>
+    <td>No. of Tenants:</td>
+    <th scope="row"> {{ count  }}</th>
+    <td> </td>
+    <td> </td>
+  </tr>
+
+  </tbody>
+</table>
+<hr>
+{% endblock %}
+
+
+
+<style>
+    table { -pdf-keep-with-next: true; }
+    p { margin: 0; -pdf-keep-with-next: true; }
+    p.separator { -pdf-keep-with-next: false; font-size: 6pt; }
+
+
+
+thead tr {
+  background-color:#D5D8DC;
+  padding:3px;
+}
+
+#firstt tr {
+  background-color: #f1f1f1;
+  padding:3px;
+}
+th {
+  text-align: left;
+}
+</style>

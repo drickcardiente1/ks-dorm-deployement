@@ -1,0 +1,119 @@
+{% extends 'admin/admin_base.html'%}
+{% load static %}
+{% block content %}
+
+<div class="container-sm mt-5"   >
+    <div class="container-sm  bg-body p-0"   >
+        <h2 class="card-title m-0 p-3 text-muted ">Create Room</h2>
+        <div class="bg-secondary p-2"></div>
+
+        <div class="container pt-4 pb-4 px-3">
+            <form class="row g-3" id="submit_form" method="POST" enctype="multipart/form-data" class="form-control form-control-lg ">
+                {% csrf_token %}
+                <div class="col-lg-4 ">
+                    <div class="label">
+                        <label   class="form-label">Status</label>
+                    </div>
+                    <input class="form-control rounded-0" type="text" value="Available" aria-label="readonly input example" readonly>
+                </div>
+                <div class="col-lg-4">
+                    <label   class="form-label">Floor Number</label>
+                    {{form.Floor_Number}}
+                </div>
+
+
+
+
+                <div class="col-lg-4 ">
+                    <div class="label">
+                        <label   class="form-label">Room Type</label>
+                    </div>
+                    {{form.Room_Type}}
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+                <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-secondary  ">Create</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <div class="container-sm  bg-body p-0 mt-5"   >
+
+        <div class="row justify-content-between p-4">
+            <div class="col-auto g-1 align-items-center justify-content-center d-flex">
+                <h3 class=" m-0 text-secondary  ">Rooms Types</h3>
+            </div>
+            <div class="col-auto   g-1 align-items-center justify-content-center d-flex">
+                <a class="btn btn-outline-secondary   d-inline float-end "  href="{% url 'room_create_roomtype_admin'%}" >
+                    <i class="fa-solid fa-plus"></i>
+                    <strong class="">Add Room Type</strong>
+                </a>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 p-3 m-auto">
+            {% for room_types in show_types %}
+            <div class="col-sm-8  col-lg-3">
+                <div class="card">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        {% if not room_types.Room_Image %}
+                        <img src="{% static 'default/no_image.jpg' %}" class="card-img-top"
+                             alt="Hollywood Sign on The Hill" />
+                        {% else %}
+                        <img src="{{ room_types.Room_Image.url }}"   class="card-img-top" alt="..." style="width:100%">
+                        {% endif %}
+
+                        <div class="card-body">
+                            <div class="row justify-content-between g-1">
+                                <div class="col-md-auto">
+                                    <h5 class="card-title"> {{ room_types.room_legend }}</h5>
+                                </div>
+                                <div class="col-md-auto">
+                                    <h5 class="card-title " style="color:#F39C12;">₱ {{ room_types.Room_Price }}</h5>
+                                </div>
+                            </div>
+                            <p class="m-0 mt-1 p-0 ">
+                                Capacity: {{ room_types.Room_Capacity }}
+                            </p>
+                            <p class="card-tex mb-0">
+                                {{ room_types.Room_Description }}
+                            </p>
+                            <span class="d-block  p-0 m-0 text-end  ">
+                               <a href="{% url 'room_edit_roomtype_admin' id=room_types.id%}"
+                                  class="btn btn-sm text-info " style="text-decoration: none;">
+                                   <i class="fa-solid fa-pen-nib"></i>
+                                   Edit
+                                </a>
+                            </span>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

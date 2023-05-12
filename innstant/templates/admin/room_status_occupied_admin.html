@@ -1,0 +1,86 @@
+{% extends 'admin/admin_base.html'%}
+{% load static %}
+{% block content %}
+{% include 'admin/room_bar_admin.html' %}
+<nav class="container" aria-label="Page navigation example">
+    <ul class="pagination justify-content-end mt-3">
+        {% if rooms.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="{% url 'room_status_occupied_admin' %}?page={{rooms.previous_page_number}}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
+
+        {% for page_num in rooms.paginator.page_range %}
+        <li class="page-item"><a class="page-link" href="{% url 'room_status_occupied_admin' %}?page={{page_num}}">{{page_num}}</a></li>
+        {% endfor %}
+
+        {% if rooms.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{% url 'room_status_occupied_admin' %}?page={{rooms.next_page_number}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+
+    </ul>
+</nav>
+
+
+<div class="container mt-5   p-0 pb-5" >
+    <div class="container ">
+        <div class="container" >
+            <div class="row row-cols-1 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 g-4">
+                {% for rooms in rooms %}
+                <a style="text-decoration: none" href="{% url  'room_occupied_details_admin' id=rooms.id %}" class="text-dark">
+                    <div class="col">
+                        <div class="card">
+                            {% if not rooms.Room_Type.Room_Image %}
+                            <img src="{% static 'default/no_image.jpg' %}" class="card-img-top"
+                                 alt="Hollywood Sign on The Hill" />
+                            {% else %}
+                            <img src="{{rooms.Room_Type.Room_Image.url }}"   class="card-img-top" alt="..." style="width:100%">
+                            {% endif %}
+
+
+                            <div class="card-body">
+                                <div class="row justify-content-between g-3">
+                                    <div class="col-md-12">
+                                        <h5>
+                                            Room  {{ rooms.id }}
+                                            <span class="badge bg-primary float-end">Occupied</span>
+                                        </h5>
+                                        <p class="card-title">Floor {{  rooms.Floor_Number  }}</p>
+                                    </div>
+                                </div>
+                                <strong> ₱ {{ rooms.Room_Type.Room_Price|floatformat:2 }} / <small>month</small></strong>
+                                <small class="card-text  d-block">Tenant: {{ rooms.user }}</small>
+                                <small class="card-text  d-block">Status: {{ rooms.Room_Status }}</small>
+                                <small class="card-text  d-block">Type:  {{ rooms.Room_Type }}</small>
+                                <small class="card-text  d-block">Capacity:  {{ rooms.Room_Type.Room_Capacity }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% include 'admin/footer_admin.html' %}
+{% endblock %}

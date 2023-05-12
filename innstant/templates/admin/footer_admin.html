@@ -1,0 +1,91 @@
+{% block content %}
+{% load static %}
+
+<footer class="bg-light pt-5 mt-5 position-relative top-100">
+
+  <div class="container">
+    <div class="row text-end">
+      <div class="col">
+        {% if request.user.is_superuser %}
+        {% if footer_data %}
+        <a href="{% url 'edit_footer_admin' %}" class="btn btn-sm me-2 text-dark float-end " style="text-decoration: none;">
+          <i class="fa-solid fa-pen-nib"></i> Edit
+        </a>
+        {% else %}
+        <a href="{% url 'create_footer_admin' %}" class="btn btn-sm me-2 text-dark float-end " style="text-decoration: none;">
+          <i class="fa-solid fa-plus"></i> Create
+        </a>
+        {% endif %}
+        {% endif %}
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <h1 class="text-black mb-4 display-6" style="font-size:30px;"><em>K’s Dormitory </em></h1>
+        <span>Contact</span>
+        <address class="text-muted mt-2">
+          {% if footer_data.Contact1 %}
+          <i class="fa-solid fa-phone me-2 text-success"></i>{{ footer_data.Contact1 }}<br>
+          {% endif %}
+
+          {% if footer_data.Contact2 %}
+          <i class="fa-solid fa-phone me-2 text-success"></i>{{ footer_data.Contact2 }}<br>
+          {% endif %}
+
+          {% if footer_data.Landline %}
+          <i class="fa-solid fa-phone me-2 text-success"></i>{{ footer_data.Landline }}<br>
+          {% endif %}
+
+          {% if footer_data.Address %}
+          <i class="fa-solid fa-location-dot me-2 text-danger"></i>{{ footer_data.Address }}<br>
+          {% endif %}
+
+
+        </address>
+        <span class="mt-3 text-black ">Email Us</span>
+        <br>
+        <span class="text-muted user-select-all me-1"><i class="fa-regular fa-envelope me-2 mt-2"></i>{{ footer_data.Email_us }}</span>
+        <br><br>
+        <span class="mt-3 text-black">Facebook</span>
+        <br>
+        <span class="text-primary  "><a  target="_blank" href="{{ footer_data.Facebook }}" class="">
+          <i class="fa-brands fa-facebook-f me-2 mt-2"></i>Facebook page.</a></span>
+      </div>
+
+      <div class="col-md-4 mt-5">
+        <h6 class="text-black  mt-3">About Us</h6>
+        <ul class="list-unstyled">
+          <p class="text-break text-muted">{{ footer_data.About }}</p>
+        </ul>
+
+        <h6 class="text-black mt-5 ">About <em>innstant</em></h6>
+        <ul class="list-unstyled">
+          <p class="text-break text-muted">{{ footer_data.About_innstant }}</p>
+        </ul>
+
+      </div>
+      <div class="col-md-4  mt-5">
+        <h6 class="text-black mt-3">Thanks to:</h6>
+        <ul class="list-unstyled ">
+          <li><a  class="text-muted">NovaJeisyl Ganub Elorde</a></li>
+          <li><a  class="text-muted">Vince Patrice Oncines</a></li>
+          <li><a class="text-muted">Billy Jireh Cabase</a></li>
+          <li><a  class="text-muted">Yves Jake Peñaflor</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-6">
+        <p>&copy; 2023 The Geeks. All rights reserved.</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <p class="mb-0">  <span class="text-danger"> </span>  </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+{% endblock %}

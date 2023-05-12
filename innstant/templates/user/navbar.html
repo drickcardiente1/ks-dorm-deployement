@@ -1,0 +1,168 @@
+{% block content %}
+<!-- Fixed navbar -->
+{% url 'home' as home %}
+{% url 'my_room' as my_room %}
+{% url 'complaint' as complaint %}
+{% url 'rules' as rules %}
+{% url 'agreement' as agreement %}
+{% url 'notifications' as notifications %}
+
+<nav class="navbar navbar-expand-lg  border-0" style="background-color:white">
+    <div class="container">
+        <a class="navbar-brand " href="{% url 'home'%}" style="color:#2E4053;  "><em>K’s Dormitory</em></a>
+        <div class=" " id="navbarMain">
+            <ul class="navbar-nav ms-auto  mb-lg-0">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                         <span class="nav-link   m-0 p-0   " aria-current="page"
+                               style="text-transform: capitalize; ">
+                                <span class="fw-bold me-2 border-end border-2  border-secondary d-inline">
+                                    <i class="fa-solid fa-user" style="font-size:16px; color:#2E4053;"></i>
+                                 </span>
+                                <span>
+                                     <strong>{{request.user.username}}</strong>
+                                </span>
+                            <div class="btn-group">
+                                <button class="btn  btn-white  dropdown-toggle  border-0 position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+
+                                <ul class="dropdown-menu dropdown-menu-end p-0 m-0 rounded-0 position-absolute top-100 end-0" style="z-index: 9999;  font-size:12px;">
+                                  <li>
+                                    {% if request.user.is_superuser %}
+                                    <a href="{% url 'room_status_all_admin' %}" class="nav-link text-center  text-dark" >
+                                      <i class="fa-solid fa-eye"></i> Admin View
+                                    </a>
+
+                                    {% else %}
+                                    <a class="nav-link text-center  text-dark"   aria-current="page" href="{% url 'tenant'%}">
+                                     <i class="fa-solid fa-user"></i>
+                                     Profile
+                                    </a>
+                                    {% endif %}
+                                  </li>
+                                  <li>
+                                  <a class="nav-link text-center  text-dark mt-1"   aria-current="page" href="{% url 'logout'%}">
+                                  <i class="fa-solid fa-right-from-bracket"></i></i>
+                                     logout
+                                  </a>
+                                  </li>
+
+                                </ul>
+                            </div>
+
+                         </span>
+
+                    {% else %}
+                <li class="nav-item">
+                    <a class="nav-link      " aria-current="page" href="{% url 'login'%}">
+                        Login
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light     bg-body border-bottom shadow  " style="font-size:16px;">
+    <div class="container p-0 px-1">
+        <ul class="nav justify-content-center">
+            <a class="nav-link   my-link     {% if request.path == '/' %}active{% endif %}" href="{% url 'home'%}">
+                <i class="fa-solid fa-house"  style="color:#2E4053 "></i>
+                <span class="d-none d-lg-inline  "  style="color:#2E4053 ">Home</span>
+            </a>
+
+            <a class="nav-link my-link     {% if request.path == '/my_room' %}active{% endif %}" href="{% url 'my_room'%}">
+                <i class="fa-solid fa-door-closed" style="color:#2E4053 "></i>
+                <span class="d-none d-lg-inline  " style="color:#2E4053 ">My room</span>
+            </a>
+
+            <a class="nav-link my-link    {% if request.path == '/complaint' %}active{% endif %}" href="{% url 'complaint'%}">
+                <i class="fa-solid fa-clipboard" style="color:#2E4053 "></i>
+                <span class="d-none d-lg-inline  "  style="color:#2E4053 ">Complaint</span>
+            </a>
+
+            <a class="nav-link   my-link   {% if request.path == '/rules/' %}active{% endif %}" href="{% url 'rules'%}">
+                <i class="fa-solid fa-list-ol"  style="color:#2E4053 "></i>
+                <span class="d-none d-lg-inline  "  style="color:#2E4053 ">Rules</span>
+            </a>
+            <a class="nav-link  my-link    {% if request.path == '/agreement' %}active{% endif %}" href="{% url 'agreement'%}">
+                <i class="fa-solid fa-file-signature"   style="color:#2E4053 "></i>
+                <span class="d-none d-lg-inline  "  style="color:#2E4053 ">Agreement</span>
+            </a>
+
+        </ul>
+
+
+        <div class="     " id="navbarTogglerDemo02">
+
+
+            <ul class="nav m-0 p-0">
+                <div id="notification-div">
+                    <a class="nav-link my-link     position-relative {% if request.path == '/notifications/' %}active{% endif %}" href="{% url 'notifications'%}">
+                        <i class="fa-solid fa-bell"  style="color:#2E4053 "></i>
+                        {% if user.is_authenticated %}
+                        {% if sum_notification_count_tenant > 0 %}
+                        <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ sum_notification_count_tenant }}<span class="visually-hidden">unread messages</span>
+                        </span>
+                        {% endif %}
+                        {% else %}
+                        {% endif %}
+                    </a>
+                </div>
+
+            </ul>
+
+
+
+        </div>
+    </div>
+</nav>
+
+
+
+
+<style>
+.nav-link.active {
+  border-bottom: 3px solid #2E4053;
+}
+a {
+  text-decoration: none; /* Remove the default underline */
+  border-bottom: 2px solid transparent; /* Add a new underline */
+}
+
+.my-link:hover {
+    background-color: rgba(241, 196, 15, 0.1);
+    border-bottom: 3px solid #F1C40F;
+}
+
+.nav-link:hover svg {
+}
+
+.nav-link:hover span {
+
+}
+</style>
+
+
+<script>
+    var notificationDiv = document.getElementById('notification-div');
+    setInterval(function() {
+        fetch(location.href)
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(html) {
+                var newDiv = document.createElement('div');
+                newDiv.innerHTML = html;
+                var newNotificationDiv = newDiv.querySelector('#notification-div');
+                notificationDiv.innerHTML = newNotificationDiv.innerHTML;
+            })
+            .catch(function(err) {
+                console.error(err);
+            });
+    }, 2000);
+</script>
+{% endblock %}

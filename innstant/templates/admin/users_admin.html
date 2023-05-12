@@ -1,0 +1,157 @@
+{% extends 'admin/admin_base.html'%}
+
+{% block content %}
+<div class="bg-white">
+    <div class="container-sm pt-5 pb-3"  >
+        <div class="row justify-content-between">
+            <div class="col-auto">
+                <h2 class=" m-0 text-secondary pb-4"><i class="fa-solid fa-user"></i> Users/Tenants</h2>
+            </div>
+            <div class="col-auto">
+                <a class="btn btn-outline-secondary   d-inline float-end "  href="{% url 'users_add_admin'%}">
+                    <i class="fa-solid fa-plus"></i>
+                    <strong class=""> Add User</strong>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <em></em>
+        </div>
+
+
+
+        <form method="get" class="">
+            {% csrf_token %}
+            <div class="row">
+                <div class="">
+                    <div class="input-group my-3 ">
+                        {{ filters.form.last_name }}
+                        <button class="btn btn-primary mx-3 rounded" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                        <a class="btn btn-outline-danger  rounded" href="{% url 'users_admin'%}" role="button"><i class="fa-solid fa-eraser"></i> Clear</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-5">
+                    <div class="d-inline input-group my-3">
+                    <span class="form-check ms-3">
+                        {{ filters.form.is_active }}
+                        <label class="form-check-label">Is Active</label>
+                    </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <hr class="mb-2">
+        <div class="row justify-content-start  ">
+            <div class="col-auto  text-muted ">
+                <p class="card-title m-0 mt-1 ms-3">
+                    <i class="fa-solid fa-circle-check" style="color:#28B463"></i>
+                    Active:  <strong>{{active}}</strong>
+                </p>
+            </div>
+            <div class="col-auto  text-muted ms-3 ">
+                <p class="card-title m-0 mt-1">
+                    <i class="fa-solid fa-circle-xmark" style="color:#566573"></i>
+                    Inactive:  <strong >{{inactive}}</strong>
+                </p>
+            </div>
+            <div class="col-auto  text-muted ms-3 ">
+                <p class="card-title m-0 mt-1">
+                    <i class="fa-solid fa-circle-check" style="color:#D68910"></i>
+                    Admin:  <strong >{{is_admin}}</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="container mt-4 p-0"  >
+
+
+    <form class="table-responsive" method="get">
+        {% csrf_token %}
+        <table class="table table-light table-hover table-md border  border-2 mt-2" >
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Tenant</th>
+                <th scope="col">Active</th>
+                <th scope="col">Admin</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for tenant in filters.qs %}
+            <tr>
+                <th scope="row ">{{tenant.id}}</th>
+                <td class="">
+                    <div class="col-9 text-truncate text-capitalize">
+                        {{tenant.last_name}}, {{tenant.first_name}}
+                    </div>
+                </td>
+                <td>
+                    {% if tenant.is_active == True %}
+                    <i class="fa-solid fa-circle-check" style="color:#28B463"></i>
+                    {% elif tenant.is_active == False %}
+                    <i class="fa-solid fa-circle-xmark" style="color:#566573"></i>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if tenant.is_superuser == True %}
+                    <i class="fa-solid fa-circle-check" style="color:#D68910"></i>
+                    {% elif tenant.is_superuser == False %}
+                    <i class="fa-solid fa-circle-xmark" style="color:#566573"></i>
+                    {% endif %}
+                </td>
+
+                <td>
+                    <a href="{% url 'users_detail_admin' id=tenant.id %}" class="text-info ms-2" style="text-decoration: none;">
+                        <i class="fa-solid fa-eye"></i>
+                        <small>Details..</small>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+input {
+  border: 1px solid #212F3D;
+}
+</style>
+
+<script>
+    // get the input element
+    var input = document.getElementsByName("last_name")[0];
+
+    // focus on the input element
+    input.focus();
+
+    // set the cursor position to the end of the input value
+    input.setSelectionRange(input.value.length, input.value.length);
+</script>
+
+{% endblock %}

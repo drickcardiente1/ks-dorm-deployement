@@ -1,0 +1,47 @@
+{% block slide %}
+<div class="bg-white mb-3">
+    <div class="container  py-5 "   >
+        <div class="row justify-content-between">
+            <div class="col-auto">
+                <h2 class=" m-0 text-secondary pb-4"><i class="fa-solid fa-clipboard"></i> Complaint</h2>
+            </div>
+            <div class="col-auto">
+                 <a   class="btn btn-outline-secondary" href="{% url 'complaint_create_admin'%}">
+                        <i class="fa-solid fa-plus"></i>
+                        <strong class="">Create Complaint</strong></a>
+            </div>
+        </div>
+        <div class="row justify-content-between" style="font-size:12px;">
+            <div class="col  text-muted ps-4">
+                <h6 class="card-title m-0 mt-1">
+                    <i class="fa-solid fa-circle-check" style="color:#2ECC71 "></i>
+                    Complete:  <strong>{{complete}}</strong>
+                </h6>
+                <h6 class="card-title m-0 mt-1">
+                    <i class="fa-regular fa-hourglass-half"  style="color:#F1C40F "></i>
+                    Pending:  <strong >{{pending}}</strong>
+                </h6>
+                <h6 class="card-title m-0 mt-1">
+                    <i class="fa-regular fa-circle-xmark" style="color:#B03A2E "></i>
+                    Denied:  <strong >{{denied}}</strong>
+                </h6>
+            </div>
+        </div>
+
+        <div class="container-sm     pt-2 "   >
+            <div class="btn-group d-inline float-end">
+                <button class="btn    dropdown-toggle   border-0 " type="button" id="dropdownCenterBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="me-2 " style="font-size:15px;">Filter by</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end text-muted"  style="font-size:12px;">
+                    <li><a class="dropdown-item text-muted text-center" href="{% url 'complaint_pending_admin'%}">Pending</a></li>
+                    <li><a class="dropdown-item text-muted text-center" href="{% url 'complaint_complete_admin'%}">Complete</a></li>
+                    <li><a class="dropdown-item text-muted text-center" href="{% url 'complaint_denied_admin'%}">Denied</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

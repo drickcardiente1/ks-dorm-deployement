@@ -1,0 +1,426 @@
+{% extends 'admin/admin_base.html'%}
+{% block content %}
+<div class="container-sm  "  >
+
+    <div class="row  bg-body py-5 border pb-5">
+
+
+        <div class="col-md-4  mx-auto">
+
+            <form   method="POST" id="submit_form"   >
+                {% csrf_token %}
+
+                <div class="form-floating text-muted">
+                    <h1 class="text-muted d-inline ms-1"><i class="fa-solid fa-user"></i> Tenant</h1>
+
+                    <a class="btn  mb-0 mt-auto float-end p-0 px-3 position-absolute bottom-0 end-0" role="button" id="edit_tenant">
+                        <i class="fa-solid fa-user-pen"></i>
+                        edit
+                    </a>
+
+                </div>
+
+                <div class="form-floating m-1 ">
+                    <input type="text" for="floatingPlaintextInput"class="form-control   " id="floating1"
+                           value="{{tenant.username}}" name="username" maxlength="10" readonly required>
+                    <label for="floating1"  >Username
+                    </label>
+                </div>
+                <div class="form-floating m-1  ">
+                    <input type="text" for="floatingPlaintextInput"class="form-control  " id="floating2"
+                           value="{{tenant.first_name}}" name="first_name" maxlength="15" readonly required>
+                    <label for="floating2"  >First Name</label>
+                </div>
+
+                <div class="form-floating m-1 ">
+                    <input type="text" for="floatingPlaintextInput"class="form-control  " id="floating3"
+                           value="{{tenant.last_name}}" name="last_name" maxlength="15" readonly required>
+                    <label for="floating3"  >Last Name</label>
+                </div>
+                <div class="form-floating  m-1 mt-4">
+                    <input type="email" for="floatingPlaintextInput"class="form-control  " id="floating4"
+                           value="{{tenant.email}}"  name="email" readonly required>
+                    <label for="floating4"  >Email address</label>
+                </div>
+                <div class="form-floating  m-1">
+                    <input type="number" for="floatingPlaintextInput"class="form-control  " id="floating5"
+                           value="{{tenant.tenantinfo.contact_number}}" name="contact_number"  readonly required>
+                    <label for="floating5"  >Contact</label>
+                </div>
+                <div class="form-floating  m-1">
+                    <input type="number" for="floatingPlaintextInput"class="form-control  " id="floating6"
+                           value="{{tenant.tenantinfo.tenant_age}}" name="tenant_age" readonly required>
+                    <label for="floating6"  >Age</label>
+                </div>
+
+                <button class="form-floating  m-1 mt-4 btn btn-secondary px-5  " form="submit_form" type="submit"
+                        style="display:none;" id="btn_save" >Save
+                </button>
+
+            </form>
+
+        </div>
+
+
+
+
+        <div class="col-md-4 mx-auto mt-3 ">
+            <form   method="POST" id="submit_form2"  action="{% url 'update_user_guardian_admin' id=tenant.id%}" >
+                {% csrf_token %}
+                <div class="form-floating ">
+                    <h4 class="text-muted ms-1">Guardian</h4>
+
+                    <a class="btn  mb-0 mt-auto float-end p-0 px-3 position-absolute bottom-0 end-0" role="button" id="edit_guardian">
+                        <i class="fa-solid fa-user-pen"></i>
+                        edit
+                    </a>
+
+                </div>
+
+                <div class="form-floating m-1 ">
+                    <input type="text" for="floatingPlaintextInput"class="form-control  " id="floating13"
+                           value="{{tenant.tenantinfo.guardian_name}}" name="guardian_name" readonly required>
+                    <label for="floating13"  >Name</label>
+                </div>
+                <div class="form-floating m-1  ">
+                    <input type="number" for="floatingPlaintextInput"class="form-control  " id="floating14"
+                           value="{{tenant.tenantinfo.guardian_contact_number}}" name="guardian_contact_number" readonly required>
+                    <label for="floating14"  >Contact</label>
+                </div>
+                <button class="form-floating  m-1 mt-4 btn btn-secondary px-5  " form="submit_form2" type="submit"
+                        style="display:none;" id="btn_save2" >Save
+                </button>
+            </form>
+        </div>
+
+
+
+
+
+        <div class="col-md-3   mx-auto mt-3">
+            <div class="form-floating ">
+                <h4 class="text-muted ms-1">Info</h4>
+            </div>
+
+
+            <div class="form-floating m-1  ">
+       <span for="floatingPlaintextInput" id="floating8" class="form-control  ">
+                  {% if tenant.is_active == True %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#28B463 "
+                         class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477
+                      9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75
+                       0 0 0-.01-1.05z"/>
+                    </svg>
+                    <small class="ms-1 text-success">Active</small>
+
+
+
+
+                  {% elif tenant.is_active == False %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#566573 "
+                         class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647
+                       2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5
+                        0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+                    </svg>
+                    <small class="ms-1 text-muted">Inactive</small>
+
+
+
+
+                  {% endif %}
+       </span>
+                <label for="floating8"  >Status</label>
+            </div>
+
+            <div class="form-floating m-1 ">
+               <span for="floatingPlaintextInput" id="floating10" class="form-control  ">
+                          {% if tenant.is_superuser == True %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#D68910"
+                                 class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477
+                              9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75
+                               0 0 0-.01-1.05z"/>
+                            </svg>
+                            <small class="ms-1 text-muted">Yes</small>
+                          {% elif tenant.is_superuser == False %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#566573"
+                                 class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647
+                               2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5
+                                0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+                            </svg>
+                            <small class="ms-1 text-muted">No</small>
+                          {% endif %}
+               </span>
+                <label for="floating10"  >Super User</label>
+            </div>
+
+
+
+            <div class="form-floating m-1  ">
+                <input type="email" for="floatingPlaintextInput"class="form-control  " id="floating11"
+                       value="{{tenant.last_login}}" readonly>
+                <label for="floating11"  >Last Login</label>
+            </div>
+            <div class="form-floating m-1 ">
+                <input type="email" for="floatingPlaintextInput"class="form-control  " id="floating12"
+                       value="{{tenant.date_joined}}" readonly>
+                <label for="floating12"  >Date joined	</label>
+            </div>
+
+            {% if tenant == request.user %}
+            {% else %}
+            <div class="form-floating m-1 mt-4 mb-4">
+                {% if tenant.is_active == True %}
+                <div class="container-sm p-0"  >
+                    <div class="container-sm  p-0"   >
+                        <div class="col  text-left text-muted  fw-light ">
+                            <a class="btn btn-secondary   px-3"  role="button"
+                               data-bs-toggle="modal" data-bs-target="#exampleModal">Deactivate</a>
+                        </div>
+                    </div>
+                </div>
+                {% elif tenant.is_active == False %}
+                <div class="container-sm p-0"   >
+                    <div class="container-sm p-0"   >
+                        <a class="btn btn-success   px-3" role="button"
+                           data-bs-toggle="modal" data-bs-target="#exampleModal2">Activate</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-floating m-1   mb-4">
+                {% if tenant.is_superuser == True %}
+                <div class="container-sm p-0"  >
+                    <div class="container-sm  p-0"   >
+                        <div class="col  text-left text-muted  fw-light ">
+                            <a class="btn btn-danger   px-3"  role="button"
+                               data-bs-toggle="modal" data-bs-target="#exampleModal3">Admin Off</a>
+                        </div>
+                    </div>
+                </div>
+                {% elif tenant.is_superuser == False %}
+                <div class="container-sm p-0"   >
+                    <div class="container-sm p-0"   >
+                        <a class="btn btn-success   px-3" role="button"
+                           data-bs-toggle="modal" data-bs-target="#exampleModal4">Admin On</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+
+<div class="container-sm mt-5 bg-white"  id="notifications-container" >
+    <div class="row card border-0 rounded-0 mt-4 p-3"    >
+        <h2 class=" m-0 text-secondary py-2"><i class="fa-solid fa-receipt"></i> Payments   </h2>
+    </div>
+    {% for payment in payment %}
+    <a href="{% url 'payment_admin' id=payment.id %}" style="text-decoration: none;  ">
+        <div class="row bg-white justify-content-start border p-2" >
+
+            <div class="col-1 p-0 m-0 d-flex align-items-center justify-content-center ps-3 pe-3">
+                {% if payment.status == 'Paid' %}
+                <span class="">
+                    <i class="fa-solid fa-circle-check" style="font-size:30px; color:#28B463"></i>
+                </span>
+                {% else %}
+                <span>
+                    <i class="fa-solid fa-circle-xmark" style="font-size:30px; color:#566573"></i>
+                </span>
+                {% endif %}
+            </div>
+            <div class="col ms-0 ps-0 p-0 ps-3">
+                <span class="m-0 text-muted d-block">
+                    {% if payment.status == 'Paid' %}
+                    <strong class="text-break">Payment for <span class="text-dark">Room {{ payment.room }}</span> has been completed!</strong>
+                    {% else %}
+                    <strong class="text-break">Payment for <span class="text-dark">Room {{ payment.room }}</span>!</strong>
+
+
+                    {% endif %}
+                    <span class="d-block">
+                        <span class="text-end me-2">Pay-ID: {{ payment.id }}</span>
+                        ₱ {{ payment.amount }}
+                    </span>
+                    <small class="d-block text-primary">
+                        <span>{{ payment.date|timesince }} ago</span>
+                    </small>
+                </span>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+
+</div>
+<div class="container-sm text-center bg-white"><button id="see-more-btn" class="btn rounded-0">See More</button></div>
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Deactivate </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body border-0">
+          <span style="font-size:14px;">
+              <span class="fw-bold">{{tenant.username}} </span>
+               <br> User account will be Deactivated.
+          </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary  " data-bs-dismiss="modal">Close</button>
+                <a type="button" class="btn btn-primary  " href="{% url 'deactivate_user_admin' id=tenant.id %}">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel2">Activate </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body border-0">
+          <span style="font-size:14px;">
+              <span class="fw-bold">{{tenant.username}} </span>
+               <br> User account will be activated.
+          </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary  " data-bs-dismiss="modal">Close</button>
+                <a type="button" class="btn btn-primary  "   href="{% url 'activate_user_admin' id=tenant.id %}">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel3">Admin Off </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body border-0">
+          <span style="font-size:14px;">
+              <span class="fw-bold">{{tenant.username}} </span>
+               <br> User account admin status will be turned off.
+          </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary  " data-bs-dismiss="modal">Close</button>
+                <a type="button" class="btn btn-primary  "   href="{% url 'off_admin' id=tenant.id %}">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel4">Admin On </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body border-0">
+          <span style="font-size:14px;">
+              <span class="fw-bold">{{tenant.username}} </span>
+               <br> User account admin status will be turned on.
+          </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary  " data-bs-dismiss="modal">Close</button>
+                <a type="button" class="btn btn-primary  "   href="{% url 'on_admin' id=tenant.id %}">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+document.getElementById('edit_tenant').onclick = function() {
+    document.getElementById('floating1').removeAttribute('readonly');
+    document.getElementById('floating2').removeAttribute('readonly');
+    document.getElementById('floating3').removeAttribute('readonly');
+    document.getElementById('floating4').removeAttribute('readonly');
+    document.getElementById('floating5').removeAttribute('readonly');
+    document.getElementById('floating6').removeAttribute('readonly');
+
+
+    document.getElementById('btn_save').style.display = "block";
+};
+
+document.getElementById('edit_guardian').onclick = function() {
+    document.getElementById('floating13').removeAttribute('readonly');
+    document.getElementById('floating14').removeAttribute('readonly');
+
+    document.getElementById('btn_save2').style.display = "block";
+};
+</script>
+<script>
+
+
+    const notificationsContainer = document.getElementById('notifications-container');
+    const seeMoreBtn = document.getElementById('see-more-btn');
+    const notifications = notificationsContainer.children;
+
+    // Show only the first 5 notifications by default
+    for (let i = 0; i < notifications.length; i++) {
+        if (i >= 5) {
+            notifications[i].style.display = 'none';
+        }
+    }
+
+    let numNotificationsToShow = 5;
+
+    // When the "See More" button is clicked, show the next 10 notifications
+    seeMoreBtn.addEventListener('click', () => {
+        let numNotificationsShown = 0;
+        for (let i = 0; i < notifications.length; i++) {
+            if (numNotificationsShown >= numNotificationsToShow) {
+                break;
+            }
+            if (notifications[i].style.display === 'none') {
+                notifications[i].style.display = 'block';
+                numNotificationsShown++;
+            }
+        }
+        if (numNotificationsShown < numNotificationsToShow) {
+            seeMoreBtn.style.display = 'none';
+        }
+    });
+</script>
+
+{% endblock %}

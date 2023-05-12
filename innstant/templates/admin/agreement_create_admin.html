@@ -1,0 +1,140 @@
+{% extends 'admin/admin_base.html'%}
+{% block content %}
+
+<div class="container-sm mt-5"  style="max-width:960px;   ">
+    <div class="container-sm  bg-body p-0 border border-secondary"   >
+
+        <div class="p-1"> <h2 class="card-title m-0 text-muted m-3">Agreement</h2> </div>
+        <div class=" container-fluid bg-secondary  p-2"></div>
+        <form class="container mt-4 " id="submit_form" method="POST" for="cr" enctype="multipart/form-data" class="form-control form-control-lg" >
+
+            {% csrf_token %}
+            <div class="row m-2">
+                <div class="col-auto m-2">
+                    <div class="label">
+                        <label form="formGroupExampleInput" class="form-label">Tenant</label>
+                    </div>
+                    {{form.tenant}}
+                </div>
+
+                <div class="col-auto me-auto m-2">
+                    <div class="label">
+                        <label form="formGroupExampleInput" class="form-label">Landlord</label>
+                    </div>
+                    <input class="form-control form-control " type="text" value="{{request.user.first_name}} {{request.user.last_name}}" aria-label="readonly input example" readonly>
+                </div>
+
+                <div class="col-auto m-2">
+                    <label class="control-label " >
+                        Date
+                    </label>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar-o">
+                            </i>
+                        </div>
+                        <input class="form-control" id="date" name="test_date" placeholder="MM/DD/YYYY" type="text" required/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row m-2">
+                <div class="my-5">
+                    <label  class="form-label  ">Rules must follow:</label>
+                    <textarea class="form-control form-control-sm p-2" aria-label="With textarea" type="text"
+                              rows="5" cols="1"   onkeypress="auto_grow(this);" onkeyup="auto_grow(this);"
+                              style=" resize:none; overflow:hidden; " maxlength="500" readonly name="body">{{form.body.initial}}</textarea>
+                </div>
+            </div>
+
+
+
+            <div class="row  align-items-end">
+                <div class="col-md  mt-5  text-left text-muted  fw-light ">
+                    <div class="container  ">
+                        <center>
+                             <p  class="alert alert-danger" id="sign_error1" style=" display: none;">The Tenant sign file is not an image</p>
+                            <div class="card-body border-0 ">
+                                <input class="form-control" type="file" id="formFile1" name="tenant_sign">
+                                <hr class="p-0 m-0 mt-1">
+                                <p class="text-dark h-6">Tenant Signature</p>
+                            </div>
+                        </center>
+                    </div>
+                </div>
+
+                <div class="col-md  ms-auto  mt-5  text-muted  fw-light  ">
+                    <div class="container   ">
+                        <center>
+                            <p  class="alert alert-danger" id="sign_error2" style=" display: none;">The landlord sign file is not an image</p>
+                            <div class="card-body border-0 ">
+                                <input class="form-control" type="file" id="formFile2" name="landlord_sign" required>
+                                <hr class="p-0 m-0 mt-1">
+                                <p class="text-dark h-6">Landlord Signature</p>
+                            </div>
+
+                        </center>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </form>
+
+    </div>
+</div>
+<div class="container my-3"  style="max-width:960px; font-size:13px; ">
+    <div class="container  p-0"   >
+        <button class="btn btn-secondary px-5  " form="submit_form" type="submit" >Create</button>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+function auto_grow(element) {
+      element.style.height = "5px";
+      element.style.height = (element.scrollHeight) + "px";
+    }
+
+    // Resize textareas on page load
+    var textareas = document.querySelectorAll("textarea");
+    textareas.forEach(function(textarea) {
+      auto_grow(textarea);
+    });
+
+    // Resize textareas on input change
+    document.addEventListener("input", function(event) {
+      if (event.target.tagName.toLowerCase() !== "textarea") return;
+      auto_grow(event.target);
+    });
+
+
+document.getElementById('submit_form').addEventListener('submit', function(event) {
+  // Get the selected file from the input field
+  var fileInput1 = document.getElementById('formFile1');
+  var fileInput2 = document.getElementById('formFile2');
+  var file1 = fileInput1.files[0];
+  var file2 = fileInput2.files[0];
+
+  // Check if the file is an image
+  if (file1 && !file1.type.match('image.*')) {
+    // If the file is not an image, show the error message
+    document.getElementById('sign_error1').style.display = 'block';
+    event.preventDefault(); // prevent the form from submitting
+  }
+  if (file2 && !file2.type.match('image.*')) {
+    // If the file is not an image, show the error message
+    document.getElementById('sign_error2').style.display = 'block';
+    event.preventDefault(); // prevent the form from submitting
+  }
+  if (file2 && file2.type.match('image.*')) {
+    // If the file is an image, hide the error message
+    document.getElementById('sign_error2').style.display = 'none';
+  }
+
+});
+</script>
+{% endblock %}

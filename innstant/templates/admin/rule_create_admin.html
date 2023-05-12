@@ -1,0 +1,32 @@
+{% extends 'admin/admin_base.html'%}
+{% block content %}
+<div class="container-sm mt-5 "  style="max-width:960px; font-size:13px; ">
+    <div class="container-sm border bg-body p-0"   >
+        <h2 class=" card-title m-0 p-3 text-muted ">Create Rule</h2>
+        <div class="bg-secondary p-2"></div>
+        <form class="border border-0 p-4" id="submit_form" method="POST" enctype="multipart/form-data" class="form-control form-control-lg " >
+            {% csrf_token %}
+            <div class="col-md-12 pb-3">
+                <div class="label">
+                    <label  class="form-label">Description</label>
+                </div>
+                <textarea class="form-control form-control-sm p-2" aria-label="With textarea" type="text"
+                          rows="3" cols="1"   onkeypress="auto_grow(this);" onkeyup="auto_grow(this);"
+                          style=" resize:none; overflow:hidden; " maxlength="500" required name="description"></textarea>
+            </div>
+
+             <button class="btn btn-secondary px-5 mt-3  " form="submit_form" type="submit" >Create</button>
+        </form>
+
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,252 @@
+{% load custom_filters %}
+{% block content %}
+
+<div class="container "  >
+
+    <div id="header_content"  >
+        <center>
+            <h1 id="contract">AGREEMENT</h1>
+        </center>
+    </div>
+
+
+    <div id="footer_label0"  >
+        <center>
+            <div id="col_right_empty0">
+            </div>
+            <div id="col_right_date" >
+                <h6   style="font-size:15px;">Date: {{ contract.test_date | date:"F d, Y" }}</h6>
+            </div>
+        </center>
+    </div>
+
+    <div id="footer_label1"  >
+            <div id="col_left_person1">
+                <h6 style="font-size:15px;">Tenant: <span id="person1">{{contract.tenant.first_name}} {{contract.tenant.last_name}}</span></h6>
+            </div>
+            <div id="col_right_empty1" >
+            </div>
+    </div>
+    <div id="footer_label2"  >
+            <div id="col_left_person2">
+                <h6 style="font-size:15px;">Landlord: <span id="person2">{{contract.landlord.first_name}} {{contract.landlord.last_name}}</span></h6>
+            </div>
+            <div id="col_right_empty2" >
+            </div>
+    </div>
+
+
+    <div id="body">
+        <h1>Rules must follow:</h1>
+        <ol>
+            {% for rule in contract.body|strip_char:'-'|split_by_dash %}
+            {% if rule %}
+            <li>{{ rule }}</li>
+            {% endif %}
+            {% endfor %}
+        </ol>
+    </div>
+
+
+    <div id="footer_img"  >
+        <center>
+            <div id="col_left_img">
+                {% if not contract.tenant_sign %}
+                {% else %}
+                <img src="{{ contract.tenant_sign.path }}" id="img_l" alt="..."  >
+                {% endif %}
+            </div>
+            <div id="col_right_img" >
+                <img src="{{ contract.landlord_sign.path }}" id="img_r"   alt="..."  >
+            </div>
+        </center>
+    </div>
+
+
+    <div id="footer_label"  >
+        <center>
+            <div id="col_left">
+                <hr id="hr_l" >
+                <p id="tenant"  class=" m-0 p-0" style="text-transform: uppercase;">
+                    {{contract.tenant}}
+                </p>
+                <p class="m-0 p-0" id="title1">Tenant</p>
+            </div>
+            <div id="col_right" >
+
+                <hr   id="hr_r">
+                <p id="landlord"  class=" m-0 p-0" style="text-transform: uppercase;">
+                    {{contract.landlord}}
+                </p>
+                <p   id="title2">Landlord</p>
+            </div>
+        </center>
+    </div>
+
+</div>
+{% endblock %}
+
+
+<style>
+    @page {
+        size: letter portrait;
+
+
+        @frame header_frame {           /* Static Frame */
+            -pdf-frame-content: header_content;
+            left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+        }
+
+        @frame content_frame {          /* Content Frame */
+            left: 50pt; width: 512pt; top: 250pt; height: 632pt;
+        }
+
+
+        /* signature image */
+        @frame col1_frame {             /* Content frame 1 */
+            -pdf-frame-content: col_left_img;
+            left: 59pt; width: 150pt; top: 590pt; height: 632pt;
+        }
+        @frame col2_frame {             /* Content frame 2 */
+            -pdf-frame-content: col_right_img;
+            left: 400pt; width: 150pt; top: 590pt; height: 632pt;
+
+        }
+
+        /* signature */
+        @frame col1_frame {             /* Content frame 1 */
+            -pdf-frame-content: col_left;
+            left: 59pt; width: 150pt; top: 710pt; height: 632pt;
+        }
+        @frame col2_frame {             /* Content frame 2 */
+            -pdf-frame-content: col_right;
+            left: 400pt; width: 150pt; top: 710pt; height: 632pt;
+        }
+
+
+        /* signature */
+        @frame col1_frame {             /* Content frame 1 */
+            -pdf-frame-content: col_right_empty0;
+            left: 0pt; width: 150pt; top: 145pt; height: 632pt;
+        }
+        @frame col2_frame {             /* Content date */
+            -pdf-frame-content: col_right_date;
+            right: 50pt; width: 150pt; top: 145pt; height: 632pt;
+            }
+
+        @frame col1_frame {             /* Content tenant */
+            -pdf-frame-content: col_left_person1;
+            left: 50pt; width: 150pt; top: 165pt; height: 632pt;
+        }
+        @frame col2_frame {             /* Content frame 2 */
+            -pdf-frame-content: col_right_empty1;
+            left: 400pt; width: 150pt; top: 120pt; height: 632pt;
+            }
+
+        @frame col1_frame {             /* Content landlord */
+            -pdf-frame-content: col_left_person2;
+            left: 50pt; width: 150pt; top: 185pt; height: 632pt;
+        }
+        @frame col2_frame {             /* Content frame 2 */
+            -pdf-frame-content: col_right_empty2;
+            left: 400pt; width: 150pt; top: 120pt; height: 632pt;
+            }
+
+    }
+
+
+
+
+    /* image */
+
+    img { zoom: 100%; }
+
+
+
+    /* header */
+
+    #contract{
+        font-size:30px;
+        text-align: center;
+    }
+
+
+
+    /* body */
+    #name{
+        font-size:17px;
+        color:#000000;
+    }
+    #body{
+        font-size:15px;
+        color:#404040;
+    }
+    #date{
+        font-size:15px;
+    }
+
+
+
+    /* tenant sign */
+
+    #hr_l{
+        text-transform: uppercase;
+        font-size:13px;
+        white-space:0px;
+        margin:0px;
+        padding:0px;
+        margin-bottom:5px;
+        padding-bottom:800px;
+        background-color:white;
+    }
+    #tenant{
+        text-transform: uppercase;
+        font-size:15px;
+        white-space:0px;
+        margin:0px;
+        padding:0px;
+        padding-top:5px;
+
+    }
+    #title1{
+        font-size:10px;
+        white-space:0px;
+       margin:0px;
+        padding:0px;
+        padding-bottom:80px;
+
+    }
+
+
+
+    /* landlord sign */
+    #hr_r{
+        text-transform: uppercase;
+        font-size:13px;
+        white-space:0px;
+        margin:0px;
+        padding:0px;
+        margin-bottom:5px;
+        padding-bottom:810px;
+    }
+    #landlord{
+        text-transform: uppercase;
+        font-size:15px;
+        white-space:0px;
+        margin:0px;
+        padding:0px;
+        padding-top:5px;
+    }
+    #title2{
+        font-size:10px;
+        white-space:0px;
+                margin:0px;
+        padding:0px;
+        padding-bottom:80px;
+
+    }
+    #person1{
+        padding-left:80px;
+    }
+
+</style>

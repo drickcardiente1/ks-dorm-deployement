@@ -1,0 +1,430 @@
+{% extends 'user/base.html'%}
+{% load static %}
+{% block content %}
+
+{% if room %}
+<div class="container-sm    py-5  mb-5 bg-body rounded-0" >
+    <div class="card mb-3 border-0  w-100 px-4" >
+        <h2 class="d-inline card-title m-0 text-muted ">
+            {% if room.Room_Status == 'Available' %}
+            Room {{ room.id }}
+            <span class="badge bg-success float-end">Available</span>
+            {% elif room.Room_Status == 'Occupied' %}
+            Room {{ room.id }}
+            <span class="badge bg-primary float-end">Occupied</span>
+            {% elif room.Room_Status == 'Unavailable' %}
+            Room {{ room.id }}
+            <span class="badge bg-danger float-end">Unavailable</span>
+            {% endif %}
+        </h2>
+        <hr>
+
+        {% if messages %}
+        <div class="alert alert-success mt-1 mb-2 mb-1" role="alert">
+            {% for message in messages %}
+            <li {% if message.tags %} {{ message.tags }} {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+
+        <div class="row ">
+            <div class="col-lg-6 ">
+                {% if not room.Room_Type.Room_Image  %}
+                <img src=" {% static 'default/no_image.jpg' %}" class="card-img-top img-fluid img-thumbnail  border-0 " alt="...">
+                {% else %}
+                <img src=" {{ room.Room_Type.Room_Image.url }}" class="img-thumbnail  border-0 " alt="...">
+                {% endif %}
+                <div class="card-body text-start">
+                    <div class="row ">
+                        <h3><strong> ₱ {{ room.Room_Type.Room_Price|floatformat:2 }} / <small>month</small></strong></h3>
+                    </div>
+                    <div class="row mt-2 mb-4">
+
+                        <div class="col-auto">
+                            <h5 class="text-muted">Occupant: </h5>
+                        </div>
+                        <div class="col-auto">
+                            <h5 class="text-primary"> {{ room.user.first_name }} {{ room.user.last_name }}</h5>
+                        </div>
+
+
+
+
+                    </div>
+                    <div class=" bg-opacity-10 p-3">
+                        <div class="row mb-1">
+                            <label  class="col-6 col-form-label">Room</label>
+                            <div class="col-6 ">
+                                <input type="text" class="form-control border-0"  value="{{ room.id }} " readonly>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <label  class="col-6 col-form-label">Floor</label>
+                            <div class="col-6">
+                                <input type="text" class="form-control border-0" value="{{ room.Floor_Number }} " readonly >
+                            </div>
+                        </div>
+
+                        <div class="row mb-1">
+                            <label  class="col-6 col-form-label">Type</label>
+                            <div class="col-6">
+                                <input type="text" class="form-control border-0"  value="{{ room.Room_Type }}" readonly>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <label  class="col-6 col-form-label">Capacity</label>
+                            <div class="col-6">
+                                <input type="text" class="form-control border-0" value="{{ room.Room_Type.Room_Capacity }} " readonly >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-secondary bg-opacity-10 p-3  ">
+                        <div class="row mb-1 ">
+                            <small class="d-block p-2 ps-2">Description </small>
+                            <span class="d-block ps-2 pb-2 pt-0 pe-2">  {{ room.Room_Type.Room_Description }}</span>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="col-lg-6 p-0">
+                <div class="container" >
+                    <div class="row ">
+                        <div class="col bg-white py-3 border">
+                            <div class="box" >
+                                <h3 class="alert alert-warning"><i class="fa-solid fa-receipt"></i> Payment ID: {{payment.id}}</h3>
+                                <hr>
+                            </div>
+
+
+
+                            <div class="bg-light p-2 border  ">
+                                <div class="mb-1 row ">
+                                    <div class="col-lg-6 my-2">
+                                        <label class="control-label" for="date1">Landlord</label>
+                                        <div class="input-group">
+                                            <input class="form-control" value=" {{payment.admin}}"
+                                                   type="text" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-6 my-2">
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+                            <div class="bg-light p-2 border  ">
+                                <div class="mb-1 row ">
+                                    <div class="col-lg-6 my-2">
+                                        <label class="control-label" for="date1">Start Date</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-calendar-o"></i></div>
+                                            <input class="form-control" id="date1" name="date" placeholder="MM/DD/YYYY"
+                                                   type="text" readonly onchange="updateDueDate()" value="{{payment.date}}"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 my-2">
+                                        <label class="control-label" for="date2">Due Date</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-calendar-o"></i></div>
+                                            <input class="form-control" id="date2" name="payment_due_date" placeholder="MM/DD/YYYY"
+                                                   type="text" readonly  value="{{payment.payment_due_date}}"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 my-2">
+                                        <label class="control-label" for="date1">Your stay ends in.</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-calendar-o"></i></div>
+                                            <input class="form-control" id="ends" type="text" readonly >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-light p-2 border  ">
+                                <div class="mb-1 row ">
+                                    <label class="col-sm-2 col-form-label"> Status:  </label>
+                                    <div class="col-sm-10">
+
+                                        <input type="text"  class="form-control rounded-0   bg-opacity-25 "
+                                               name="amount" value=" {{payment.status}}" readonly>
+                                    </div>
+                                </div>
+                                <div class="mb-1 row ">
+                                    <label   class="col-sm-2 col-form-label"> Price:  </label>
+                                    <div class="col-sm-10">
+                                        <input type="number"  class="form-control rounded-0   bg-opacity-25 "
+                                               name="amount" value="{{ payment.amount}}" readonly>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+
+
+                            {% if payment.status == 'Paid' %}
+
+                            <div class="row mx-3 mt-4">
+                                <button type="button" class="btn btn-outline-primary px-5  " disabled >Pay</button>
+                                <div class="container alert alert-primary mt-2">
+                                    <p class="p-0 m-0" id="notif_label"><em>Your payment has been completed.</em></p>
+                                </div>
+                            </div>
+
+
+                            {% else %}
+                            <div class="row mx-3">
+                                <button type="button" class="btn btn-outline-primary px-5 mt-3   " id="pay_button">Pay</button>
+                            </div>
+                            <div class="row  mx-3 justify-content-start mt-3 alert alert-primary" id="floating0" style="display:none;">
+                                <h6 class="ms-3 " >Select Payment Method</h6>
+                                <hr>
+
+                                <div class=" d-inline mb-2">
+                                    <a class="btn d-flex justify-content-center col-auto border p-3 shadow-sm p-3 mb-3 bg-body rounded" id="g_cash_button" style="display:none;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 192 192" fill="none">
+                                            <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" d="M84 96h36c0 19.882-16.118 36-36 36s-36-16.118-36-36 16.118-36 36-36c9.941 0 18.941 4.03 25.456 10.544"/><path fill="#000000" d="M145.315 66.564a6 6 0 0 0-10.815 5.2l10.815-5.2ZM134.5 120.235a6 6 0 0 0 10.815 5.201l-10.815-5.201Zm-16.26-68.552a6 6 0 1 0 7.344-9.49l-7.344 9.49Zm7.344 98.124a6 6 0 0 0-7.344-9.49l7.344 9.49ZM84 152c-30.928 0-56-25.072-56-56H16c0 37.555 30.445 68 68 68v-12ZM28 96c0-30.928 25.072-56 56-56V28c-37.555 0-68 30.445-68 68h12Zm106.5-24.235C138.023 79.09 140 87.306 140 96h12c0-10.532-2.399-20.522-6.685-29.436l-10.815 5.2ZM140 96c0 8.694-1.977 16.909-5.5 24.235l10.815 5.201C149.601 116.522 152 106.532 152 96h-12ZM84 40c12.903 0 24.772 4.357 34.24 11.683l7.344-9.49A67.733 67.733 0 0 0 84 28v12Zm34.24 100.317C108.772 147.643 96.903 152 84 152v12a67.733 67.733 0 0 0 41.584-14.193l-7.344-9.49Z"/><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" d="M161.549 58.776C166.965 70.04 170 82.666 170 96c0 13.334-3.035 25.96-8.451 37.223"/>
+                                        </svg>
+                                        <span class="ms-3">Gcash</span>
+                                        <br>
+
+                                    </a>
+
+                                    <center id="gcash_qr_code" style="display:none;">
+
+                                        {% if qr_code_gcash.QRCODE %}
+                                        <small class="d-block">Click to Download</small>
+                                        <img  id="qr-code" class="img-thumbnail" src="{{ qr_code_gcash.QRCODE.url }}" alt="QR Code">
+                                        {% else %}
+
+                                        <div class="alert alert-danger" role="alert">
+                                            <i class="fa-solid fa-triangle-exclamation"></i>
+                                            No QR Code
+                                        </div>
+
+                                        {% endif %}
+                                    </center>
+                                </div>
+                                <hr>
+                                <div id="paypal-button-container"></div>
+                            </div>
+
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+
+
+                    {% if payment.status == 'Paid' %}
+                    {% if extend_exists %}
+                    <div class="row bg-white p-3 border mt-2">
+                        <p class="alert alert-light my-0 text-center" >
+                            <em>You have already requested an extension for this room.</em>
+                        </p>
+                    </div>
+                    {% else %}
+                    <div class="row bg-white p-3 border mt-2">
+                        <form class="m-0 p-0" method="post">
+                            {% csrf_token %}
+                            <div class="col ">
+                                <h3>Extend</h3>
+                                <hr>
+                                <div class="row mb-3 ">
+                                    <div class="col">
+                                        {{ form.as_p }}
+                                    </div>
+                                    <div class="col ">
+                                        <div class="col  text-left text-muted  fw-light d-grid">
+                                            <span class=" ">. </span>
+                                            <button type="submit"  class="btn btn-outline-success   ">Extend Stay</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+
+                            </div>
+                        </form>
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <div class="row bg-white p-3 border mt-2">
+                        <p class="alert alert-light my-0 text-center" id="notif_label ">
+                            <em>You can extend your stay when payment is paid</em>
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="container-sm bg-white p-3  py-5 border text-muted">
+    <center>
+        <h1>No room found</h1>
+        <p>Admin have not assigned you to a room yet...</p>
+
+    </center>
+</div>
+
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+<script src="https://www.paypal.com/sdk/js?client-id=AYv7UBmCIKE3YHBFOh8c6iBkesJSiUtpo5wDDS2deZEmXStMWxb3YLfttIlcf1dawJ_AuyvquSqvxYrk&currency=PHP&disable-funding=card"></script>
+<script>
+    paypal.Buttons({
+
+        // Order is created on the client and the order id is returned
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '{{ payment.amount }}'
+                    }
+                }]
+            });
+        },
+
+        // Finalize the transaction on the server after payer approval
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                // Successful capture!
+                console.log('Capture result', details, JSON.stringify(details, null, 2));
+
+                // Make a POST request to update payment status
+                fetch('/update-payment-status/{{ payment.id }}/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token in header
+                    },
+                    body: JSON.stringify({ status: 'Paid' }) // Update payment status to 'Paid'
+                }).then(function(response) {
+                    console.log('Payment status updated successfully');
+                    window.location.href = '/my_room' // Redirect to payment details page
+                });
+            });
+        }
+    }).render('#paypal-button-container');
+</script>
+
+
+<script>
+
+
+function auto_grow(element) {
+      element.style.height = "5px";
+      element.style.height = (element.scrollHeight) + "px";
+    }
+
+    // Resize textareas on page load
+    var textareas = document.querySelectorAll("textarea");
+    textareas.forEach(function(textarea) {
+      auto_grow(textarea);
+    });
+
+    // Resize textareas on input change
+    document.addEventListener("input", function(event) {
+      if (event.target.tagName.toLowerCase() !== "textarea") return;
+      auto_grow(event.target);
+    });
+
+
+
+var startDateInput = document.getElementById("date1");
+var dueDateInput = document.getElementById("date2");
+
+
+var startDate = new Date(startDateInput.value);
+var dueDate = new Date(dueDateInput.value);
+var currentDate = new Date();
+
+
+var diffTime = dueDate - currentDate;
+var diffSeconds = Math.floor(diffTime / 1000);
+var diffMinutes = Math.floor(diffSeconds / 60);
+var diffHours = Math.floor(diffMinutes / 60);
+var diffDays = Math.floor(diffHours / 24);
+
+var remainingHours = diffHours % 24;
+var remainingMinutes = diffMinutes % 60;
+var remainingSeconds = diffSeconds % 60;
+
+
+var stayEndsInput = document.getElementById("ends");
+
+
+function updateRemainingTime() {
+
+
+  if (currentDate >= startDate) {
+    diffTime = dueDate - currentDate;
+    var diffHours = Math.floor(diffTime / (1000 * 60 * 60)); // calculate the difference in hours
+    if (diffTime <= 0) {
+      stayEndsInput.value = "Stay has ended"; // stay has ended
+    } else if (diffDays <= 1) {
+      stayEndsInput.value = diffHours + " hours"; // update the input field with the remaining hours
+    } else {
+      stayEndsInput.value = diffDays + " days, " + remainingHours + " hours"; // update the input field with the remaining days
+    }
+
+
+  }
+}
+
+
+updateRemainingTime(); // call the function on page load
+
+window.addEventListener('load', function() {
+  setInterval(updateRemainingTime, 1000); // call the function every second to update the remaining time
+});
+
+
+
+
+document.getElementById('pay_button').onclick = function() {
+    document.getElementById('floating0').style.display = "flex";
+    document.getElementById('floating1').style.display = "block";
+    document.getElementById('floating2').style.display = "block";
+};
+
+</script>
+
+<script>
+document.getElementById('g_cash_button').onclick = function() {
+    document.getElementById('gcash_qr_code').style.display = "block";
+};
+
+</script>
+<script>
+  const qrCodeImg = document.getElementById('qr-code');
+
+  qrCodeImg.addEventListener('click', () => {
+    const downloadLink = document.createElement('a');
+    downloadLink.href = qrCodeImg.src;
+    downloadLink.download = 'qr-code.png';
+    downloadLink.click();
+  });
+</script>
+{% endblock %}

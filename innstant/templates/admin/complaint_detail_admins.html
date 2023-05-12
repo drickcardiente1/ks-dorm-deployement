@@ -1,0 +1,135 @@
+{% extends 'admin/admin_base.html'%}
+{% block content %}
+
+
+<div class="container-sm  mt-5"  style="max-width:960px;  ">
+    <div class="container-sm  bg-body p-0 border border-secondary" >
+        <div class="card-body p-0">
+            <div class="p-3 pb-1">
+                <h3 class="d-inline text-muted" >
+                    Complaint_{{complaint.id}}
+                </h3>
+            </div>
+            <div class="row justify-content-between px-3">
+                <div class="col-md-4   text-left text-muted  ">Created by:
+                    <span class="text-primary">
+                    <strong>
+                         <a href="{% url 'users_detail_admin' id=complaint.user.id %}"  style="text-decoration: none;  height:9rem;" >
+                        {{complaint.user}}
+                         </a>
+                    </strong>
+                </span>
+                </div>
+
+                <div class="col-md-4   text-muted    ">Date Created:
+                    <span class="text-primary"><strong>{{complaint.date}}</strong></span>
+                </div>
+            </div>
+
+            <div class="bg-secondary my-3 p-2"></div>
+
+
+            <div class="card-text p-3">
+                <div class="row g-12">
+                    <div class="col-md-4 m-0 pt-2">
+                    <span class="text-success fs-5 h4 ">
+                    {{complaint.type}}
+                    </span>
+                    </div>
+                    <div class="col-md-4 ms-auto m-0 pt-2">
+                        <div class=" ">
+                            <span class="me-1">Status:</span>
+
+                            {% if complaint.status == 'Pending' %}
+                            <button type="button" class="btn btn btn-warning dropdown-toggle  btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{complaint.status}}
+                            </button>
+                            {% elif complaint.status == 'Complete' %}
+                            <button type="button" class="btn btn-success dropdown-toggle  btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{complaint.status}}
+                            </button>
+                            {% elif complaint.status == 'Denied' %}
+                            <button type="button" class="btn btn-danger dropdown-toggle  btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{complaint.status}}
+                            </button>
+                            {% endif %}
+
+
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'complaint_status_pen' id=complaint.id%}">Pending</a></li>
+                                <li><a class="dropdown-item" href="{% url 'complaint_status_com' id=complaint.id%}">Complete</a></li>
+                                <li><a class="dropdown-item" href="{% url 'complaint_status_den' id=complaint.id%}">Denied</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+
+
+                <br>
+                <p class="card-text bg-secondary bg-opacity-10 p-4">
+                    <span class="d-block card-text "><small class="text-muted">Description</small></span>
+                    <span class="d-block   fs-6  text-break mt-2" >{{complaint.description}}</span>
+                </p>
+
+                <br>
+                <br>
+                {% if not complaint.comments.all %}
+                <p class="text-center text-muted">No comments from admin yet...</p>
+                <br>
+                {% else %}
+                <p class="fs-5">Comments...</p>
+                {% for comment in complaint.comments.all %}
+                <div class="container-fluid shadow-none p-2 mb-2 bg-light border rounded">
+                    <strong class="text-primary">  {{ comment.user_comment }} </strong>
+                    <small class="text-muted  fw-light ms-2">{{ comment.date_added | timesince}} ago</small>
+                    <p class=" p-0 m-0 mt-1"> {{ comment.body }} </p>
+                </div>
+                {% endfor %}
+
+                {% endif %}
+            </div>
+            <hr class="mb-0 pb-0">
+
+
+
+
+            <div class="container-fluid   p-4 mb-2    rounded">
+                <form  class="row p-0 m-0" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="col ps-0">
+                    <textarea class="form-control form-control-sm p-2" aria-label="With textarea" type="text"
+                              rows="1" cols="1"   onkeypress="auto_grow(this);" onkeyup="auto_grow(this);"
+                              style=" resize:none; overflow:hidden; " maxlength="1000" required name="body"></textarea>
+                    </div>
+                    <div class=" col-auto  p-0">
+                        <button class="btn btn-secondary   px-3" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
+                                <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<script type="text/javascript">
+    function auto_grow(element){
+        element.style.height = "5px";
+        element.style.height = (element.scrollHeight)+"px";
+    }
+</script>
+{% endblock %}
+

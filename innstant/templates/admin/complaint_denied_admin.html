@@ -1,0 +1,97 @@
+{% extends 'admin/admin_base.html'%}
+{% block content %}
+{% include 'admin/complaint_bar_admin.html' %}
+<nav class="container   "   aria-label="Page navigation example ">
+    <ul class="pagination justify-content-end mt-5">
+        {% if show_complaint.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="{% url 'complaint_denied_admin' %}?page={{show_complaint.previous_page_number}}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
+
+        {% for number in show_complaint.paginator.page_range %}
+        <li class="page-item"><a class="page-link" href="{% url 'complaint_denied_admin' %}?page={{number}}">{{number}}</a></li>
+        {% endfor %}
+
+        {% if show_complaint.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{% url 'complaint_denied_admin' %}?page={{show_complaint.next_page_number}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
+
+
+{% for data in show_complaint %}
+
+<div class="container  mt-2 mb-3 p-3 bg-white border rounded " >
+    <div class="row justify-content-between">
+        <div class="col-auto">
+            <h5 class="mb-0" >Complaint_{{ data.id}}</h5>
+            <span class="badge text-bg-light text-capitalize">{{ data.user}}</span>
+            <span class="text-muted  fw-light " style="font-size:12px;">
+                {{ data.date | timesince}} ago
+            </span>
+        </div>
+        <div class="col-auto text-end p-0 m-0">
+               <span class="">
+                    {% if not data.comments.all %}
+                    {% else %}
+
+                   <i class="fa-solid fa-message me-2" style="font-size:17px; color:#239B56;"></i>
+                        {% endif %}
+                        <strong class="bg-primary text-white px-2 py-1  rounded"  style="font-size:12px;">{{ data.status}}</strong>
+                        <a href="{% url 'delete_complaint_admin' id=data.id %}" class="  m-2 ">
+
+                         <i class="fa-solid fa-square-xmark" style="font-size:20px; color:#EC7063;"></i>
+                        </a>
+              </span>
+        </div>
+    </div>
+    <a style="text-decoration: none" href="{% url  'complaint_detail_admins' id=data.id %}" class="text-dark">
+
+        <div class="card my-1 ">
+            <div class="card-body">
+                <h6 class="heading text-success">{{ data.type|default_if_none:""}}</h6>
+                <p class="d-inline-block text-truncate m-0" style="max-width: 97%; font-size:11px;"  >{{ data.description}}</p>
+            </div>
+        </div>
+    </a>
+</div>
+
+
+
+{% empty %}
+<center>
+    <div class="container-sm mt-3 pt-2 bg-light pb-4" style="max-width:960px; height: 140px; ">
+        <h5 class="text-muted pt-5">Empty</h5>
+    </div>
+</center>
+
+{% endfor %}
+
+
+<style>
+    #bar:hover  {
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    }
+
+</style>
+{% endblock %}

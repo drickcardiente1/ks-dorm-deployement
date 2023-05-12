@@ -1,0 +1,213 @@
+{% extends 'admin/admin_base.html'%}
+
+{% block content %}
+
+<div class="bg-white">
+    <div class="container  py-5" >
+        <div class="row justify-content-between">
+            <div class="col-auto">
+                <h2 class=" m-0 text-secondary pb-4"><i class="fa-solid fa-square-poll-horizontal"></i> Reports  </h2>
+            </div>
+            <div class="row">
+            </div>
+            <form method="get" class="" onchange="this.form.submit()">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="">
+                        <div class="input-group my-3 ">
+                            {{ filters.form.tenant }}
+                            <button class="btn btn-primary mx-3 rounded" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                            <a class="btn btn-outline-danger rounded" href="{% url 'reports_admin' %}" role="button"><i class="fa-solid fa-eraser"></i> Clear</a>
+                        </div>
+
+                    </div>
+                </div>
+
+<span  id="my-div-id2">
+                <div class="row mt-3">
+                    <div class="col">
+                        <strong class="text-muted me-3 ">Status: </strong>
+                        <div class="input-group my-3">
+                            <div class="form-check form-check-inline ">
+                                <input class="form-check-input" type="radio" name="status" id="all" value="" {% if filters.form.status.value == '' %}checked{% endif %} onchange="this.form.submit()">
+                                <label class="form-check-label" for="all">All</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status" id="paid" value="Paid" {% if filters.form.status.value == 'Paid' %}checked{% endif %} onchange="this.form.submit()">
+                                <label class="form-check-label" for="paid">Paid</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status" id="unpaid" value="Unpaid" {% if filters.form.status.value == 'Unpaid' %}checked{% endif %} onchange="this.form.submit()">
+                                <label class="form-check-label" for="unpaid">Unpaid</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col  text-muted ">
+                        <p class="card-title m-0 mt-1 ms-3">
+                            <i class="fa-solid fa-circle-check" style="color:#2ECC71;"></i>
+                            Paid:  <strong>{{paid}}</strong>
+                        </p>
+                    </div>
+                    <div class="col  text-muted ms-3 ">
+                        <p class="card-title m-0 mt-1">
+                            <i class="fa-solid fa-circle-xmark" style="color:#566573;"></i>
+                            Unpaid:  <strong >{{unpaid}}</strong>
+                        </p>
+                    </div>
+
+                </div>
+    </span>
+            </form>
+            <div class="row  mt-3">
+                    <div class="input-group  gap-4 ">
+                        <div class="col-auto">
+                        <a class="btn btn-outline-primary rounded me-2"  target="_blank"
+                           href="{% url 'report_payment_month_pdf'  %}" role="button"> <i class="fa-regular fa-file-pdf"></i> Generate Month</a>
+                        <a class="btn btn-outline-danger rounded me-2"  target="_blank"
+                           href="{% url 'report_payment_year_pdf'  %}" role="button"> <i class="fa-regular fa-file-pdf"></i> Generate Year</a>
+                        </div>
+                        <div class="col-auto">
+                        <a class="btn btn-outline-success rounded me-2"  target="_blank"
+                           href="{% url 'report_room_pdf'  %}" role="button"> <i class="fa-regular fa-file-pdf"></i> Generate Room</a>
+
+                        <a class="btn btn-outline-secondary rounded"  target="_blank"
+                           href="{% url 'report_tenant_pdf'  %}" role="button"> <i class="fa-regular fa-file-pdf"></i> Generate Tenant</a>
+                        </div>
+
+
+
+
+
+                    </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<span  id="my-div-id">
+
+<div class="container mt-4 p-0"  >
+
+
+    <form class="table-responsive" method="get">
+        {% csrf_token %}
+        <table class="table table-light table-hover table-md border  border-2 mt-2" >
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Tenant</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Room</th>
+                <th scope="col">Capacity</th>
+                <th scope="col">Type</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for payment in filters.qs %}
+            {% if payment.status == 'Unpaid' %}
+            <tr class="table-danger">
+                <th scope="row ">{{payment.id}}</th>
+                <td class=""> {{payment.tenant.last_name}}  {{payment.tenant.first_name}} </td>
+                <td class="">₱ {{payment.amount}} </td>
+                <td class=""> {{payment.room}} </td>
+                <td class=""> {{payment.room.Room_Type.Room_Capacity}} </td>
+                <td class=""> {{payment.room.Room_Type}} </td>
+                <td class=""> {{payment.status}} </td>
+
+
+                <td>
+                    <a  class="text-danger ms-2"  href="{% url 'payment_admin' id=payment.id %}" style="text-decoration: none;">
+                        <i class="fa-solid fa-eye"></i>
+                        <small>Details..</small>
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr class="table-success">
+                <th scope="row ">{{payment.id}}</th>
+                <td class=""> {{payment.tenant.last_name}}  {{payment.tenant.first_name}} </td>
+                <td class="">₱ {{payment.amount}} </td>
+                <td class=""> {{payment.room}} </td>
+                <td class=""> {{payment.room.Room_Type.Room_Capacity}} </td>
+                <td class=""> {{payment.room.Room_Type}} </td>
+                <td class=""> {{payment.status}} </td>
+
+
+                <td>
+                    <a  class="text-success ms-2"  href="{% url 'payment_admin' id=payment.id %}" style="text-decoration: none;">
+                        <i class="fa-solid fa-eye"></i>
+                        <small>Details..</small>
+                    </a>
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+</div>
+
+</span>
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+input {
+  border: 1px solid #212F3D;
+}
+</style>
+
+
+<script>
+    // get the input element
+    var input = document.getElementsByName("tenant")[0];
+
+    // focus on the input element
+    input.focus();
+
+    // set the cursor position to the end of the input value
+    input.setSelectionRange(input.value.length, input.value.length);
+</script>
+
+
+
+<script>
+var div = $('#my-div-id');
+$.get(location.href, function(data) {
+    div.html($(data).find('#my-div-id').html());
+});
+
+setInterval(function() {
+    var div = $('#my-div-id');
+    div.load(location.href + ' #my-div-id');
+}, 2000);
+
+</script>
+<script>
+var div = $('#my-div-id2');
+$.get(location.href, function(data) {
+    div.html($(data).find('#my-div-id2').html());
+});
+
+setInterval(function() {
+    var div = $('#my-div-id2');
+    div.load(location.href + ' #my-div-id2');
+}, 2000);
+
+</script>
+{% endblock %}
