@@ -52,12 +52,13 @@
         <center>
             <div id="col_left_img">
                 {% if not contract.tenant_sign %}
+                <img src="https://res.cloudinary.com/devqjzqxb/raw/upload/v1/images/Room_image/ks_logo_j3dp1c.JPG?fbclid=IwAR2EZX-kn43E_NpihJbJu62JiTihJ3gGwzbbbs-zI0gvH7T2lFVa9_125SQ" id="img_l" alt="..."  >
                 {% else %}
-                <img src="" id="img_l" alt="..."  >
+                <img src="{{ contract.tenant_sign.path }}" id="img_l" alt="..."  >
                 {% endif %}
             </div>
             <div id="col_right_img" >
-                <img src="" id="img_r"   alt="..."  >
+                <img src="{{ contract.landlord_sign.path }}" id="img_r"   alt="..."  >
             </div>
         </center>
     </div>
