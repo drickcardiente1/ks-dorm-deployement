@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container-sm mt-5 "  style="max-width:960px; font-size:13px; ">
   <div class="container-sm border bg-body p-0"   >
-    <h2 class=" card-title m-0 p-3 text-muted "><i class="fa-solid fa-pen-nib"></i> Create Footer</h2>
+    <h2 class=" card-title m-0 p-3 text-muted "> Create Footer</h2>
     <div class="bg-secondary p-2"></div>
     <form class="border border-0 p-4" id="submit_form" method="POST" enctype="multipart/form-data" class="form-control form-control-lg " >
       {% csrf_token %}
@@ -44,25 +44,21 @@
       <br>
 
       <div class="form-group">
-        <label >Email us:</label>
+        <label >Email Us:</label>
         {{ form.Email_us }}
       </div>
       <br>
 
       <div class="form-group">
-        <label  >About:</label>
+        <label  >About Us:</label>
         {{ form.About }}
       </div>
       <br>
 
-      <div class="form-group">
-        <label >About Innstant:</label>
-        {{ form.About_innstant }}
-      </div>
-      <br>
+
 
       <div class="form-group">
-        <label  >Facebook:</label>
+        <label  >Facebook Page Link:</label>
         {{ form.Facebook }}
       </div>
       <br>

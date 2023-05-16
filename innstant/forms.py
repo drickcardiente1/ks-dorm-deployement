@@ -224,7 +224,7 @@ class NotificationForm(forms.ModelForm):
 class FooterForm(forms.ModelForm):
     class Meta:
         model = Footer
-        fields = ['Contact1', 'Contact2', 'Landline', 'Address', 'Email_us', 'About', 'About_innstant', 'Facebook']
+        fields = ['Contact1', 'Contact2', 'Landline', 'Address', 'Email_us', 'About',  'Facebook']
 
         widgets = {
             'Contact1': forms.NumberInput(attrs={'class': 'form-control'}),
@@ -233,7 +233,6 @@ class FooterForm(forms.ModelForm):
             'Address': forms.TextInput(attrs={'class': 'form-control'}),
             'Email_us': forms.EmailInput(attrs={'class': 'form-control'}),
             'About': forms.Textarea(attrs={'class': 'form-control'}),
-            'About_innstant': forms.Textarea(attrs={'class': 'form-control'}),
             'Facebook': forms.URLInput(attrs={'class': 'form-control'}),
         }
 
