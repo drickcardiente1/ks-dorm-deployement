@@ -35,10 +35,10 @@ if 'SECRET_KEY' in os.environ:
 # Generally avoid wildcards(*). However since Heroku router provides hostname validation it is ok
 
 # ssl switch
-SECURE_SSL_REDIRECT = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-ALLOWED_HOSTS = ['ks-dorm.com','www.ks-dorm.com']
+ALLOWED_HOSTS = ['ks-dorm.com','www.ks-dorm.com','*']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 

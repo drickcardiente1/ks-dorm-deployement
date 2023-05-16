@@ -54,14 +54,14 @@
                 {% if not contract.tenant_sign %}
                 <p>No Signature</p>
                 {% else %}
-                <img src="{{ contract.tenant_sign.path }}" id="img_l" alt="..."  >
+                <img src="{{ contract.tenant_sign.url }}" id="img_l" alt="..."  >
                 {% endif %}
             </div>
             <div id="col_right_img" >
                 {% if not contract.landlord_sign %}
                 <p>No Signature</p>
                 {% else %}
-                <img src="{{ contract.landlord_sign.path }}" id="img_r"   alt="..."  >
+                <img src="{{ contract.landlord_sign.url }}" id="img_r" alt="..."  >
                 {% endif %}
             </div>
         </center>
