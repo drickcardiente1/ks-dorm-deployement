@@ -110,22 +110,22 @@
         /* signature image */
         @frame col1_frame {             /* Content frame 1 */
             -pdf-frame-content: col_left_img;
-            left: 59pt; width: 150pt; top: 590pt; height: 632pt;
+            left: 59pt; width: 150pt; top: 570pt; height: 400pt;
         }
         @frame col2_frame {             /* Content frame 2 */
             -pdf-frame-content: col_right_img;
-            left: 400pt; width: 150pt; top: 590pt; height: 632pt;
+            left: 400pt; width: 150pt; top: 570pt; height: 400pt;
 
         }
 
         /* signature */
         @frame col1_frame {             /* Content frame 1 */
             -pdf-frame-content: col_left;
-            left: 59pt; width: 150pt; top: 710pt; height: 632pt;
+            left: 59pt; width: 150pt; top: 720pt; height: 632pt;
         }
         @frame col2_frame {             /* Content frame 2 */
             -pdf-frame-content: col_right;
-            left: 400pt; width: 150pt; top: 710pt; height: 632pt;
+            left: 400pt; width: 150pt; top: 720pt; height: 632pt;
         }
 
 
@@ -190,8 +190,20 @@
         font-size:15px;
     }
 
+    #footer_img{
+
+     background-color:white;
+     position: relative;
+      z-index: -1;
+    }
 
 
+    #footer_label{
+
+     background-color:white;
+     position: relative;
+      z-index: 9999;
+    }
     /* tenant sign */
 
     #hr_l{
