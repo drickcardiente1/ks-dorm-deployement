@@ -104,13 +104,24 @@ WSGI_APPLICATION = 'myinnstant.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'dormks',
+#         'USER': 'dormitoryks',
+#         'PASSWORD': 'ksdormitory123',
+#         'HOST': 'ksdata.cobjgmfi4r80.ap-southeast-2.rds.amazonaws.com',
+#         'PORT': '5432'
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dormks',
-        'USER': 'dormitoryks',
-        'PASSWORD': 'ksdormitory123',
-        'HOST': 'ksdata.cobjgmfi4r80.ap-southeast-2.rds.amazonaws.com',
+        "ENGINE" : "django.db.backends.postgresql_psycopg2",
+        'NAME': 'ddpfmqesoehqd7',
+        'USER': 'sxwpjmdyeyxqiy',
+        'PASSWORD': '1b377774a0442ca9feb5dd547be8ec6babfe2b22226b5711310831831bb6fdf3',
+        'HOST': 'ec2-3-232-103-50.compute-1.amazonaws.com',
         'PORT': '5432'
     }
 }
