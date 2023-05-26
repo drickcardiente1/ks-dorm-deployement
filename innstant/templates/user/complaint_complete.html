@@ -36,11 +36,7 @@
         {% endif %}
     </ul>
 </nav>
-
-
-
 {% for data in show_complaint %}
-
 <div class="container  mt-2 mb-3 p-3 bg-white border rounded " >
     <div class="row justify-content-between">
         <div class="col-auto">
@@ -75,18 +71,13 @@
         </div>
     </a>
 </div>
-
-
 {% empty %}
 <center>
     <div class="container mt-3 pt-2 bg-light pb-4" style=" height: 140px; ">
         <h5 class="text-muted pt-5">Empty</h5>
     </div>
 </center>
-
 {% endfor %}
-
-
 <style>
     #bar:hover  {
         box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);

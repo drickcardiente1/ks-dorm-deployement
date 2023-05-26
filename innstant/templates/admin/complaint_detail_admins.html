@@ -1,7 +1,5 @@
 {% extends 'admin/admin_base.html'%}
 {% block content %}
-
-
 <div class="container-sm  mt-5"  style="max-width:960px;  ">
     <div class="container-sm  bg-body p-0 border border-secondary" >
         <div class="card-body p-0">
@@ -25,18 +23,19 @@
                     <span class="text-primary"><strong>{{complaint.date}}</strong></span>
                 </div>
             </div>
-
             <div class="bg-secondary my-3 p-2"></div>
-
-
             <div class="card-text p-3">
+{% if complaint.room %}
+    <h5 class="p-0 m-0 mb-2"><span class="badge text-bg-primary">Room {{ complaint.room }}</span></h5>
+{% else %}
+{% endif %}
                 <div class="row g-12">
-                    <div class="col-md-4 m-0 pt-2">
+                    <div class="col-lg-auto m-0 pt-2">
                     <span class="text-success fs-5 h4 ">
                     {{complaint.type}}
                     </span>
                     </div>
-                    <div class="col-md-4 ms-auto m-0 pt-2">
+                    <div class="col-lg-auto ms-auto m-0 pt-2">
                         <div class=" ">
                             <span class="me-1">Status:</span>
 
@@ -44,38 +43,23 @@
                             <button type="button" class="btn btn btn-warning dropdown-toggle  btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
                                 {{complaint.status}}
                             </button>
-                            {% elif complaint.status == 'Complete' %}
+                            {% elif complaint.status == 'Resolved' %}
                             <button type="button" class="btn btn-success dropdown-toggle  btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
                                 {{complaint.status}}
                             </button>
-                            {% elif complaint.status == 'Denied' %}
-                            <button type="button" class="btn btn-danger dropdown-toggle  btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
-                                {{complaint.status}}
-                            </button>
                             {% endif %}
-
-
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{% url 'complaint_status_pen' id=complaint.id%}">Pending</a></li>
-                                <li><a class="dropdown-item" href="{% url 'complaint_status_com' id=complaint.id%}">Complete</a></li>
-                                <li><a class="dropdown-item" href="{% url 'complaint_status_den' id=complaint.id%}">Denied</a></li>
+                                <li><a class="dropdown-item" href="{% url 'complaint_status_com' id=complaint.id%}">Resolved</a></li>
                             </ul>
                         </div>
-
                     </div>
                 </div>
-
-
-
-
-
-
                 <br>
                 <p class="card-text bg-secondary bg-opacity-10 p-4">
                     <span class="d-block card-text "><small class="text-muted">Description</small></span>
                     <span class="d-block   fs-6  text-break mt-2" >{{complaint.description}}</span>
                 </p>
-
                 <br>
                 <br>
                 {% if not complaint.comments.all %}
@@ -94,10 +78,6 @@
                 {% endif %}
             </div>
             <hr class="mb-0 pb-0">
-
-
-
-
             <div class="container-fluid   p-4 mb-2    rounded">
                 <form  class="row p-0 m-0" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -115,15 +95,9 @@
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
-
 </div>
-
-
-
-
 
 <script type="text/javascript">
     function auto_grow(element){

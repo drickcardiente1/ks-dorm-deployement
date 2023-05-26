@@ -1,51 +1,52 @@
 {% extends 'user/base.html'%}
+{% load static %}
 {% block content %}
-
 <div class="container-sm    py-5  mb-5 bg-body rounded-0" >
-
+    <br>
     <div class="card mb-3 border-0  w-100  " >
         <div class="row card-body py-0 text-start">
-
-            <div class="box" >
-                <h3 class="alert alert-warning"><i class="fa-solid fa-receipt"></i> Payment ID_{{payment.id}}</h3>
-            </div>
-        </div>
-        <div class="row card-body py-0 text-start">
             <div class="col-lg-6 ">
-                <div class=" bg-opacity-10 p-3">
+                <div class=" bg-opacity-10 ">
+                    {% if not payment.room.Room_Type.Room_Image  %}
+                    <img src=" {% static 'default/no_image.jpg' %}" class="card-img-top img-fluid img-thumbnail  border-0 mb-3" alt="...">
+                    {% else %}
+                    <img src=" {{ payment.room.Room_Type.Room_Image.url }}" class="img-thumbnail  border-0 mb-3" alt="...">
+                    {% endif %}
                     <div class="row mb-1">
-                        <label  class="col-6 col-form-label">Tenant</label>
-                        <div class="col-6 ">
-                            <input type="text" class="form-control border-0"  value=" {{ payment.tenant.first_name }}  {{ payment.tenant.last_name }} " readonly>
-                        </div>
+                        <h5  class="col-6  ">Occupant</h5>
+                        <h5 class="col-6 ">
+                            {{ payment.tenant.first_name }} {{ payment.tenant.last_name }}
+                        </h5>
                     </div>
+
                     <div class="row mb-1">
-                        <label  class="col-6 col-form-label">Room</label>
+                        <label  class="col-6  ">Room</label>
                         <div class="col-6 ">
-                            <input type="text" class="form-control border-0"  value="{{ payment.room.id }} " readonly>
-                        </div>
-                    </div>
-                    <div class="row mb-1">
-                        <label  class="col-6 col-form-label">Floor</label>
-                        <div class="col-6">
-                            <input type="text" class="form-control border-0" value="{{ payment.room.Floor_Number }} " readonly >
+                            <p class="m-0">{{ payment.room.id }}</p>
                         </div>
                     </div>
 
                     <div class="row mb-1">
-                        <label  class="col-6 col-form-label">Type</label>
+                        <label  class="col-6  ">Floor</label>
                         <div class="col-6">
-                            <input type="text" class="form-control border-0"  value="{{ payment.room.Room_Type }}" readonly>
+                            <p class="m-0">{{ payment.room.Floor_Number }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <label  class="col-6  ">Type</label>
+                        <div class="col-6">
+                            <p class="m-0">{{ payment.room.Room_Type }}</p>
                         </div>
                     </div>
                     <div class="row mb-1">
-                        <label  class="col-6 col-form-label">Capacity</label>
+                        <label  class="col-6  ">Capacity</label>
                         <div class="col-6">
-                            <input type="text" class="form-control border-0" value="{{ payment.room.Room_Type.Room_Capacity }} " readonly >
+                            <p class="m-0">{{ payment.room.Room_Type.Room_Capacity }}</p>
                         </div>
                     </div>
                 </div>
-                <div class="bg-secondary bg-opacity-10 p-3 py-0 my-2">
+                <div class="bg-secondary bg-opacity-10 p-3 py-0 my-2 mt-3">
                     <div class="row mb-1 ">
                         <small class="d-block p-2 ps-2">Description </small>
                         <span class="d-block ps-2 pb-2 pt-0 pe-2">  {{ payment.room.Room_Type.Room_Description }}</span>
@@ -54,12 +55,19 @@
             </div>
 
 
-            <div class="col-md-6">
+
+
+
+
+
+
+            <div class="col-lg-6">
                 <div class="col ">
-
+                    <div class="box" >
+                        <h3 class="alert alert-warning"><i class="fa-solid fa-receipt"></i> Payment ID: {{payment.id}}</h3>
+                        <hr>
+                    </div>
                     <div class=" p-2 border my-3">
-
-
                         <div class="mb-1 row ">
                             <div class=" col-lg-6 my-2">
                                 <label class="control-label" for="date1">Start Date</label>
@@ -106,16 +114,7 @@
                             </div>
                         </div>
                     </div>
-
-
-
-
-
-
-
-
                     {% if payment.status == 'Paid' %}
-
                     <div class="row  mb-3 mt-4">
                         <div class="col d-grid">
                             <button type="button" class="btn btn-outline-primary px-5  " disabled >Pay</button>
@@ -124,17 +123,12 @@
                             </div>
                         </div>
                     </div>
-
                     {% else %}
                     <div class="row mb-3 mt-4">
                         <div class="col d-grid">
                             <button type="button" class="btn btn-outline-primary px-5 mt-3 " id="pay_button">Pay</button>
                         </div>
                     </div>
-
-
-
-
                     <div class="row mx-1  justify-content-start mt-3 alert alert-primary" id="floating0" style="display:none;">
                         <div class="col  ">
                             <h6 class="ms-3 " >Select Payment Method</h6>
@@ -146,21 +140,16 @@
                                     </svg>
                                     <span class="ms-3">Gcash</span>
                                     <br>
-
                                 </a>
-
                                 <center id="gcash_qr_code" style="display:none;">
-
                                     {% if qr_code_gcash.QRCODE %}
                                     <small class="d-block">Click to Download</small>
                                     <img  id="qr-code" class="img-thumbnail" src="{{ qr_code_gcash.QRCODE.url }}" alt="QR Code">
                                     {% else %}
-
                                     <div class="alert alert-danger" role="alert">
                                         <i class="fa-solid fa-triangle-exclamation"></i>
                                         No QR Code
                                     </div>
-
                                     {% endif %}
                                 </center>
                             </div>
@@ -168,23 +157,12 @@
                             <div id="paypal-button-container"></div>
                         </div>
                     </div>
-
-
                     {% endif %}
-
                 </div>
             </div>
         </div>
     </div>
-
 </div>
-
-
-
-
-
-
-
 
 <script src="https://www.paypal.com/sdk/js?client-id=AYv7UBmCIKE3YHBFOh8c6iBkesJSiUtpo5wDDS2deZEmXStMWxb3YLfttIlcf1dawJ_AuyvquSqvxYrk&currency=PHP&disable-funding=card"></script>
 <script>
@@ -223,56 +201,36 @@
         }
     }).render('#paypal-button-container');
 </script>
-
-
 <script>
-
-
 function auto_grow(element) {
       element.style.height = "5px";
       element.style.height = (element.scrollHeight) + "px";
     }
-
     // Resize textareas on page load
     var textareas = document.querySelectorAll("textarea");
     textareas.forEach(function(textarea) {
       auto_grow(textarea);
     });
-
     // Resize textareas on input change
     document.addEventListener("input", function(event) {
       if (event.target.tagName.toLowerCase() !== "textarea") return;
       auto_grow(event.target);
     });
-
-
-
 var startDateInput = document.getElementById("date1");
 var dueDateInput = document.getElementById("date2");
-
-
 var startDate = new Date(startDateInput.value);
 var dueDate = new Date(dueDateInput.value);
 var currentDate = new Date();
-
-
 var diffTime = dueDate - currentDate;
 var diffSeconds = Math.floor(diffTime / 1000);
 var diffMinutes = Math.floor(diffSeconds / 60);
 var diffHours = Math.floor(diffMinutes / 60);
 var diffDays = Math.floor(diffHours / 24);
-
 var remainingHours = diffHours % 24;
 var remainingMinutes = diffMinutes % 60;
 var remainingSeconds = diffSeconds % 60;
-
-
 var stayEndsInput = document.getElementById("ends");
-
-
 function updateRemainingTime() {
-
-
   if (currentDate >= startDate) {
     diffTime = dueDate - currentDate;
     var diffHours = Math.floor(diffTime / (1000 * 60 * 60)); // calculate the difference in hours
@@ -283,38 +241,25 @@ function updateRemainingTime() {
     } else {
       stayEndsInput.value = diffDays + " days, " + remainingHours + " hours"; // update the input field with the remaining days
     }
-
-
   }
 }
-
-
 updateRemainingTime(); // call the function on page load
-
 window.addEventListener('load', function() {
   setInterval(updateRemainingTime, 1000); // call the function every second to update the remaining time
 });
-
-
-
-
 document.getElementById('pay_button').onclick = function() {
     document.getElementById('floating0').style.display = "flex";
     document.getElementById('floating1').style.display = "block";
     document.getElementById('floating2').style.display = "block";
 };
-
 </script>
-
 <script>
 document.getElementById('g_cash_button').onclick = function() {
     document.getElementById('gcash_qr_code').style.display = "block";
 };
-
 </script>
 <script>
   const qrCodeImg = document.getElementById('qr-code');
-
   qrCodeImg.addEventListener('click', () => {
     const downloadLink = document.createElement('a');
     downloadLink.href = qrCodeImg.src;
@@ -322,5 +267,4 @@ document.getElementById('g_cash_button').onclick = function() {
     downloadLink.click();
   });
 </script>
-
 {% endblock %}

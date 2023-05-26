@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 {% include 'admin/room_bar_admin.html' %}
-
 <nav class="container" aria-label="Page navigation example">
     <ul class="pagination justify-content-end mt-3">
         {% if rooms.has_previous %}
@@ -18,7 +17,6 @@
             </a>
         </li>
         {% endif %}
-
         {% for page_num in rooms.paginator.page_range %}
         <li class="page-item"><a class="page-link" href="{% url 'room_status_available_admin' %}?page={{page_num}}">{{page_num}}</a></li>
         {% endfor %}
@@ -36,16 +34,8 @@
             </a>
         </li>
         {% endif %}
-
     </ul>
 </nav>
-
-
-
-
-
-
-
 <div class="container mt-5   p-0 pb-5" >
     <div class="container ">
         <div class="container">
@@ -71,10 +61,7 @@
                                     </div>
                                 </div>
                                 <strong> ₱ {{ rooms.Room_Type.Room_Price|floatformat:2 }} / <small>month</small></strong>
-                                <small class="card-text  d-block">Tenant: {{ rooms.user }}</small>
-                                <small class="card-text  d-block">Status: {{ rooms.Room_Status }}</small>
                                 <small class="card-text  d-block">Type:  {{ rooms.Room_Type }}</small>
-                                <small class="card-text  d-block">Capacity:  {{ rooms.Room_Type.Room_Capacity }}</small>
                             </div>
                         </div>
                     </div>
@@ -84,6 +71,12 @@
         </div>
     </div>
 </div>
+<style>
+.col:hover {
+    transform: scale(1.02);
+    transition: all 300ms ease-out;
+}
 
+</style>
 {% include 'admin/footer_admin.html' %}
 {% endblock %}

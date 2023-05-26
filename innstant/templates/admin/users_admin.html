@@ -1,5 +1,4 @@
 {% extends 'admin/admin_base.html'%}
-
 {% block content %}
 <div class="bg-white">
     <div class="container-sm pt-5 pb-3"  >
@@ -17,9 +16,6 @@
         <div class="row">
             <em></em>
         </div>
-
-
-
         <form method="get" class="">
             {% csrf_token %}
             <div class="row">
@@ -31,8 +27,6 @@
                     </div>
                 </div>
             </div>
-
-
             <div class="row">
                 <div class="col-5">
                     <div class="d-inline input-group my-3">
@@ -67,15 +61,7 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
 <div class="container mt-4 p-0"  >
-
-
     <form class="table-responsive" method="get">
         {% csrf_token %}
         <table class="table table-light table-hover table-md border  border-2 mt-2" >
@@ -111,7 +97,6 @@
                     <i class="fa-solid fa-circle-xmark" style="color:#566573"></i>
                     {% endif %}
                 </td>
-
                 <td>
                     <a href="{% url 'users_detail_admin' id=tenant.id %}" class="text-info ms-2" style="text-decoration: none;">
                         <i class="fa-solid fa-eye"></i>
@@ -124,25 +109,11 @@
         </table>
     </form>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
 <style>
 input {
   border: 1px solid #212F3D;
 }
 </style>
-
 <script>
     // get the input element
     var input = document.getElementsByName("last_name")[0];
@@ -153,5 +124,4 @@ input {
     // set the cursor position to the end of the input value
     input.setSelectionRange(input.value.length, input.value.length);
 </script>
-
 {% endblock %}

@@ -76,7 +76,7 @@
 <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light border-bottom shadow  bg-body " style="font-size:16px;">
     <div class="container p-0 px-1">
         <ul class="nav justify-content-center">
-            <a class="nav-link my-link   text-dark  {% if request.path == '/room_status_occupied_admin' %}active{% endif %}" href="{% url 'room_status_occupied_admin'%}">
+            <a class="nav-link my-link   text-dark  {% if request.path == '/room_status_occupied_admin' %}active{% endif %}" href="{% url 'room_status_all_admin'%}">
                 <i class="fa-solid fa-door-closed" style="color:#2E4053"></i>
                 <span class="d-none d-lg-inline  ">Rooms</span>
             </a>
@@ -112,7 +112,7 @@
             <ul class="nav m-0 p-0">
                 <div id="notification-div">
                     <a class="nav-link my-link text-dark position-relative {% if request.path == '/notification_admin/' %}active{% endif %}" href="{% url 'notification_admin'%}">
-                        <i class="fa-solid fa-bell" style="color:#2E4053"></i>
+                        <i class="fa-solid fa-bell" style="color:#2E4053" id="bell_shake"></i>
                         {% if user.is_authenticated %}
                         {% if sum_notification_count_admin > 0 %}
                         <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger">
@@ -156,7 +156,26 @@ a {
 .nav-link:hover span {
 
 }
+#bell_shake:hover {
+  /* Start the shake animation and make the animation last for 0.5 seconds */
+  animation: shake 0.5s;
 
+
+  /* When the animation is finished, start again */
+  animation-iteration-count: infinite;
+}
+
+@keyframes shake {
+  0% { transform: rotate(0); }
+  15% { transform: rotate(10deg); }
+  30% { transform: rotate(-10deg); }
+  45% { transform: rotate(8deg); }
+  60% { transform: rotate(-8deg); }
+  75% { transform: rotate(4deg); }
+  85% { transform: rotate(-4deg); }
+  92% { transform: rotate(2deg); }
+  100% { transform: rotate(0); }
+}
 </style>
 
 <script>

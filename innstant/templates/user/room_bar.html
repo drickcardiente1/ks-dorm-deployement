@@ -1,0 +1,63 @@
+{% block slide %}
+<div class="bg-white">
+    <div class="container  py-5" >
+        <div class="row justify-content-between">
+            <div class="col-auto">
+                <h2 class=" m-0 text-secondary pb-4"><i class="fa-solid fa-door-closed"></i> Rooms</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="container mt-4 "  >
+                <div class="d-flex justify-content-center text-muted" style="font-size:75%; ">
+                    <div class="m-1 p-2 border   border-dark-subtle   rounded bg-white "  style="width: 50%; height:50%">
+                        <a class="link-dark  text-center" href="{% url 'room_status_available'%}" style="text-decoration: none;">
+                        <span class="card-title  text-center ">
+                            <span class="display-1  d-flex justify-content-center"  >{{available}}</span>
+                            <small class="d-block"  >Available Room</small>
+                        </span>
+                        </a>
+                    </div>
+                    <div class="m-1 p-2 border border-dark-subtle   rounded   bg-white  "style="width: 50%; height:50%">
+                        <a class="link-dark  text-center" href="{% url 'room_status_occupied'%}">
+                        <span class="card-title  text-center ">
+                            <span class="display-1  d-flex justify-content-center">{{occupied}}</span>
+                            <small class="d-block">Occupied Room</small>
+                        </span>
+                        </a>
+                    </div>
+                    <div class="m-1 p-2 border border-dark-subtle   rounded bg-white  "  style="width: 50%; height:50%">
+                        <a class="link-dark  text-center" href="{% url 'room_status_unavailable'%}">
+                        <span class="card-title  text-center ">
+                            <span class="display-1  d-flex justify-content-center">{{unavailable}}</span>
+                            <small class="d-block">Unavailable Room</small>
+                        </span>
+                        </a>
+                    </div>
+                    <div class="m-1 p-2 border border-dark-subtle   rounded  bg-white "  style="width: 50%; height:50%">
+                        <a class="link-dark  text-center" href="{% url 'home'%}">
+                        <span class="card-title  text-center ">
+                            <span class="display-1  d-flex justify-content-center">{{room_count}}</span>
+                            <small class="d-block"> Number of Rooms </small>
+                        </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-3 pt-2 pb-5"  >
+        <div class="btn-group d-inline float-end">
+            <button class="btn   dropdown-toggle text-dark bg-transparent border-0" type="button" id="dropdownCenterBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="me-2 text-muted">Filter by</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end text-muted" >
+
+                <li><a class="dropdown-item text-muted text-center" href="{% url 'home'%}">All Rooms</a></li>
+                <li><a class="dropdown-item text-muted text-center" href="{% url 'room_status_available'%}">Available</a></li>
+                <li><a class="dropdown-item text-muted text-center" href="{% url 'room_status_occupied'%}">Occupied</a></li>
+                <li><a class="dropdown-item text-muted text-center" href="{% url 'room_status_unavailable'%}">Unavailable</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

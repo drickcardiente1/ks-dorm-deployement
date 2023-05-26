@@ -5,36 +5,25 @@
         <div class="col bg-white p-3 border">
             <div class="box" >
                 <h3 class="alert alert-warning">Assign Tenant</h3>
-
                 <hr>
-                <div class="bg-light p-2 border">
+                <div class="bg-light p-2 border" style="display:none;">
                     <div class="mb-1 row">
                         <label  class="col-sm-2 col-form-label"> Room:  </label>
                         <div class="col-sm-10">
                             <input type="number"  class="form-control rounded-0" name="room"  readonly  value="{{ room.id }}">
                         </div>
                     </div>
-
-
                     <div class="mb-1 row">
                         <label  class="col-sm-2 col-form-label"> Floor:  </label>
                         <div class="col-sm-10">
                             <input type="number"  class="form-control rounded-0" name="room_floor"  readonly  value="{{ room.Floor_Number }}">
                         </div>
                     </div>
-
                     <div class="mb-1 row">
                         <label  class="col-sm-2 col-form-label"> Type:  </label>
                         <div class="col-sm-10">
-
-
                             <textarea class="form-control" rows="1" oninput="auto_grow(this)" maxlength="500" name="room_type"
                                       style=" resize:none; overflow:hidden; " readonly>{{ room.Room_Type.Room_Description }}</textarea>
-
-
-
-
-
                         </div>
                     </div>
                 </div>
@@ -54,13 +43,11 @@
                         {{form.tenant}}
                     </div>
                 </div>
-
                 {% if form.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{form.errors}}
                 </div>
                 {% endif %}
-
             </div>
             <div class="bg-light p-2 border my-3">
                 <div class="mb-1 row ">
@@ -89,10 +76,6 @@
                     </div>
                 </div>
             </div>
-
-
-
-
             <div class="bg-light p-2 border my-3">
                 <div class="mb-1 row ">
                     <label class="col-sm-2 col-form-label"> Status:  </label>
@@ -108,7 +91,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col d-grid">
                 <button class="btn btn-success  my-3" form="submit_form" type="submit" > Confirm</button>
             </div>
@@ -117,53 +99,37 @@
     </div>
 </form>
 
-
-
 <script>
 function updateDueDate() {
     // Get the value of the duration of stay select element
     var duration = document.getElementById("duration").value;
-
     // Get the value of the start date input element
     var startDateString = document.getElementById("date1").value;
-
     // Parse the start date into a date object
     var startDate = new Date(startDateString);
-
     // Calculate the due date based on the selected duration of stay
     var dueDate = new Date(startDate.getTime() + duration * 24 * 60 * 60 * 1000);
-
     // Format the due date as MM/DD/YYYY
     var dueDateString = (dueDate.getMonth() + 1) + "/" + dueDate.getDate() + "/" + dueDate.getFullYear();
-
     // Update the value of the due date input element
     document.getElementById("date2").value = dueDateString;
     }
-
     // Listen for changes to the duration and start date select elements
     document.getElementById("duration").addEventListener("change", updateDueDate);
     document.getElementById("date1").addEventListener("change", updateDueDate);
-
-
-
 function auto_grow(element) {
       element.style.height = "5px";
       element.style.height = (element.scrollHeight) + "px";
     }
-
     // Resize textareas on page load
     var textareas = document.querySelectorAll("textarea");
     textareas.forEach(function(textarea) {
       auto_grow(textarea);
     });
-
     // Resize textareas on input change
     document.addEventListener("input", function(event) {
       if (event.target.tagName.toLowerCase() !== "textarea") return;
       auto_grow(event.target);
     });
-
 </script>
-
-
 {% endblock %}

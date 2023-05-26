@@ -7,25 +7,28 @@
             </div>
             <div class="col-auto ms-auto  text-muted  fw-light ">
                 <div class="d-grid  d-md-flex justify-content-md-end  pt-2  mb-0">
+
+                    {% if user.is_authenticated %}
                     <a   class="btn btn-outline-secondary" href="{% url 'complaint_create'%}">
-                          <i class="fa-solid fa-plus"></i>
-                          <strong class="">Create Complaint</strong></a>
+                        <i class="fa-solid fa-plus"></i>
+                        <strong class="">Create  </strong></a>
+                    {% else %}
+                    <a   class="btn btn-outline-secondary disabled" href="{% url 'complaint_create'%}">
+                        <i class="fa-solid fa-plus"></i>
+                        <strong class="">Create  </strong></a>
+                    {% endif %}
                 </div>
             </div>
         </div>
         <div class="row justify-content-between" style="font-size:12px;">
             <div class="col  text-muted ps-4">
                 <h6 class="card-title m-0 mt-1">
-                     <i class="fa-solid fa-circle-check" style="color:#2ECC71 "></i>
-                    Complete:  <strong>{{complete}}</strong>
+                    <i class="fa-solid fa-circle-check" style="color:#2ECC71 "></i>
+                    Resolved:  <strong>{{resolved}}</strong>
                 </h6>
                 <h6 class="card-title m-0 mt-1">
                     <i class="fa-regular fa-hourglass-half"  style="color:#F1C40F "></i>
                     Pending:  <strong >{{pending}}</strong>
-                </h6>
-                <h6 class="card-title m-0 mt-1">
-                    <i class="fa-regular fa-circle-xmark" style="color:#B03A2E "></i>
-                    Denied:  <strong >{{denied}}</strong>
                 </h6>
             </div>
         </div>
@@ -36,8 +39,7 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end text-muted"  style="font-size:12px;">
                     <li><a class="dropdown-item text-muted text-center" href="{% url 'complaint'%}">Pending</a></li>
-                    <li><a class="dropdown-item text-muted text-center" href="{% url 'complaint_complete'%}">Complete</a></li>
-                    <li><a class="dropdown-item text-muted text-center" href="{% url 'complaint_denied'%}">Denied</a></li>
+                    <li><a class="dropdown-item text-muted text-center" href="{% url 'complaint_complete'%}">Resolved</a></li>
                 </ul>
             </div>
         </div>

@@ -4,7 +4,6 @@ from .models import Complaint, Rules, Comment, TenantInfo, Agreement,  Room, Roo
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from django.db.models import Q
-
 from django.contrib.auth.forms import PasswordChangeForm
 
 
@@ -21,7 +20,7 @@ class ChangePasswordForm(PasswordChangeForm):
 class ComplaintForm(forms.ModelForm):
     class Meta:
         model = Complaint
-        fields = ('type', 'description',)
+        fields = ('type', 'description', 'room',)
 
         widgets = {
             'type': forms.Select(attrs={'class': 'form-control form-control ', 'placeholder': 'Enter Type',  'required': True}),
@@ -195,7 +194,8 @@ class PaymentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['tenant'].queryset = self.fields['tenant'].queryset.filter(
-            Q(room_user__isnull=True) | Q(room_user=None), is_active=True, is_superuser=False).order_by('first_name')
+            room_user__isnull=True, is_active=True, is_superuser=False
+        ).order_by('first_name')
         self.fields['tenant'].label_from_instance = lambda obj: f"{obj.first_name} {obj.last_name}"
 
 

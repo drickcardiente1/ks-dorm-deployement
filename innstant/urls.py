@@ -9,11 +9,13 @@ urlpatterns = [
 
 
     path('', views_tenant.index, name="home"),
+    path('room_status_available', views_tenant.room_status_available, name="room_status_available"),
+    path('room_status_occupied', views_tenant.room_status_occupied, name="room_status_occupied"),
+    path('room_status_unavailable', views_tenant.room_status_unavailable, name="room_status_unavailable"),
 
     path('complaint', views_tenant.complaint, name="complaint"),
     path('complaint_create', views_tenant.complaint_create, name="complaint_create"),
     path('complaint_complete', views_tenant.complaint_complete, name="complaint_complete"),
-    path('complaint_denied', views_tenant.complaint_denied, name="complaint_denied"),
     path('delete_complaint/<int:id>/', views_tenant.delete_complaint, name='delete_complaint'),
     path('complaint_detail/<int:id>', views_tenant.complaint_detail, name="complaint_detail"),
 
@@ -58,11 +60,9 @@ urlpatterns = [
     path('complaint_pending_admin', views.complaint_pending_admin, name="complaint_pending_admin"),
     path('complaint_detail_admins/<int:id>', views.complaint_detail_admins, name="complaint_detail_admins"),
     path('complaint_complete_admin', views.complaint_complete_admin, name="complaint_complete_admin"),
-    path('complaint_denied_admin', views.complaint_denied_admin, name="complaint_denied_admin"),
     path('delete_complaint_admin/<int:id>/', views.delete_complaint_admin, name='delete_complaint_admin'),
     path('complaint_status_pen/<int:id>/', views.complaint_status_pen, name='complaint_status_pen'),
     path('complaint_status_com/<int:id>/', views.complaint_status_com, name='complaint_status_com'),
-    path('complaint_status_den/<int:id>/', views.complaint_status_den, name='complaint_status_den'),
     path('delete_complaint_type_admin/<int:id>/', views.delete_complaint_type_admin, name='delete_complaint_type_admin'),
 
 
@@ -120,8 +120,8 @@ urlpatterns = [
 
     path('notification_admin/', views.get_notifications_admin, name='notification_admin'),
     path('notification_extension_admin/', views.get_extension_notifications_admin, name='notification_extension_admin'),
-    path('extend_stay_processing/<int:id>/accept/', views.extend_stay_processing, name='extend_stay_processing'),
-    path('extend-stay/<int:id>/deny/', views.extend_stay_deny, name='extend-stay-deny'),
+    path('extend_stay_processing/<str:username>/<int:id>/accept/', views.extend_stay_processing, name='extend_stay_processing'),
+    path('extend-stay/<str:username>/<int:id>/deny/', views.extend_stay_deny, name='extend-stay-deny'),
     path('extend_stay_admin/<int:id>', views.extend_stay_admin, name='extend_stay_admin'),
 
 
@@ -129,8 +129,8 @@ urlpatterns = [
     # ................................................................................................
     path('update-payment-status/<int:payment_id>/', views_tenant.update_payment_status, name='update_payment_status'),
 
-    path('remove_tenant_admin/<int:id>/', views.remove_tenant_admin, name="remove_tenant_admin"),
-    path('remove_deactivate_tenant_admin/<int:id>/', views.remove_deactivate_tenant_admin, name="remove_deactivate_tenant_admin"),
+    path('remove_tenant_admin/<str:username>/<int:id>/', views.remove_tenant_admin, name="remove_tenant_admin"),
+    path('remove_deactivate_tenant_admin/<str:username>/<int:id>/', views.remove_deactivate_tenant_admin, name="remove_deactivate_tenant_admin"),
     path('cancel_tenant_admin/<int:id>/', views.cancel_tenant_admin, name="cancel_tenant_admin"),
 
     path('payment_admin/<int:id>', views.payment_admin, name="payment_admin"),

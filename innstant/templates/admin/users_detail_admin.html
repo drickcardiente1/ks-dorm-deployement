@@ -1,25 +1,17 @@
 {% extends 'admin/admin_base.html'%}
 {% block content %}
 <div class="container-sm  "  >
-
     <div class="row  bg-body py-5 border pb-5">
-
-
         <div class="col-md-4  mx-auto">
-
             <form   method="POST" id="submit_form"   >
                 {% csrf_token %}
-
                 <div class="form-floating text-muted">
                     <h1 class="text-muted d-inline ms-1"><i class="fa-solid fa-user"></i> Tenant</h1>
-
                     <a class="btn  mb-0 mt-auto float-end p-0 px-3 position-absolute bottom-0 end-0" role="button" id="edit_tenant">
                         <i class="fa-solid fa-user-pen"></i>
                         edit
                     </a>
-
                 </div>
-
                 <div class="form-floating m-1 ">
                     <input type="text" for="floatingPlaintextInput"class="form-control   " id="floating1"
                            value="{{tenant.username}}" name="username" maxlength="10" readonly required>
@@ -56,27 +48,17 @@
                 <button class="form-floating  m-1 mt-4 btn btn-secondary px-5  " form="submit_form" type="submit"
                         style="display:none;" id="btn_save" >Save
                 </button>
-
             </form>
-
         </div>
-
-
-
-
         <div class="col-md-4 mx-auto mt-3 ">
             <form   method="POST" id="submit_form2"  action="{% url 'update_user_guardian_admin' id=tenant.id%}" >
                 {% csrf_token %}
                 <div class="form-floating ">
-                    <h4 class="text-muted ms-1">Guardian</h4>
-
                     <a class="btn  mb-0 mt-auto float-end p-0 px-3 position-absolute bottom-0 end-0" role="button" id="edit_guardian">
                         <i class="fa-solid fa-user-pen"></i>
                         edit
                     </a>
-
                 </div>
-
                 <div class="form-floating m-1 ">
                     <input type="text" for="floatingPlaintextInput"class="form-control  " id="floating13"
                            value="{{tenant.tenantinfo.guardian_name}}" name="guardian_name" readonly required>
@@ -92,17 +74,10 @@
                 </button>
             </form>
         </div>
-
-
-
-
-
         <div class="col-md-3   mx-auto mt-3">
             <div class="form-floating ">
                 <h4 class="text-muted ms-1">Info</h4>
             </div>
-
-
             <div class="form-floating m-1  ">
        <span for="floatingPlaintextInput" id="floating8" class="form-control  ">
                   {% if tenant.is_active == True %}
@@ -113,10 +88,6 @@
                        0 0 0-.01-1.05z"/>
                     </svg>
                     <small class="ms-1 text-success">Active</small>
-
-
-
-
                   {% elif tenant.is_active == False %}
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#566573 "
                          class="bi bi-x-circle-fill" viewBox="0 0 16 16">
@@ -125,10 +96,6 @@
                         0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
                     </svg>
                     <small class="ms-1 text-muted">Inactive</small>
-
-
-
-
                   {% endif %}
        </span>
                 <label for="floating8"  >Status</label>
@@ -156,9 +123,6 @@
                </span>
                 <label for="floating10"  >Super User</label>
             </div>
-
-
-
             <div class="form-floating m-1  ">
                 <input type="email" for="floatingPlaintextInput"class="form-control  " id="floating11"
                        value="{{tenant.last_login}}" readonly>
@@ -169,7 +133,6 @@
                        value="{{tenant.date_joined}}" readonly>
                 <label for="floating12"  >Date joined	</label>
             </div>
-
             {% if tenant == request.user %}
             {% else %}
             <div class="form-floating m-1 mt-4 mb-4">
@@ -211,22 +174,9 @@
                 {% endif %}
             </div>
             {% endif %}
-
-
-
         </div>
-
-
-
-
     </div>
-
-
-
 </div>
-
-
-
 
 <div class="container-sm mt-5 bg-white"  id="notifications-container" >
     <div class="row card border-0 rounded-0 mt-4 p-3"    >
@@ -253,8 +203,6 @@
                     <strong class="text-break">Payment for <span class="text-dark">Room {{ payment.room }}</span> has been completed!</strong>
                     {% else %}
                     <strong class="text-break">Payment for <span class="text-dark">Room {{ payment.room }}</span>!</strong>
-
-
                     {% endif %}
                     <span class="d-block">
                         <span class="text-end me-2">Pay-ID: {{ payment.id }}</span>
@@ -268,15 +216,8 @@
         </div>
     </a>
     {% endfor %}
-
 </div>
 <div class="container-sm text-center bg-white"><button id="see-more-btn" class="btn rounded-0">See More</button></div>
-
-
-
-
-
-
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -299,9 +240,6 @@
         </div>
     </div>
 </div>
-
-
-
 <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -322,8 +260,6 @@
         </div>
     </div>
 </div>
-
-
 <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -344,8 +280,6 @@
         </div>
     </div>
 </div>
-
-
 <div class="modal fade" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -366,9 +300,6 @@
         </div>
     </div>
 </div>
-
-
-
 <script type="text/javascript">
 document.getElementById('edit_tenant').onclick = function() {
     document.getElementById('floating1').removeAttribute('readonly');
@@ -390,8 +321,6 @@ document.getElementById('edit_guardian').onclick = function() {
 };
 </script>
 <script>
-
-
     const notificationsContainer = document.getElementById('notifications-container');
     const seeMoreBtn = document.getElementById('see-more-btn');
     const notifications = notificationsContainer.children;
@@ -402,7 +331,6 @@ document.getElementById('edit_guardian').onclick = function() {
             notifications[i].style.display = 'none';
         }
     }
-
     let numNotificationsToShow = 5;
 
     // When the "See More" button is clicked, show the next 10 notifications
@@ -422,5 +350,4 @@ document.getElementById('edit_guardian').onclick = function() {
         }
     });
 </script>
-
 {% endblock %}

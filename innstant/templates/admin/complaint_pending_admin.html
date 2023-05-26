@@ -16,7 +16,6 @@
             </a>
         </li>
         {% endif %}
-
         {% for number in show_complaint.paginator.page_range %}
         <li class="page-item"><a class="page-link" href="{% url 'complaint_pending_admin' %}?page={{number}}">{{number}}</a></li>
         {% endfor %}
@@ -36,11 +35,8 @@
         {% endif %}
     </ul>
 </nav>
-
-
 <span  id="my-div-id">
 {% for data in show_complaint %}
-
 <div class="container  mt-2 mb-3 p-3 bg-white border rounded " >
     <div class="row justify-content-between">
         <div class="col-auto">
@@ -75,18 +71,14 @@
         </div>
     </a>
 </div>
-</span>
-
-
 {% empty %}
 <center>
     <div class="container-sm mt-3 pt-2 bg-light pb-4" style="max-width:960px; height: 140px; ">
         <h5 class="text-muted pt-5">Empty</h5>
     </div>
 </center>
-
 {% endfor %}
-
+</span>
 
 <style>
     #bar:hover  {
@@ -94,8 +86,6 @@
     }
 
 </style>
-
-
 <script>
 var div = $('#my-div-id');
 $.get(location.href, function(data) {

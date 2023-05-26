@@ -36,12 +36,8 @@
         {% endif %}
     </ul>
 </nav>
-
-
 <span  id="my-div-id">
 {% for data in show_complaint %}
-
-
 <div class="container  mt-2 mb-3 p-3 bg-white border rounded " >
     <div class="row justify-content-between">
         <div class="col-auto">
@@ -82,35 +78,23 @@
         <h5 class="text-muted pt-5">Empty</h5>
     </div>
 </center>
-
 {% endfor %}
 </span>
-
-
-
-
-
-
-
 <style>
     #bar:hover  {
         box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
     }
 
 </style>
-
-
 <script>
 var div = $('#my-div-id');
 $.get(location.href, function(data) {
     div.html($(data).find('#my-div-id').html());
 });
-
 setInterval(function() {
     var div = $('#my-div-id');
     div.load(location.href + ' #my-div-id');
 }, 2000);
 
 </script>
-
 {% endblock %}

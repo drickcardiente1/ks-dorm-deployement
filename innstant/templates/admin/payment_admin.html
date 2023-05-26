@@ -1,51 +1,57 @@
 {% extends 'admin/admin_base.html'%}
+{% load static %}
 {% block content %}
-
 <div class="container-sm    py-4  mb-5 bg-body rounded-0" >
+    <br>
+
 
     <div class="card mb-3 border-0  w-100 py-4" >
 
         <div class="row card-body py-0 text-start">
-            <div class="box" >
-                <h3 class="alert alert-warning"><i class="fa-solid fa-receipt"></i> Payment ID_{{payment.id}}</h3>
-            </div>
-        </div>
-        <div class="row card-body py-0 text-start">
             <div class="col-lg-6 ">
-                <div class=" bg-opacity-10 p-3">
+                <div class=" bg-opacity-10 ">
+                    {% if not payment.room.Room_Type.Room_Image  %}
+                    <img src=" {% static 'default/no_image.jpg' %}" class="card-img-top img-fluid img-thumbnail  border-0 mb-3" alt="...">
+                    {% else %}
+                    <img src=" {{ payment.room.Room_Type.Room_Image.url }}" class="img-thumbnail  border-0 mb-3" alt="...">
+                    {% endif %}
                     <div class="row mb-1">
-                        <label  class="col-6 col-form-label">Tenant</label>
-                        <div class="col-6 ">
-                            <input type="text" class="form-control border-0"  value=" {{ payment.tenant.first_name }}  {{ payment.tenant.last_name }} " readonly>
-                        </div>
+                        <h5  class="col-6  ">Occupant</h5>
+                        <h5 class="col-6 ">
+                            <a href="{% url 'users_detail_admin' id=payment.tenant.id %}"  style="text-decoration: none; " >
+                                {{ payment.tenant.first_name }} {{ payment.tenant.last_name }}
+                            </a>
+                        </h5>
                     </div>
+
                     <div class="row mb-1">
-                        <label  class="col-6 col-form-label">Room</label>
+                        <label  class="col-6  ">Room</label>
                         <div class="col-6 ">
-                            <input type="text" class="form-control border-0"  value="{{ payment.room.id }} " readonly>
-                        </div>
-                    </div>
-                    <div class="row mb-1">
-                        <label  class="col-6 col-form-label">Floor</label>
-                        <div class="col-6">
-                            <input type="text" class="form-control border-0" value="{{ payment.room.Floor_Number }} " readonly >
+                            <p class="m-0">{{ payment.room.id }}</p>
                         </div>
                     </div>
 
                     <div class="row mb-1">
-                        <label  class="col-6 col-form-label">Type</label>
+                        <label  class="col-6  ">Floor</label>
                         <div class="col-6">
-                            <input type="text" class="form-control border-0"  value="{{ payment.room.Room_Type }}" readonly>
+                            <p class="m-0">{{ payment.room.Floor_Number }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <label  class="col-6  ">Type</label>
+                        <div class="col-6">
+                            <p class="m-0">{{ payment.room.Room_Type }}</p>
                         </div>
                     </div>
                     <div class="row mb-1">
-                        <label  class="col-6 col-form-label">Capacity</label>
+                        <label  class="col-6  ">Capacity</label>
                         <div class="col-6">
-                            <input type="text" class="form-control border-0" value="{{ payment.room.Room_Type.Room_Capacity }} " readonly >
+                            <p class="m-0">{{ payment.room.Room_Type.Room_Capacity }}</p>
                         </div>
                     </div>
                 </div>
-                <div class="bg-secondary bg-opacity-10 p-3 py-0 my-2">
+                <div class="bg-secondary bg-opacity-10 p-3 py-0 my-2 mt-3">
                     <div class="row mb-1 ">
                         <small class="d-block p-2 ps-2">Description </small>
                         <span class="d-block ps-2 pb-2 pt-0 pe-2">  {{ payment.room.Room_Type.Room_Description }}</span>
@@ -55,90 +61,232 @@
 
 
 
-            </div>
 
 
-            <div class="col-md-6">
-                <div class="col ">
-                    <div class=" p-2 border my-3">
-                        <div class="mb-1 row ">
-                            <div class="col-lg-6  my-2">
-                                <label class="control-label" for="date1">Start Date</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-calendar-o"></i></div>
-                                    <input class="form-control" id="date1"  placeholder="MM/DD/YYYY"
-                                           type="text"  onchange="updateDueDate()" value="{{payment.date}}" readonly/>
+
+
+
+                <div class="row bg-white p-3   mt-2">
+                    <div class="col ">
+                        <h3>Actions</h3>
+                        <hr>
+                        <div class="row mb-3 g-3">
+                            <div class="col-lg">
+                                <a class="btn btn-warning" style=" display: block;"   data-bs-toggle="modal" data-bs-target="#exampleModal1">Evict</a>
+                            </div>
+                            <div class="col-lg">
+                                <div class="  text-left text-muted  fw-light ">
+                                    <a class="btn btn-danger" style=" display: block;" data-bs-toggle="modal" data-bs-target="#exampleModal2">Evict + Deactivate </a>
                                 </div>
                             </div>
-                            <div class="col-lg-6  my-2">
-                                <label class="control-label" for="date2">Due Date</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-calendar-o"></i></div>
-                                    <input class="form-control" id="date2"   placeholder="MM/DD/YYYY"
-                                           type="text" readonly  value="{{payment.payment_due_date}}"/>
+                        </div>
+                        <div class="row mb-3 g-3">
+                            <div class="col-lg">
+                                <a class="btn btn-secondary" style=" display: block;"   data-bs-toggle="modal" data-bs-target="#exampleModal3">Cancel Assign</a>
+                            </div>
+                            <div class="col-lg">
+                                <div class="  text-left text-muted  fw-light ">
+                                    <a class="btn btn-primary d-block" data-bs-toggle="modal" data-bs-target="#exampleModal"> Pay </a>
                                 </div>
                             </div>
-                            <div class="col-lg-6 my-2">
-                                <label class="control-label" for="date1">Your stay ends in.</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-calendar-o"></i></div>
-                                    <input class="form-control" id="ends" type="text" readonly >
+                        </div>
+                        <hr>
+
+
+
+
+
+                        <div class="row mb-3 my-3">
+                            {% if payment.status == "Paid" %}
+                            <div class="col">
+                                <a class="btn btn-primary d-block"    disabled> Send Email </a>
+                                <div class="container alert alert-primary mt-2">
+                                    <p class="p-0 m-0" id="notif_label"><em>Button is disabled when payment is Paid.</em></p>
                                 </div>
                             </div>
-
-                        </div>
-                    </div>
-                    <div class=" p-2 border my-3">
-                        <div class="mb-1 row ">
-                            <label class="col-sm-2 col-form-label"> Status:  </label>
-                            <div class="col-sm-10">
-
-                                <input type="text"  class="form-control rounded-0   bg-opacity-25 "
-                                       name="amount" value=" {{payment.status}}" id="pay_status" readonly>
+                            {% else %}
+                            <div class="col">
+                                <a class="btn btn-primary d-block" id ="notif_2"  href="{% url 'send_email_unpaid'  id=payment.id%}"> Notify Payment </a>
                             </div>
-                        </div>
-                        <div class="mb-1 row ">
-                            <label   class="col-sm-2 col-form-label"> Price:  </label>
-                            <div class="col-sm-10">
-                                <input type="number"  class="form-control rounded-0   bg-opacity-25 "
-                                       name="amount" value="{{ payment.amount }}" readonly>
+                            <div class="col">
+                                <!-- <a class="btn btn-success g-3" id="notif_0" style="display: none;" href="{% url 'send_email' id=payment.room.id %}">Remind Payment</a> -->
+                                <!-- <a class="btn btn-danger g-3" id="notif_1" style="display: none;" href="{% url 'send_email_stay_end' id=payment.room.id %}">Notify Stay</a> -->
                             </div>
-                        </div>
-                    </div>
-
-
-                    <div class="row mb-3 my-3">
-                        {% if payment.status == "Paid" %}
-                        <div class="col">
-                            <a class="btn btn-primary d-block"    disabled> Send Email </a>
-                            <div class="container alert alert-primary mt-2">
-                                <p class="p-0 m-0" id="notif_label"><em>Button is disabled when payment is Paid.</em></p>
+                            {% endif %}
+                            {% if messages %}
+                            <div class="alert alert-success mt-2 mb-1" role="alert">
+                                {% for message in messages %}
+                                <li {% if message.tags %} {{ message.tags }} {% endif %}>{{ message }}</li>
+                                {% endfor %}
                             </div>
+                            {% endif %}
                         </div>
-                        {% else %}
-                        <div class="col">
-                            <a class="btn btn-primary d-block" id ="notif_0"  href="{% url 'send_email_unpaid'  id=payment.id%}"> Send Email </a>
-                        </div>
-                        <div class="col">
-                            <a class="btn btn-primary d-block" data-bs-toggle="modal" data-bs-target="#exampleModal"> Pay </a>
-                        </div>
-                        {% endif %}
-
                     </div>
-                    {% if messages %}
-                    <div class="alert alert-success mt-2 mb-1" role="alert">
-                        {% for message in messages %}
-                        <li {% if message.tags %} {{ message.tags }} {% endif %}>{{ message }}</li>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-
                 </div>
             </div>
+
+
+
+            <div class="col-lg-6">
+                <div class="row bg-white  px-0 border">
+                    <form  id="submit_form" method="POST">
+                        {% csrf_token %}
+                        <div class="col mt-3 ">
+                            <div class="box" >
+                                <h3 class="alert alert-warning"><i class="fa-solid fa-receipt"></i> Payment ID: {{payment.id}}</h3>
+                                <hr>
+                            </div>
+
+
+                            <div class="mb-1 row justify-content-end ">
+                                <div class="col-auto ">
+                                    <a class="btn  text-end " role="button" id="edit_date">
+                                        <i class="fa-solid fa-pen-nib"></i>
+                                        edit
+                                    </a>
+                                </div>
+                            </div>
+                            <div class=" px-2   my-0">
+                                <div class="mb-1 row ">
+                                    <div class="col-lg-6 my-2">
+                                        <label class="control-label" for="date1">Landlord</label>
+                                        <div class="input-group">
+                                            <input class="form-control" value=" {{payment.admin}}"
+                                                   type="text" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-6 my-2">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class=" px-2   my-3">
+
+
+                                <div class="mb-1 row ">
+                                    <div class="col-lg-6 my-2">
+                                        <label class="control-label" for="date1">Start Date</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-calendar-o"></i></div>
+                                            <input class="form-control" id="date1" name="date" value="{{payment.date}}"
+                                                   placeholder="MM/DD/YYYY" type="text"  readonly required onchange="updateDueDate()"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 my-2">
+                                        <label class="control-label" for="date2">Due Date</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-calendar-o"></i></div>
+                                            <input class="form-control" id="date2" name="payment_due_date"  value="{{payment.payment_due_date}}"
+                                                   placeholder="MM/DD/YYYY" type="text" readonly required />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 my-2">
+                                        <label class="control-label" for="date1">Your stay ends in.</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-calendar-o"></i></div>
+                                            <input class="form-control" id="ends" type="text" readonly >
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class=" px-2   my-3">
+                                <div class="mb-1 row ">
+                                    <label class="col-sm-2 col-form-label"> Status:  </label>
+                                    <div class="col-sm-10">
+
+                                        <input type="text"  class="form-control rounded-0   bg-opacity-25 "
+                                               name="amount" value=" {{payment.status}}" id="pay_status" readonly>
+                                    </div>
+                                </div>
+                                <div class="mb-1 row ">
+                                    <label   class="col-sm-2 col-form-label"> Price:  </label>
+                                    <div class="col-sm-10">
+                                        <input type="number"  class="form-control rounded-0   bg-opacity-25 " id="amount"
+                                               name="amount" value="{{ payment.amount }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                        </div>
+
+                        <div class="d-grid gap-2   mx-auto">
+                            <button class="form-floating btn btn-secondary my-5" form="submit_form" type="submit"
+                                    style="display:none;" id="btn_save" >Save
+                            </button>
+                        </div>
+
+
+                    </form>
+
+
+
+                </div>
+
+
+
+
+
+
+
+
+                <div class="row bg-white p-3   border mt-2">
+                    <div class="col ">
+                        <h3>Extend</h3>
+                        <hr>
+                        {% if extend_button_displayed %}
+                        <form class="m-0 p-0" method="POST" action="{% url 'extend_stay_admin' id=payment.id %}">
+                            {% csrf_token %}
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label class="control-label" for="duration">Duration</label>
+                                    <select class="form-select" id="duration" name="duration" aria-label="Default select example">
+                                        <option value="30">1 month</option>
+                                        <option value="7">1 week</option>
+                                        <option value="1">1 day</option>
+                                    </select>
+                                </div>
+                                <div class="col d-grid">
+                                    <label class="control-label" for="duration">.</label>
+                                    <button type="submit"  class="btn btn-outline-success px-2 ">Extend Stay</button>
+                                </div>
+                            </div>
+                        </form>
+                        {% else %}
+                        <em>Accept Extend request in notification first to be able to extend.</em>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -171,6 +319,96 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel1">Remove  </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body border-0">
+          <span style="font-size:14px;">
+              <span class="fw-bold">{{ payment.tenant.first_name }} {{ payment.tenant.last_name }}</span>
+                  <p>You are going to remove tenant from the room.</p>
+          </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Close</button>
+                <a type="button" class="btn btn-primary rounded-0" href="{% url 'remove_tenant_admin' username=payment.tenant.username id=payment.room.id %}">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel2">Remove + Deactivate </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body border-0">
+          <span style="font-size:14px;">
+              <span class="fw-bold">{{ payment.tenant.first_name }} {{ payment.tenant.last_name }}</span>
+                  <p class="m-0">You are going to remove & deactivate tenant.</p>
+                  <p class="m-0">Make sure to check first if tenant had paid payments before deactivating.</p>
+          </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Close</button>
+                <a type="button" class="btn btn-primary rounded-0"   href="{% url 'remove_deactivate_tenant_admin' username=payment.tenant.username id=payment.room.id %}">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel3">Cancel </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body border-0">
+          <span style="font-size:14px;">
+              <span class="fw-bold">{{ payment.tenant.first_name }} {{ payment.tenant.last_name }}</span>
+
+                 <p class="m-0">You are going to remove tenant from Room {{ room.id }}.</p>
+                  <p class="m-0">Payment will  be canceled.</p>
+          </span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Close</button>
+                <a type="button" class="btn btn-primary rounded-0"   href="{% url 'cancel_tenant_admin' id=payment.id %}">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script type="text/javascript">
+document.getElementById('edit_date').onclick = function() {
+    document.getElementById('date1').removeAttribute('readonly');
+    document.getElementById('date2').removeAttribute('readonly');
+    document.getElementById('amount').removeAttribute('readonly');
+
+    document.getElementById('btn_save').style.display = "block";
+};
+</script>
 <script>
 function auto_grow(element) {
       element.style.height = "5px";
@@ -193,30 +431,19 @@ function auto_grow(element) {
 <script>
 var startDateInput = document.getElementById("date1");
 var dueDateInput = document.getElementById("date2");
-
-
 var startDate = new Date(startDateInput.value);
 var dueDate = new Date(dueDateInput.value);
 var currentDate = new Date();
-
-
 var diffTime = dueDate - currentDate;
 var diffSeconds = Math.floor(diffTime / 1000);
 var diffMinutes = Math.floor(diffSeconds / 60);
 var diffHours = Math.floor(diffMinutes / 60);
 var diffDays = Math.floor(diffHours / 24);
-
 var remainingHours = diffHours % 24;
 var remainingMinutes = diffMinutes % 60;
 var remainingSeconds = diffSeconds % 60;
-
-
 var stayEndsInput = document.getElementById("ends");
-
-
 function updateRemainingTime() {
-
-
   if (currentDate >= startDate) {
     diffTime = dueDate - currentDate;
     var diffHours = Math.floor(diffTime / (1000 * 60 * 60)); // calculate the difference in hours
@@ -232,15 +459,33 @@ function updateRemainingTime() {
     displayNotification(diffDays);
   }
 }
-
-
+function displayNotification(days) {
+  var stayEndsInput = document.getElementById("ends");
+  if (stayEndsInput.value === "Stay has ended") {
+    // Hide both buttons
+    document.getElementById("notif_0").style.display = "none";
+    document.getElementById("notif_1").style.display = "block";
+  }
+  else if (days <= 3) {
+    // Display the "3 Send Email" button
+    document.getElementById("notif_0").style.display = "block";
+    document.getElementById("notif_1").style.display = "none";
+  }
+  else if (days == 0) {
+    // Display the "0 Send Email" button
+    document.getElementById("notif_0").style.display = "none";
+    document.getElementById("notif_1").style.display = "block";
+  }
+  else {
+    // Hide both buttons
+    document.getElementById("notif_0").style.display = "none";
+    document.getElementById("notif_1").style.display = "none";
+  }
+}
 updateRemainingTime(); // call the function on page load
-
 window.addEventListener('load', function() {
   setInterval(updateRemainingTime, 1000); // call the function every second to update the remaining time
 });
 </script>
-
-
 
 {% endblock %}

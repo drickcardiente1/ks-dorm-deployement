@@ -16,14 +16,13 @@ class Complaint(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1, related_name='user_complaint')
     type = models.ForeignKey(ComplaintType, on_delete=models.CASCADE, related_name='complaint_type', default=None, blank=True, null=True)
     description = models.TextField(max_length=1000)
-    COMPLETE = 'Complete'
+    RESOLVED = 'Resolved'
     PENDING = 'Pending'
-    DENIED = 'Denied'
     Status = [
-        (COMPLETE, 'Complete'),
+        (RESOLVED, 'Resolved'),
         (PENDING, 'Pending'),
-        (DENIED, 'Denied'),
     ]
+    room = models.CharField(max_length=150, blank=True,  null=True)
     status = models.CharField(max_length=10, choices=Status, default=PENDING, )
     date = models.DateTimeField(default=datetime.now, blank=True)
 
@@ -51,7 +50,7 @@ class RoomType(models.Model):
 
 
 class Room(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, default=None, blank=True, null=True, related_name='room_user')
+    user = models.ManyToManyField(User, blank=True, related_name='room_user')
     Floor_Number = models.IntegerField()
     AVAILABLE = 'Available'
     OCCUPIED = 'Occupied'

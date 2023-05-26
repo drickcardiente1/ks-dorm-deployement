@@ -1,8 +1,5 @@
 {% extends 'admin/admin_base.html'%}
-
 {% block content %}
-
-
 <div class="container-sm    py-0   mb-5   "  >
     <span  id="my-div-id">
     <div class="row card border-0 rounded-0  p-3"    >
@@ -30,13 +27,6 @@
             </a>
         </div>
     </div>
-
-
-
-
-
-
-
     <div class="container p-0" id="notifications-container">
         {% for notif in notifications %}
         <a href="{% url 'payment_admin' id=notif.payment.id %}" style="text-decoration: none;  ">
@@ -90,56 +80,8 @@
         </a>
         {% endfor %}
     </div>
-
-<!--
-    <div class="row bg-white"><button id="see-more-btn" class="btn rounded-0">See More</button></div>
--->
-
-
-
-
-
-
-
-
 </span>
 </div>
-<!--
-<script>
-
-
-    const notificationsContainer = document.getElementById('notifications-container');
-    const seeMoreBtn = document.getElementById('see-more-btn');
-    const notifications = notificationsContainer.children;
-
-    // Show only the first 1 notifications by default
-    for (let i = 0; i < notifications.length; i++) {
-        if (i >= 1) {
-            notifications[i].style.display = 'none';
-        }
-    }
-
-    let numNotificationsToShow = 1;
-
-    // When the "See More" button is clicked, show the next 10 notifications
-    seeMoreBtn.addEventListener('click', () => {
-        let numNotificationsShown = 0;
-        for (let i = 0; i < notifications.length; i++) {
-            if (numNotificationsShown >= numNotificationsToShow) {
-                break;
-            }
-            if (notifications[i].style.display === 'none') {
-                notifications[i].style.display = 'block';
-                numNotificationsShown++;
-            }
-        }
-        if (numNotificationsShown < numNotificationsToShow) {
-            seeMoreBtn.style.display = 'none';
-        }
-    });
-</script>
--->
-
 <script>
 var div = $('#my-div-id');
 $.get(location.href, function(data) {

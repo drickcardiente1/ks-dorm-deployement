@@ -22,7 +22,7 @@ BASE_MARGIN = 5 * mm
 def index(request):
     try:
         rules_show = Rules.objects.all().order_by('id')
-        room = Room.objects.filter(Room_Status='Available').order_by('id')
+        room = Room.objects.all().order_by('id')
         available = Room.objects.filter(Room_Status='Available').count()
         occupied = Room.objects.filter(Room_Status='Occupied').count()
         unavailable = Room.objects.filter(Room_Status='Unavailable').count()
@@ -51,82 +51,168 @@ def index(request):
     return render(request, 'user/home.html', context)
 
 
-@login_required(login_url="login",)
-def complaint_create(request):
-    user = request.user
-    form = ComplaintForm(request.POST or None)
-
+def room_status_available(request):
     try:
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.user = request.user
-            instance.save()
-            return redirect('complaint_detail',  id=instance.id)
+        rules_show = Rules.objects.all().order_by('id')
+        room = Room.objects.filter(Room_Status='Available').order_by('id')
+        available = Room.objects.filter(Room_Status='Available').count()
+        occupied = Room.objects.filter(Room_Status='Occupied').count()
+        unavailable = Room.objects.filter(Room_Status='Unavailable').count()
+        room_count = Room.objects.all().count()
 
-        context = {'form': form, }
-        return render(request, 'user/complaint_create.html', context)
-    except Exception:
-        return render(request, 'user/error_page.html')
+        p = Paginator(room, 5)
+        page_num = request.GET.get('page', 1)
 
-
-@login_required(login_url="login",)
-def complaint(request):
-    try:
-        show_complaint = Complaint.objects.filter(user=request.user).filter(status='Pending').order_by('-date')
-        complete = Complaint.objects.filter(user=request.user, status='Complete').count()
-        pending = Complaint.objects.filter(user=request.user, status='Pending').count()
-        denied = Complaint.objects.filter(user=request.user, status='Denied').count()
-        p = Paginator(show_complaint, 5)
-        page_num = request.GET.get('page',1)
-        user = request.user
+        try:
+            page_num = int(page_num)
+        except ValueError:
+            page_num = 1
 
         try:
             page = p.page(page_num)
         except EmptyPage:
             page = p.page(1)
-        context = {'complete': complete, 'pending': pending, 'denied': denied, 'show_complaint': page,}
+
+        context = {'rules_show': rules_show, 'rooms': room, 'available': available, 'occupied': occupied,
+                   'unavailable': unavailable,
+                   'room_count': room_count, 'room': page}
+    except Exception as e:
+        print(e)
+        return render(request, 'user/error_page.html')
+
+    return render(request, 'user/room_status_available.html', context)
+
+
+def room_status_occupied(request):
+    try:
+        rules_show = Rules.objects.all().order_by('id')
+        room = Room.objects.filter(Room_Status='Occupied').order_by('id')
+        available = Room.objects.filter(Room_Status='Available').count()
+        occupied = Room.objects.filter(Room_Status='Occupied').count()
+        unavailable = Room.objects.filter(Room_Status='Unavailable').count()
+        room_count = Room.objects.all().count()
+
+        p = Paginator(room, 5)
+        page_num = request.GET.get('page', 1)
+
+        try:
+            page_num = int(page_num)
+        except ValueError:
+            page_num = 1
+
+        try:
+            page = p.page(page_num)
+        except EmptyPage:
+            page = p.page(1)
+
+        context = {'rules_show': rules_show, 'rooms': room, 'available': available, 'occupied': occupied,
+                   'unavailable': unavailable,
+                   'room_count': room_count, 'room': page}
+    except Exception as e:
+        print(e)
+        return render(request, 'user/error_page.html')
+
+    return render(request, 'user/room_status_occupied.html', context)
+
+
+def room_status_unavailable(request):
+    try:
+        rules_show = Rules.objects.all().order_by('id')
+        room = Room.objects.filter(Room_Status='Unavailable').order_by('id')
+        available = Room.objects.filter(Room_Status='Available').count()
+        occupied = Room.objects.filter(Room_Status='Occupied').count()
+        unavailable = Room.objects.filter(Room_Status='Unavailable').count()
+        room_count = Room.objects.all().count()
+
+        p = Paginator(room, 5)
+        page_num = request.GET.get('page', 1)
+
+        try:
+            page_num = int(page_num)
+        except ValueError:
+            page_num = 1
+
+        try:
+            page = p.page(page_num)
+        except EmptyPage:
+            page = p.page(1)
+
+        context = {'rules_show': rules_show, 'rooms': room, 'available': available, 'occupied': occupied,
+                   'unavailable': unavailable,
+                   'room_count': room_count, 'room': page}
+    except Exception as e:
+        print(e)
+        return render(request, 'user/error_page.html')
+
+    return render(request, 'user/room_status_unavailable.html', context)
+
+
+def complaint_create(request):
+    user = request.user
+
+    if not user.is_authenticated:
+        context = {'room': None}
+        return render(request, 'user/complaint_create.html', context)
+
+    try:
+        form = ComplaintForm(request.POST or None)
+        room = Room.objects.filter(user=user).first()
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.user = request.user
+            instance.room = room
+            instance.save()
+            return redirect('complaint_detail',  id=instance.id)
+
+        context = {'form': form, 'room': room }
+        return render(request, 'user/complaint_create.html', context)
+    except Exception:
+        return render(request, 'user/error_page.html')
+
+
+def complaint(request):
+    user = request.user
+    if not user.is_authenticated:
+        context = {'show_complaint': None}
+        return render(request, 'user/complaint.html', context)
+
+    try:
+        show_complaint = Complaint.objects.filter(user=request.user).filter(status='Pending').order_by('-date')
+        resolved = Complaint.objects.filter(user=request.user, status='Resolved').count()
+        pending = Complaint.objects.filter(user=request.user, status='Pending').count()
+        p = Paginator(show_complaint, 5)
+        page_num = request.GET.get('page',1)
+
+
+        try:
+            page = p.page(page_num)
+        except EmptyPage:
+            page = p.page(1)
+        context = {'resolved': resolved, 'pending': pending, 'show_complaint': page,}
 
         return render(request, 'user/complaint.html', context)
     except Complaint.DoesNotExist:
         return render(request, 'user/error_page.html')
 
 
-@login_required(login_url="login")
 def complaint_complete(request):
+    user = request.user
+    if not user.is_authenticated:
+        context = {'show_complaint': None}
+        return render(request, 'user/complaint.html', context)
+
     try:
-        show_complaint = Complaint.objects.filter(user=request.user).filter(status='Complete').order_by('-date')
-        complete = Complaint.objects.filter(user=request.user, status='Complete').count()
+        show_complaint = Complaint.objects.filter(user=request.user).filter(status='Resolved').order_by('-date')
+        resolved = Complaint.objects.filter(user=request.user, status='Resolved').count()
         pending = Complaint.objects.filter(user=request.user, status='Pending').count()
-        denied = Complaint.objects.filter(user=request.user, status='Denied').count()
         p = Paginator(show_complaint, 5)
         page_num = request.GET.get('page', 1)
-        user = request.user
         try:
             page = p.page(page_num)
         except EmptyPage:
             page = p.page(1)
-        context = {'complete': complete, 'pending': pending, 'denied': denied, 'show_complaint': page}
+        context = {'resolved': resolved, 'pending': pending, 'show_complaint': page}
         return render(request, 'user/complaint_complete.html', context)
-    except:
-        return render(request, 'user/error_page.html')
-
-
-@login_required(login_url="login")
-def complaint_denied(request):
-    try:
-        show_complaint = Complaint.objects.filter(user=request.user).filter(status='Denied').order_by('-date')
-        complete = Complaint.objects.filter(user=request.user, status='Complete').count()
-        pending = Complaint.objects.filter(user=request.user, status='Pending').count()
-        denied = Complaint.objects.filter(user=request.user, status='Denied').count()
-        p = Paginator(show_complaint, 5)
-        page_num = request.GET.get('page', 1)
-        user = request.user
-        try:
-            page = p.page(page_num)
-        except EmptyPage:
-            page = p.page(1)
-        context = {'complete': complete, 'pending': pending, 'denied': denied, 'show_complaint': page}
-        return render(request, 'user/complaint_denied.html', context)
     except:
         return render(request, 'user/error_page.html')
 
@@ -161,19 +247,28 @@ def rules(request):
         return render(request, 'user/error_page.html', context)
 
 
-@login_required(login_url="login",)
 def my_room(request):
     tenant = request.user
+
+    if not tenant.is_authenticated:
+        context = {'qr_code_gcash': None, 'payment': None}
+        return render(request, 'user/my_room.html', context)
 
     try:
         payment = Payment.objects.filter(tenant=tenant).last()
         qr_code_gcash = QRCODEPayment.objects.filter(QRCODE_Name='Gcash').first()
         room = Room.objects.get(user=tenant)
+
+        room_user = room.user.count()
+        room_capacity = room.Room_Type.Room_Capacity
+        user_count = room_capacity - room_user
+
         extend_exists = ExtendStay.objects.filter(
             Q(status='Pending') | Q(status='Processing'),
             room=room,
             tenant=tenant,
         ).exists()
+
         if extend_exists:
             # If an ExtendStay object already exists for this room and tenant, don't allow creation of another one
             form = None
@@ -190,6 +285,7 @@ def my_room(request):
             else:
                 form = ExtendStayForm()
         context = {
+            'user_count': user_count,
             'room': room,
             'tenant': tenant,
             'payment': payment,
@@ -203,19 +299,29 @@ def my_room(request):
     return render(request, 'user/my_room.html', context)
 
 
-@login_required(login_url="login", )
 def room_detail(request, id):
     try:
         room = Room.objects.get(id=id)
+
+        room_user = room.user.count()
+        room_capacity = room.Room_Type.Room_Capacity
+        user_count = room_capacity - room_user
+
+        room_full = room.user.count()
+
+
     except Room.DoesNotExist:
         return render(request, 'user/error_page.html')
 
-    context = {'room': room, }
+    context = {'room': room, 'user_count': user_count, 'room_full':room_full }
     return render(request, 'user/room_detail.html', context)
 
 
-@login_required(login_url="login",)
 def agreement(request):
+    user = request.user
+    if not user.is_authenticated:
+        context = {'contract': None}
+        return render(request, 'user/agreement.html', context)
     try:
         contract = Agreement.objects.filter(tenant=request.user).order_by('-id').exclude(tenant_sign='')
         contract_pending = Agreement.objects.filter(tenant_sign='').filter(tenant=request.user)
@@ -264,6 +370,7 @@ def tenant(request):
     user = request.user
     try:
         tenant_info = TenantInfo.objects.get(user=user)
+        payment = Payment.objects.filter(tenant=user).order_by('-id')
     except TenantInfo.DoesNotExist:
         return render(request, 'user/error_page.html')
 
@@ -278,7 +385,7 @@ def tenant(request):
         user_form = UserProfileForm(instance=user)
         tenant_form = TenantDetailForm(instance=tenant_info)
 
-    return render(request, 'user/tenant.html', {'user_form': user_form, 'tenant_form': tenant_form})
+    return render(request, 'user/tenant.html', {'user_form': user_form, 'tenant_form': tenant_form, 'payment':payment})
 
 
 @login_required(login_url="login",)

@@ -1,12 +1,10 @@
 {% extends 'admin/admin_base.html'%}
 {% load static %}
 {% block content %}
-
 <div class="container-sm mt-5"   >
     <div class="container-sm  bg-body p-0"   >
         <h2 class="card-title m-0 p-3 text-muted ">Create Room</h2>
         <div class="bg-secondary p-2"></div>
-
         <div class="container pt-4 pb-4 px-3">
             <form class="row g-3" id="submit_form" method="POST" enctype="multipart/form-data" class="form-control form-control-lg ">
                 {% csrf_token %}
@@ -20,44 +18,19 @@
                     <label   class="form-label">Floor Number</label>
                     {{form.Floor_Number}}
                 </div>
-
-
-
-
                 <div class="col-lg-4 ">
                     <div class="label">
                         <label   class="form-label">Room Type</label>
                     </div>
                     {{form.Room_Type}}
                 </div>
-
-
-
-
-
-
-
-
-
-
-
                 <div class="col-12 mt-4">
                     <button type="submit" class="btn btn-secondary  ">Create</button>
                 </div>
             </form>
-
         </div>
     </div>
-
-
-
-
-
-
-
-
     <div class="container-sm  bg-body p-0 mt-5"   >
-
         <div class="row justify-content-between p-4">
             <div class="col-auto g-1 align-items-center justify-content-center d-flex">
                 <h3 class=" m-0 text-secondary  ">Rooms Types</h3>
@@ -69,7 +42,6 @@
                 </a>
             </div>
         </div>
-
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 p-3 m-auto">
             {% for room_types in show_types %}
             <div class="col-sm-8  col-lg-3">
@@ -81,7 +53,6 @@
                         {% else %}
                         <img src="{{ room_types.Room_Image.url }}"   class="card-img-top" alt="..." style="width:100%">
                         {% endif %}
-
                         <div class="card-body">
                             <div class="row justify-content-between g-1">
                                 <div class="col-md-auto">
@@ -104,16 +75,12 @@
                                    Edit
                                 </a>
                             </span>
-
                         </div>
                     </div>
-
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
 </div>
-
-
 {% endblock %}

@@ -11,35 +11,26 @@
 .login {
   min-height: 100vh;
 }
-
 .bg-image {
   background-image: url(/images/signatures/sample.png );
   opacity:100%;
   background-size: cover;
   background-position: center;
-}
 
 .login-heading {
   font-weight: 300;
 }
-
 .btn-login {
   font-size: 0.9rem;
   letter-spacing: 0.05rem;
   padding: 0.75rem 1rem;
 }
-
-
-
-
 .text-center{
   margin:0;
   display:flex;
   align-items:center;
   justify-content: center;
-
 }
-
 h1{
   margin:0;
   padding:0;
@@ -61,31 +52,20 @@ h1:hover:before{
   width:100%;
 }
 </style>
-
 </head>
-
 <body  >
-
-
-
 <div class="container-fluid ps-md-0">
     <div class="row g-0">
-
-
         <div class="d-none d-md-flex align-items-center col-md-4 col-lg-6   " style="background:#2B2B2B;">
             <div class="container bg-image">
-                <img src="https://res.cloudinary.com/devqjzqxb/raw/upload/v1/images/Room_image/ks_logo_j3dp1c.JPG?fbclid=IwAR2EZX-kn43E_NpihJbJu62JiTihJ3gGwzbbbs-zI0gvH7T2lFVa9_125SQ" class="card-img-top img-fluid    border-0 " alt="...">
+                <img src=" {% static 'images/logo/ks_logo.JPG' %}" class="card-img-top img-fluid    border-0 " alt="...">
             </div>
         </div>
-
-
-
         <div class="col-md-8 col-lg-6">
             <div class="login d-flex align-items-center py-5">
                 <div class="container-sm ">
                     <div class="col-md-9 col-lg-8 mx-auto">
                         <div class="row">
-
                             <div class="d-grid mb-5" >
                                 <div class="text-center mb-5 ">
                                     <h1 style="font-size:60px;">
@@ -93,10 +73,7 @@ h1:hover:before{
                                     </h1>
                                 </div>
                             </div>
-
                             <h3 class="login-heading mb-4">Welcome!</h3>
-
-                            <!-- Sign In Form -->
                             <form  id="submit_form" method="POST" enctype="multipart/form-data"  >
                                 {% csrf_token %}
                                 <div class="form-floating mb-3">
@@ -107,17 +84,7 @@ h1:hover:before{
                                     <input type="password" class="form-control" name="password" >
                                     <label  >Password</label>
                                 </div>
-                                <!--
-                                <div class="form-check mb-3">
-                                  <input class="form-check-input" type="checkbox" value="" id="rememberPasswordCheck">
-                                  <label class="form-check-label" for="rememberPasswordCheck">
-                                    Remember password
-                                  </label>
-                                </div>
-                                -->
                                 <br>
-
-
                                 {% if messages %}
                                 {% for message in messages %}
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -125,17 +92,9 @@ h1:hover:before{
                                 </div>
                                 {% endfor %}
                                 {% endif %}
-
-
                                 <div class="d-grid">
-                                    <button class="btn btn-lg btn-secondary btn-login text-uppercase fw-bold mb-2" type="submit">Sign in</button>
-                                    <!--
-                                    <div class="text-center">
-                                      <a class="small" href="#">Forgot password?</a>
-                                    </div>
-                                    -->
+                                    <button class="btn   btn-secondary btn-login     mb-2" type="submit">Login</button>
                                 </div>
-
                             </form>
                         </div>
                     </div>
@@ -144,13 +103,6 @@ h1:hover:before{
         </div>
     </div>
 </div>
-
-
-
-
-
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 </body>
-
 </html>

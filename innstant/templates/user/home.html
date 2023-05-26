@@ -1,7 +1,59 @@
 {% extends 'user/base.html'%}
-
 {% block content %}
+
+{% if user.is_authenticated %}
+
+{% else %}
+<div class="modal-container p-0 bg-transparent">
+<div class="modal modal-dialog    modal-dialog-centered modal-dialog-scrollable " id="exampleModal" tabindex="-1"
+     aria-labelledby="exampleModalLabel" aria-hidden="true"  >
+  <div class="modal-dialog  modal-sm-12">
+    <div class="modal-content">
+      <div class="modal-header border-0 d-grid gap-2 d-md-flex justify-content-md-end  ">
+        <button type="button" class="btn btn-end fs-5 " data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x-circle"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="d-grid">
+            <div class="text-center mb-5 ">
+              <h1 class="display-2" style="font-size:40px;">
+                <em>K’s Dormitory</em>
+              </h1>
+            </div>
+          </div>
+          <h5 class="login-heading mb-4">Welcome!</h5>
+          <form id="submit_form" method="POST" action="{% url 'login_modal' %}">
+            {% csrf_token %}
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" name="username">
+              <label>Username</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="password" class="form-control" name="password">
+              <label>Password</label>
+            </div>
+            <br>
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <em>{{ message }}</em>
+            </div>
+            {% endfor %}
+            {% endif %}
+            <div class="d-grid gap-2 col-6 mx-auto mb-5">
+              <button class="btn   btn-dark-blue   p-2 mb-2" type="submit">Login</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endif %}
+
 <span  id="my-div-id">
+{% include 'user/room_bar.html' %}
 {% include 'user/rooms.html' %}
 <nav class="container " aria-label="Page navigation example">
     <ul class="pagination justify-content-end mt-3">
@@ -18,7 +70,6 @@
             </a>
         </li>
         {% endif %}
-
         {% for number in room.paginator.page_range %}
         <li class="page-item"><a class="page-link" href="{% url 'home' %}?page={{number}}">{{number}}</a></li>
         {% endfor %}
@@ -36,28 +87,25 @@
             </a>
         </li>
         {% endif %}
-
     </ul>
 </nav>
-
 <div class="container-sm card mt-5 p-0 mb-5 border border  rounded-0" >
     <div class="container p-0">
         <div class="fs-3 p-4 ps-4 text-center text-muted "  >
             <h2 class="d-inline card-title m-0  ms-4 ">Payment Options</h2>
         </div>
         <div class="row p-4 text-muted" >
-            <div class="col">
+            <div class="col" style="color:#3498DB;">
                 <div class="text-center">
                     <h1 class="d-inline">
                         <i class="fa-brands fa-paypal"></i>
                     </h1>
-                     <p class="" style="">Paypal</p>
+                    <p class="fw-bold"  ><span style="color:#0444AC;"> Pay</span><span>pal</span> </p>
                 </div>
-
             </div>
-            <div class="col">
+            <div class="col" style="color:#0444AC;">
 
-                <div class="text-center">
+                <div class="text-center" >
                     <h1 class="d-inline">
                         <svg xmlns="http://www.w3.org/2000/svg"  width="45" height="45" viewBox="0 0 192 192" fill="none">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"
@@ -65,21 +113,17 @@
                             <path fill="currentColor" d="M145.315 66.564a6 6 0 0 0-10.815 5.2l10.815-5.2ZM134.5 120.235a6 6 0 0 0 10.815 5.201l-10.815-5.201Zm-16.26-68.552a6 6 0 1 0 7.344-9.49l-7.344 9.49Zm7.344 98.124a6 6 0 0 0-7.344-9.49l7.344 9.49ZM84 152c-30.928 0-56-25.072-56-56H16c0 37.555 30.445 68 68 68v-12ZM28 96c0-30.928 25.072-56 56-56V28c-37.555 0-68 30.445-68 68h12Zm106.5-24.235C138.023 79.09 140 87.306 140 96h12c0-10.532-2.399-20.522-6.685-29.436l-10.815 5.2ZM140 96c0 8.694-1.977 16.909-5.5 24.235l10.815 5.201C149.601 116.522 152 106.532 152 96h-12ZM84 40c12.903 0 24.772 4.357 34.24 11.683l7.344-9.49A67.733 67.733 0 0 0 84 28v12Zm34.24 100.317C108.772 147.643 96.903 152 84 152v12a67.733 67.733 0 0 0 41.584-14.193l-7.344-9.49Z"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" d="M161.549 58.776C166.965 70.04 170 82.666 170 96c0 13.334-3.035 25.96-8.451 37.223"/>
                         </svg>
                     </h1>
-                    <p class="" style="">Gcash</p>
+                    <p class="fw-bold" >Gcash</p>
                 </div>
             </div>
-
-            <div class="col">
-
+            <div class="col" style="color:#239B56;">
                 <div class="text-center">
                     <h1 class="d-inline">
                         <i class="fa-solid fa-money-bill"></i>
-
                     </h1>
-                    <p class="" style="">In Person</p>
+                    <p class="fw-bold"  >In Person</p>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -106,13 +150,8 @@
         </ol>
     </div>
 </div>
-
-
-
-
 {% include 'admin/footer_admin.html' %}
 </span>
-
 <script>
 var div = $('#my-div-id');
 $.get(location.href, function(data) {
@@ -123,6 +162,5 @@ setInterval(function() {
     var div = $('#my-div-id');
     div.load(location.href + ' #my-div-id');
 }, 10000);
-
 </script>
 {% endblock %}

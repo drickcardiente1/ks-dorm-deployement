@@ -1,0 +1,156 @@
+{% extends 'user/base.html'%}
+{% load static %}
+{% block content %}
+{% include 'user/room_bar.html' %}
+<div class="container mt-5   p-0 pb-5" >
+    <div class="container ">
+        <div class="container" >
+            <div class="row row-cols-1 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 g-4">
+                {% for rooms in room %}
+
+                <a style="text-decoration: none" href="{% url  'room_detail' id=rooms.id %}" class="text-dark" id="room_hover">
+                    <div class="col">
+                        <div class="card">
+                            {% if not rooms.Room_Type.Room_Image %}
+                            <img src="{% static 'default/no_image.jpg' %}" class="card-img-top"
+                                 alt="Hollywood Sign on The Hill" />
+                            {% else %}
+                            <img src="{{rooms.Room_Type.Room_Image.url }}"   class="card-img-top" alt="..." style="width:100%">
+                            {% endif %}
+                            <div class="card-body">
+                                <div class="row justify-content-between g-3">
+                                    <div class="col-md-12">
+                                        <h5> Room {{ rooms.id }}
+
+                                            {% if rooms.Room_Status == 'Available' %}
+                                            {{ room.id }}
+                                            <span class="badge bg-success float-end">Available</span>
+                                            {% elif rooms.Room_Status == 'Occupied' %}
+                                            {{ room.id }}
+                                            <span class="badge bg-primary float-end">Occupied</span>
+                                            {% elif rooms.Room_Status == 'Unavailable' %}
+                                            {{ room.id }}
+                                            <span class="badge bg-danger float-end">Unavailable</span>
+                                            {% endif %}
+                                        </h5>
+                                        <p class="card-title">Floor {{  rooms.Floor_Number  }}</p>
+                                    </div>
+                                </div>
+                                <strong> ₱ {{ rooms.Room_Type.Room_Price|floatformat:2 }} / <small>month</small></strong>
+                                <small class="card-text  d-block">Type:  {{ rooms.Room_Type }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<nav class="container " aria-label="Page navigation example">
+    <ul class="pagination justify-content-end mt-3">
+        {% if room.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="{% url 'home' %}?page={{room.previous_page_number}}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
+        {% for number in room.paginator.page_range %}
+        <li class="page-item"><a class="page-link" href="{% url 'home' %}?page={{number}}">{{number}}</a></li>
+        {% endfor %}
+
+        {% if room.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{% url 'home' %}?page={{room.next_page_number}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
+
+<div class="container-sm card mt-5 p-0 mb-5 border border  rounded-0" >
+    <div class="container p-0">
+        <div class="fs-3 p-4 ps-4 text-center text-muted "  >
+            <h2 class="d-inline card-title m-0  ms-4 ">Payment Options</h2>
+        </div>
+        <div class="row p-4 text-muted" >
+            <div class="col" style="color:#3498DB;">
+                <div class="text-center">
+                    <h1 class="d-inline">
+                        <i class="fa-brands fa-paypal"></i>
+                    </h1>
+                    <p class="fw-bold"  ><span style="color:#0444AC;"> Pay</span><span>pal</span> </p>
+                </div>
+            </div>
+            <div class="col" style="color:#0444AC;">
+
+                <div class="text-center" >
+                    <h1 class="d-inline">
+                        <svg xmlns="http://www.w3.org/2000/svg"  width="45" height="45" viewBox="0 0 192 192" fill="none">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"
+                                  d="M84 96h36c0 19.882-16.118 36-36 36s-36-16.118-36-36 16.118-36 36-36c9.941 0 18.941 4.03 25.456 10.544"/>
+                            <path fill="currentColor" d="M145.315 66.564a6 6 0 0 0-10.815 5.2l10.815-5.2ZM134.5 120.235a6 6 0 0 0 10.815 5.201l-10.815-5.201Zm-16.26-68.552a6 6 0 1 0 7.344-9.49l-7.344 9.49Zm7.344 98.124a6 6 0 0 0-7.344-9.49l7.344 9.49ZM84 152c-30.928 0-56-25.072-56-56H16c0 37.555 30.445 68 68 68v-12ZM28 96c0-30.928 25.072-56 56-56V28c-37.555 0-68 30.445-68 68h12Zm106.5-24.235C138.023 79.09 140 87.306 140 96h12c0-10.532-2.399-20.522-6.685-29.436l-10.815 5.2ZM140 96c0 8.694-1.977 16.909-5.5 24.235l10.815 5.201C149.601 116.522 152 106.532 152 96h-12ZM84 40c12.903 0 24.772 4.357 34.24 11.683l7.344-9.49A67.733 67.733 0 0 0 84 28v12Zm34.24 100.317C108.772 147.643 96.903 152 84 152v12a67.733 67.733 0 0 0 41.584-14.193l-7.344-9.49Z"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" d="M161.549 58.776C166.965 70.04 170 82.666 170 96c0 13.334-3.035 25.96-8.451 37.223"/>
+                        </svg>
+                    </h1>
+                    <p class="fw-bold" >Gcash</p>
+                </div>
+            </div>
+            <div class="col" style="color:#239B56;">
+                <div class="text-center">
+                    <h1 class="d-inline">
+                        <i class="fa-solid fa-money-bill"></i>
+                    </h1>
+                    <p class="fw-bold"  >In Person</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-sm card mt-5 p-0 mb-5 border border  rounded-0" >
+    <div class="container p-0">
+        <div class="fs-3 p-4 ps-4 text-muted "  >
+            <h2 class="d-inline card-title m-0  ms-4 "><i class="fa-solid fa-list-ol"></i> Rules</h2>
+        </div>
+        <ol class="m-4" >
+            {% for rule in rules_show %}
+            <div class=" " style="width: auto;"  >
+                <p class="text-dark m-0 " >
+                    <small>
+                        <li class="float-start me-1" ></li>
+                        <strong>
+                            <small class="d-inline">{{ rule.description }}</small>
+                        </strong>
+                    </small>
+                </p>
+            </div>
+            <hr>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
+{% include 'admin/footer_admin.html' %}
+<style>
+#room_hover:hover {
+    transform: scale(1.02);
+    transition: all 300ms ease-out;
+}
+
+</style>
+{% endblock %}

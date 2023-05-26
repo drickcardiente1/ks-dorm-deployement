@@ -8,22 +8,18 @@
         <div class="container-fluid shadow-sm p-0  m-1  bg-body rounded-0 border border-danger" style="width: 7rem; height:9rem;">
             <a href="{% url 'agreement_create_admin' %}" style="text-decoration: none" class=" ">
                 <div class="card text-center vstack w-100 h-100 border-0" >
-
                     <span class=" d-block   text-muted  fw-light fw-semibold  m-auto " style=" font-size:10px; ">
                      <i class="bi bi-file-earmark" style="font-size:40px; color:#CB4335;"></i>
                     </span>
                     <span class="d-block p-2 text-bg-danger">Create</span>
-
                 </div>
             </a>
         </div>
-
         <div class="row container m-0 p-0 ">
             {% if contract_pending %}
             <p class="mt-3 m-0 mb-1" >Latest</p>
             {% for contract_pending in contract_pending %}
             <div class="container-fluid shadow-sm  m-1  bg-body rounded-0  p-0 position-relative border border-danger"  style="width: 7rem; height:9rem;" id="contract_pending">
-
                 <a href="{% url 'agreement_detail_admin' id=contract_pending.id %}"  class="h-100" style="text-decoration: none;  height:9rem;" >
                     <div class="text-truncate  text-muted  fw-light p-2  pb-1 ps-2 fw-semibold h-auto mx-1" style=" font-size:10px; ">
                         {{contract_pending.tenant.first_name}} {{contract_pending.tenant.last_name}}
@@ -51,11 +47,6 @@
             </div>
             {% endfor %}
             {% endif  %}
-
-
-
-
-
             {% if contract_latest %}
             {% for contract_latest in contract_latest %}
             <div class="container-fluid shadow-sm p-1  m-1  bg-body rounded-0 position-relative border border-secondary "  style="width: 7rem; height:9rem;" id="contract_latest">
@@ -85,17 +76,12 @@
             {% endfor %}
             {% endif  %}
         </div>
-
-
-
-
     </div>
 </div>
 
 
 <div class="container   mt-3 "   >
     <div class="row container m-0 p-0 ">
-
         <nav aria-label="Page navigation example ">
             <ul class="pagination justify-content-end ">
                 {% if contract.has_previous %}
@@ -158,14 +144,7 @@
             </a>
         </div>
         {% endfor %}
-
-
-
     </div>
-
-
-
-
 </div>
 </span>
 

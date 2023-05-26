@@ -1,15 +1,11 @@
 {% load custom_filters %}
 {% block content %}
-
 <div class="container "  >
-
     <div id="header_content"  >
         <center>
             <h1 id="contract">AGREEMENT</h1>
         </center>
     </div>
-
-
     <div id="footer_label0"  >
         <center>
             <div id="col_right_empty0">
@@ -19,7 +15,6 @@
             </div>
         </center>
     </div>
-
     <div id="footer_label1"  >
             <div id="col_left_person1">
                 <h6 style="font-size:15px;">Tenant: <span id="person1">{{contract.tenant.first_name}} {{contract.tenant.last_name}}</span></h6>
@@ -34,8 +29,6 @@
             <div id="col_right_empty2" >
             </div>
     </div>
-
-
     <div id="body">
         <h1>Rules must follow:</h1>
         <ol>
@@ -46,8 +39,6 @@
             {% endfor %}
         </ol>
     </div>
-
-
     <div id="footer_img"  >
         <center>
             <div id="col_left_img">
@@ -66,8 +57,6 @@
             </div>
         </center>
     </div>
-
-
     <div id="footer_label"  >
         <center>
             <div id="col_left">
@@ -78,7 +67,6 @@
                 <p class="m-0 p-0" id="title1">Tenant</p>
             </div>
             <div id="col_right" >
-
                 <hr   id="hr_r">
                 <p id="landlord"  class=" m-0 p-0" style="text-transform: uppercase;">
                     {{contract.landlord}}
@@ -87,10 +75,8 @@
             </div>
         </center>
     </div>
-
 </div>
 {% endblock %}
-
 
 <style>
     @page {
@@ -158,9 +144,6 @@
             }
 
     }
-
-
-
 
     /* image */
 

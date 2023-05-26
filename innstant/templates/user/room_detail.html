@@ -2,74 +2,97 @@
 {% load static %}
 {% block content %}
 <div class="container-sm  py-5    mb-5 bg-body rounded-0" >
-
     <div class="card mb-3 border-0  w-100 p-4" >
-
         <h2 class="d-inline card-title m-0 text-muted ">
             {% if room.Room_Status == 'Available' %}
             Room {{ room.id }}
-            <span class="badge bg-success float-end">Available</span>
+            <span class="badge bg-success float-end">Available {{user_count}}/{{room.Room_Type.Room_Capacity}}</span>
             {% elif room.Room_Status == 'Occupied' %}
             Room {{ room.id }}
-            <span class="badge bg-primary float-end">Occupied</span>
+            <span class="badge bg-primary float-end">Occupied {{room_full}}/{{room.Room_Type.Room_Capacity}}</span>
             {% elif room.Room_Status == 'Unavailable' %}
             Room {{ room.id }}
-            <span class="badge bg-danger float-end">Unavailable</span>
+            <span class="badge bg-danger float-end">Unavailable </span>
             {% endif %}
         </h2>
         <hr>
-
         <div class="row ">
             <div class="col-lg-6 ">
+
+                {% if room.Room_Status == 'Available' %}
                 {% if not room.Room_Type.Room_Image  %}
                 <img src=" {% static 'default/no_image.jpg' %}" class="card-img-top img-fluid img-thumbnail  border-0 " alt="...">
                 {% else %}
                 <img src=" {{ room.Room_Type.Room_Image.url }}" class="img-thumbnail  border-0 " alt="...">
                 {% endif %}
+                {% elif room.Room_Status == 'Occupied' %}
+                {% if not room.Room_Type.Room_Image  %}
+                <img src=" {% static 'default/no_image.jpg' %}" class="card-img-top img-fluid img-thumbnail  border-0 " alt="...">
+                {% else %}
+                <img src=" {{ room.Room_Type.Room_Image.url }}" class="img-thumbnail  border-0 " alt="...">
+                {% endif %}
+                {% elif room.Room_Status == 'Unavailable' %}
+
+                {% if not room.Room_Type.Room_Image  %}
+                <img src=" {% static 'default/no_image.jpg' %}" class="card-img-top img-fluid img-thumbnail  border-0 " alt="...">
+                {% else %}
+                <div class="card border-0">
+                    <img src=" {{ room.Room_Type.Room_Image.url }}" class="img-thumbnail  border-0 " alt="...">
+                    <div class="card-img-overlay bg-light bg-opacity-50 d-flex align-items-center  justify-content-center ">
+                        <center>
+                            <h1 class=" "> Unavailable </h1>
+                        </center>
+                    </div>
+                </div>
+                {% endif %}
+                {% endif %}
+
             </div>
-            <div class="col-md-6">
-
-
-
-
-
+            <div class="col-lg-6">
                 <div class="card-body text-start">
-                    <div class="row ">
-                        <h3><strong> ₱ {{ room.Room_Type.Room_Price|floatformat:2 }} / <small>month</small></strong></h3>
-                    </div>
-                    <div class="row mt-2 mb-4">
-                        <h5 class="text-muted">Occupant: <span class="text-dark"> {{ room.user }}</span></h5>
 
-                    </div>
+                    <div class="  bg-opacity-10 p-3">
+                        <div class="row ">
+                            <h3><strong> ₱ {{ room.Room_Type.Room_Price|floatformat:2 }} / <small>month</small></strong></h3>
+                        </div>
+                        <div class="row mt-2 mb-4">
+                            <div class="col-auto">
+                                <h5 class="text-muted">Occupant:
+                                    {% if user.is_authenticated %}
+                                    {% for user in room.user.all %}
+                                    <span class="badge bg-opacity-10"  style="color:#0E6655; background-color: #D0ECE7;  ">{{ user.get_full_name }}</span>
+                                    {% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                    {% else %}
+                                    <span class="bg-warning bg-opacity-25 p-2 rounded   "
+                                          style="font-size:13px; color:#664D03 ; "><i class="bi bi-eye-slash-fill mx-1"></i> Hidden</span>
+                                    {% endif %}
+                                </h5>
 
-
-
-
-
-                    <div class="bg-secondary bg-opacity-10 p-3">
+                            </div>
+                        </div>
                         <div class="row mb-1">
                             <label  class="col-6 col-form-label">Room</label>
                             <div class="col-6 ">
-                                <input type="text" class="form-control"  value="{{ room.id }} " readonly>
+                                <input type="text" class="form-control border-0"  value="{{ room.id }} " readonly>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <label  class="col-6 col-form-label">Floor</label>
                             <div class="col-6">
-                                <input type="text" class="form-control" value="{{ room.Floor_Number }} " readonly >
+                                <input type="text" class="form-control border-0" value="{{ room.Floor_Number }} " readonly >
                             </div>
                         </div>
-
                         <div class="row mb-1">
                             <label  class="col-6 col-form-label">Type</label>
                             <div class="col-6">
-                                <input type="text" class="form-control"  value="{{ room.Room_Type }}" readonly>
+                                <input type="text" class="form-control border-0"  value="{{ room.Room_Type }}" readonly>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <label  class="col-6 col-form-label">Capacity</label>
                             <div class="col-6">
-                                <input type="text" class="form-control" value="{{ room.Room_Type.Room_Capacity }} " readonly >
+                                <input type="text" class="form-control border-0" value="{{ room.Room_Type.Room_Capacity }} " readonly >
                             </div>
                         </div>
                     </div>
@@ -83,6 +106,5 @@
             </div>
         </div>
     </div>
-
 </div>
 {% endblock %}

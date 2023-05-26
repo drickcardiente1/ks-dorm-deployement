@@ -2,20 +2,16 @@
 {% block content %}
 <div class="container-sm  "  >
     <div class="row  bg-body py-5 pb-5 border">
-
         <div class="col-md-4  mx-auto">
             <form   method="POST" id="submit_form"   >
                 {% csrf_token %}
                 <div class="form-floating ">
                     <h1 class="text-muted d-inline ms-1"><i class="fa-solid fa-user-gear"></i> User</h1>
-
                     <a class="btn  mb-0 mt-auto float-end p-0 px-3 position-absolute bottom-0 end-0" role="button" id="edit_tenant">
                         <i class="fa-solid fa-pen-nib"></i>
                         edit
                     </a>
-
                 </div>
-
                 <div class="form-floating m-1 ">
                     <input type="text" for="floatingPlaintextInput"class="form-control  " id="floating1"
                            value="{{user.username}}" name="username" maxlength="10" readonly required>
@@ -26,7 +22,6 @@
                            value="{{user.first_name}}" name="first_name" maxlength="15" readonly required>
                     <label for="floating2"  >First Name</label>
                 </div>
-
                 <div class="form-floating m-1 ">
                     <input type="text" for="floatingPlaintextInput"class="form-control " id="floating3"
                            value="{{user.last_name}}" name="last_name" maxlength="15" readonly required>
@@ -51,25 +46,19 @@
                 <button class="form-floating  m-1 mt-4 btn btn-secondary px-5 " form="submit_form" type="submit"
                         style="display:none;" id="btn_save" >Save
                 </button>
-
             </form>
         </div>
-
-
         <div class="col-md-4 mx-auto ">
             <div class="row mt-3">
                 <form   method="POST" id="submit_form2"  action="{% url 'update_guardian_admin'%}" >
                     {% csrf_token %}
                     <div class="form-floating ">
                         <h4 class="text-muted ms-1">Guardian</h4>
-
                         <a class="btn  mb-0 mt-auto float-end p-0 px-3 position-absolute bottom-0 end-0" role="button" id="edit_guardian">
                             <i class="fa-solid fa-pen-nib"></i>
                             edit
                         </a>
-
                     </div>
-
                     <div class="form-floating m-1 ">
                         <input type="text" for="floatingPlaintextInput"class="form-control " id="floating13"
                                value="{{user.tenantinfo.guardian_name}}" name="guardian_name" readonly required>
@@ -85,9 +74,6 @@
                     </button>
                 </form>
             </div>
-
-
-
             <br>
             <div class="row">
                 <form method="POST" id="submit_form3" action="{% url 'update_password_admin'%}">
@@ -131,39 +117,22 @@
                                value="" name="new_password2" required>
                         <label for="floating14">Confirm New Password</label>
                     </div>
-
                     <br>
-
                     <div class="form-floating m-1" style="display:none;" id="new_pass">
                         <input type="password" for="floatingPlaintextInput" class="form-control" id="floating17"
                                value="" name="old_password" required>
                         <label for="floating14">Enter Old Password to Confirm</label>
                     </div>
-
                     <button class="form-floating m-1 mt-4 btn btn-secondary px-5" form="submit_form3" type="submit"
                             style="display:none;" id="save_pass">Save
                     </button>
                 </form>
-
             </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
         <div class="col-md-3   mx-auto mt-3">
             <div class="form-floating ">
                 <h4 class="text-muted ms-1">Info</h4>
             </div>
-
-
             <div class="form-floating m-1  ">
            <span for="floatingPlaintextInput" id="floating8" class="form-control ">
                       {% if user.is_active == True %}
@@ -174,10 +143,6 @@
                            0 0 0-.01-1.05z"/>
                         </svg>
                         <small class="ms-1 text-success">Active</small>
-
-
-
-
                       {% elif user.is_active == False %}
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#566573 "
                              class="bi bi-x-circle-fill" viewBox="0 0 16 16">
@@ -186,16 +151,10 @@
                             0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
                         </svg>
                         <small class="ms-1 text-muted">Inactive</small>
-
-
-
-
                       {% endif %}
            </span>
                 <label for="floating8"  >Status</label>
             </div>
-
-
             <div class="form-floating m-1 ">
            <span for="floatingPlaintextInput" id="floating10" class="form-control ">
                       {% if user.is_superuser == True %}
@@ -229,17 +188,9 @@
                        value="{{user.date_joined}}" readonly>
                 <label for="floating12"  >Date joined	</label>
             </div>
-
-
         </div>
-
-
     </div>
 </div>
-
-
-
-
 
 <script type="text/javascript">
 document.getElementById('edit_tenant').onclick = function() {
@@ -249,15 +200,12 @@ document.getElementById('edit_tenant').onclick = function() {
     document.getElementById('floating4').removeAttribute('readonly');
     document.getElementById('floating5').removeAttribute('readonly');
     document.getElementById('floating6').removeAttribute('readonly');
-
-
     document.getElementById('btn_save').style.display = "block";
 };
 
 document.getElementById('edit_guardian').onclick = function() {
     document.getElementById('floating13').removeAttribute('readonly');
     document.getElementById('floating14').removeAttribute('readonly');
-
     document.getElementById('btn_save2').style.display = "block";
 };
 
@@ -267,6 +215,5 @@ document.getElementById('edit_password').onclick = function() {
     document.getElementById('new_pass').style.display = "block";
     document.getElementById('save_pass').style.display = "block";
 };
-
 </script>
 {% endblock %}

@@ -2,21 +2,16 @@
 {% block content %}
 <div class="container-sm "  >
     <div class="row  bg-body py-5    border  pb-5">
-
-
         <div class="col-md-4  mx-auto">
             <form   method="POST" id="submit_form"   >
                 {% csrf_token %}
                 <div class="form-floating ">
                     <h1 class="text-muted d-inline ms-1"><i class="fa-solid fa-user"></i> Tenant</h1>
-
                     <a class="btn  mb-0 mt-auto float-end p-0 px-3 position-absolute bottom-0 end-0" role="button" id="edit_tenant">
                         <i class="fa-solid fa-pen-nib"></i>
                         edit
                     </a>
-
                 </div>
-
                 <div class="form-floating m-1 ">
                     <input type="text" for="floatingPlaintextInput"class="form-control  " id="floating1"
                            value="{{user.username}}" name="username" maxlength="10" readonly required>
@@ -28,7 +23,6 @@
                            value="{{user.first_name}}" name="first_name" maxlength="15" readonly required>
                     <label for="floating2"  >First Name</label>
                 </div>
-
                 <div class="form-floating m-1 ">
                     <input type="text" for="floatingPlaintextInput"class="form-control " id="floating3"
                            value="{{user.last_name}}" name="last_name" maxlength="15" readonly required>
@@ -49,29 +43,22 @@
                            value="{{user.tenantinfo.tenant_age}}" name="tenant_age" readonly required>
                     <label for="floating6"  >Age</label>
                 </div>
-
                 <button class="form-floating  m-1 mt-4 btn btn-secondary px-5 " form="submit_form" type="submit"
                         style="display:none;" id="btn_save" >Save
                 </button>
-
             </form>
         </div>
-
         <div class="col-md-4 mx-auto ">
-
             <div class="row mt-3">
                 <form   method="POST" id="submit_form2"  action="{% url 'update_guardian'%}" >
                     {% csrf_token %}
                     <div class="form-floating ">
                         <h4 class="text-muted ms-1">Guardian</h4>
-
                         <a class="btn  mb-0 mt-auto float-end p-0 px-3 position-absolute bottom-0 end-0" role="button" id="edit_guardian">
                             <i class="fa-solid fa-pen-nib"></i>
                             edit
                         </a>
-
                     </div>
-
                     <div class="form-floating m-1 ">
                         <input type="text" for="floatingPlaintextInput"class="form-control " id="floating13"
                                value="{{user.tenantinfo.guardian_name}}" name="guardian_name" readonly required>
@@ -87,23 +74,10 @@
                     </button>
                 </form>
             </div>
-
-
-
-
-
-
-
-
-
             <br>
             <div class="row">
                 <form method="POST" id="submit_form3" action="{% url 'update_password'%}">
                     {% csrf_token %}
-
-
-
-
                     <div class="form-floating">
                         <h4 class="text-muted ms-1">Password</h4>
                         <a class="btn  mb-0 mt-auto float-end p-0 px-3 position-absolute bottom-0 end-0" role="button" id="edit_password">
@@ -118,24 +92,17 @@
                         {% endfor %}
                     </div>
                     {% endif %}
-
                     {% if form.errors %}
                     <div class="alert alert-danger">
                         <strong>Error:</strong>
                         <ul class="">
-
                             {% for field, error_msgs in form.errors.items %}
                             <li class="">
                                 {% for error_msg in error_msgs %}
                                 {{ error_msg }}
                                 {% endfor %}
                             </li>
-
                             {% endfor %}
-
-
-
-
                         </ul>
                     </div>
                     {% endif %}
@@ -144,42 +111,27 @@
                                value="" name="new_password1" required>
                         <label for="floating13">Enter New Password</label>
                     </div>
-
                     <div class="form-floating m-1" style="display:none;" id="pass2">
                         <input type="password" for="floatingPlaintextInput" class="form-control" id="floating16"
                                value="" name="new_password2" required>
                         <label for="floating14">Confirm New Password</label>
                     </div>
-
                     <br>
-
                     <div class="form-floating m-1" style="display:none;" id="new_pass">
                         <input type="password" for="floatingPlaintextInput" class="form-control" id="floating17"
                                value="" name="old_password" required>
                         <label for="floating14">Enter Old Password to Confirm</label>
                     </div>
-
                     <button class="form-floating m-1 mt-4 btn btn-secondary px-5" form="submit_form3" type="submit"
                             style="display:none;" id="save_pass">Save
                     </button>
                 </form>
-
             </div>
         </div>
-
-
-
-
-
-
-
-
         <div class="col-md-3   mx-auto mt-3">
             <div class="form-floating ">
                 <h4 class="text-muted ms-1">Info</h4>
             </div>
-
-
             <div class="form-floating m-1  ">
            <span for="floatingPlaintextInput" id="floating8" class="form-control ">
                       {% if user.is_active == True %}
@@ -190,10 +142,6 @@
                            0 0 0-.01-1.05z"/>
                         </svg>
                         <small class="ms-1 text-success">Active</small>
-
-
-
-
                       {% elif user.is_active == False %}
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#566573 "
                              class="bi bi-x-circle-fill" viewBox="0 0 16 16">
@@ -202,15 +150,10 @@
                             0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
                         </svg>
                         <small class="ms-1 text-muted">Inactive</small>
-
-
-
-
                       {% endif %}
            </span>
                 <label for="floating8"  >Status</label>
             </div>
-
             <div class="form-floating m-1 ">
            <span for="floatingPlaintextInput" id="floating10" class="form-control ">
                       {% if user.is_superuser == True %}
@@ -244,20 +187,52 @@
                        value="{{user.date_joined}}" readonly>
                 <label for="floating12"  >Date joined	</label>
             </div>
-
-
         </div>
-
-
-
-
-
     </div>
 </div>
 
 
 
+<div class="container-sm mt-5 bg-white"  id="notifications-container" >
+    <div class="row card border-0 rounded-0 mt-4 p-3"    >
+        <h2 class=" m-0 text-secondary py-2"><i class="fa-solid fa-receipt"></i> Payments   </h2>
+    </div>
+    {% for payment in payment %}
+    <a href="{% url 'payment' id=payment.id %}" style="text-decoration: none;  ">
+        <div class="row bg-white justify-content-start border p-2" >
 
+            <div class="col-1 p-0 m-0 d-flex align-items-center justify-content-center ps-3 pe-3">
+                {% if payment.status == 'Paid' %}
+                <span class="">
+                    <i class="fa-solid fa-circle-check" style="font-size:30px; color:#28B463"></i>
+                </span>
+                {% else %}
+                <span>
+                    <i class="fa-solid fa-circle-xmark" style="font-size:30px; color:#566573"></i>
+                </span>
+                {% endif %}
+            </div>
+            <div class="col ms-0 ps-0 p-0 ps-3">
+                <span class="m-0 text-muted d-block">
+                    {% if payment.status == 'Paid' %}
+                    <strong class="text-break">Payment for <span class="text-dark">Room {{ payment.room }}</span> has been completed!</strong>
+                    {% else %}
+                    <strong class="text-break">Payment for <span class="text-dark">Room {{ payment.room }}</span>!</strong>
+                    {% endif %}
+                    <span class="d-block">
+                        <span class="text-end me-2">Pay-ID: {{ payment.id }}</span>
+                        ₱ {{ payment.amount }}
+                    </span>
+                    <small class="d-block text-primary">
+                        <span>{{ payment.date|timesince }} ago</span>
+                    </small>
+                </span>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+<div class="container-sm text-center bg-white"><button id="see-more-btn" class="btn rounded-0">See More</button></div>
 
 <script type="text/javascript">
 document.getElementById('edit_tenant').onclick = function() {
@@ -267,23 +242,48 @@ document.getElementById('edit_tenant').onclick = function() {
     document.getElementById('floating4').removeAttribute('readonly');
     document.getElementById('floating5').removeAttribute('readonly');
     document.getElementById('floating6').removeAttribute('readonly');
-
     document.getElementById('btn_save').style.display = "block";
 };
-
 document.getElementById('edit_guardian').onclick = function() {
     document.getElementById('floating13').removeAttribute('readonly');
     document.getElementById('floating14').removeAttribute('readonly');
-
     document.getElementById('btn_save2').style.display = "block";
 };
-
 document.getElementById('edit_password').onclick = function() {
     document.getElementById('pass1').style.display = "block";
     document.getElementById('pass2').style.display = "block";
     document.getElementById('new_pass').style.display = "block";
     document.getElementById('save_pass').style.display = "block";
 };
+</script>
+<script>
+    const notificationsContainer = document.getElementById('notifications-container');
+    const seeMoreBtn = document.getElementById('see-more-btn');
+    const notifications = notificationsContainer.children;
 
+    // Show only the first 5 notifications by default
+    for (let i = 0; i < notifications.length; i++) {
+        if (i >= 5) {
+            notifications[i].style.display = 'none';
+        }
+    }
+    let numNotificationsToShow = 5;
+
+    // When the "See More" button is clicked, show the next 10 notifications
+    seeMoreBtn.addEventListener('click', () => {
+        let numNotificationsShown = 0;
+        for (let i = 0; i < notifications.length; i++) {
+            if (numNotificationsShown >= numNotificationsToShow) {
+                break;
+            }
+            if (notifications[i].style.display === 'none') {
+                notifications[i].style.display = 'block';
+                numNotificationsShown++;
+            }
+        }
+        if (numNotificationsShown < numNotificationsToShow) {
+            seeMoreBtn.style.display = 'none';
+        }
+    });
 </script>
 {% endblock %}

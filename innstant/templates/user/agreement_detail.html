@@ -1,14 +1,11 @@
 {% extends 'user/base.html'%}
 {% load custom_filters %}
 {% block content %}
-
 <div class="container-sm mt-5"  style="max-width:960px;   ">
     <div class="container-sm  bg-body p-0 border border-secondary"   >
-
         <div class="p-1"> <h2 class="card-title m-0 text-muted m-3">Agreement</h2> </div>
         <div class=" container-fluid bg-secondary  p-2"></div>
         <form class="container mt-4 " id="submit_form" method="POST" for="cr" enctype="multipart/form-data" class="form-control form-control-lg " >
-
             {% csrf_token %}
             <div class="row m-2">
                 <div class="col-auto m-2">
@@ -17,14 +14,12 @@
                     </div>
                     <input class="form-control form-control  border-0 border-bottom" type="text" value="{{contract.tenant.first_name}} {{contract.tenant.last_name}}"  readonly name="tenant">
                 </div>
-
                 <div class="col-auto me-auto m-2">
                     <div class="label">
                         <label form="formGroupExampleInput" class="form-label">Landlord</label>
                     </div>
                     <input class="form-control form-control border-0 border-bottom" type="text" value="{{contract.landlord.first_name}} {{contract.landlord.last_name}}"  readonly name="landlord">
                 </div>
-
                 <div class="col-auto m-2">
                     <label class="control-label " >
                         Date
@@ -38,7 +33,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="row m-2">
                 <div class="my-5">
                     <label  class="form-label  ">Rules must follow:</label>
@@ -48,13 +42,9 @@
                         <li>{{ rule }}</li>
                         {% endif %}
                         {% endfor %}
-
                     </ol>
                 </div>
             </div>
-
-
-
             {% if not contract.tenant_sign %}
             <div class="row  align-items-end">
                 <div class="col-md text-left text-muted fw-light">
@@ -69,7 +59,6 @@
                         </center>
                     </div>
                 </div>
-
                 <div class="col-md ms-auto text-muted fw-light">
                     <div class="container">
                         <center>
@@ -83,8 +72,6 @@
                 </div>
             </div>
             {% else %}
-
-
             <div class="row align-items-end mt-5">
                 <div class="col-md    text-left text-muted  fw-light ">
                     <div class="container  ">
@@ -97,7 +84,6 @@
                         </center>
                     </div>
                 </div>
-
                 <div class="col-md  ms-auto    text-muted  fw-light  ">
                     <div class="container   ">
                         <center>
@@ -111,14 +97,9 @@
                 </div>
             </div>
             {% endif %}
-
-
         </form>
-
     </div>
 </div>
-
-
 {% if not contract.tenant_sign %}
 <div class="container  my-3"  style="max-width:960px; font-size:13px; ">
     <div class="container  p-0"   >
@@ -127,7 +108,6 @@
         <a class="btn btn-success  px-3" href="{% url 'agreement_pdf_download'  id=contract.id   %}" role="button"><i class="fa-regular fa-circle-down"></i> Download</a>
     </div>
 </div>
-
 {% else %}
 <div class="container  my-3"  style="max-width:960px; font-size:13px; ">
     <div class="container   p-0"   >
@@ -138,32 +118,19 @@
     </div>
 </div>
 {% endif %}
-
-
-
-
-
-
-
 <script type="text/javascript">
-
 document.getElementById('submit_form').addEventListener('submit', function(event) {
   // Get the selected file from the input field
   var fileInput1 = document.getElementById('formFile1');
   var file1 = fileInput1.files[0];
-
   // Check if the file is an image
   if (file1 && !file1.type.match('image.*')) {
     // If the file is not an image, show the error message
     document.getElementById('sign_error1').style.display = 'block';
     event.preventDefault(); // prevent the form from submitting
   }
-
 });
 </script>
-
-
-
 {% endblock %}
 
 

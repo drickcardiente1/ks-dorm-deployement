@@ -1,5 +1,4 @@
 {% extends 'user/base.html'%}
-
 {% block content %}
 <div class="bg-white">
     <div class="container  py-5"   >
@@ -37,8 +36,6 @@
     </div>
 </div>
 </span>
-
-
 <script>
 var div = $('#my-div-id');
 $.get(location.href, function(data) {
@@ -49,7 +46,5 @@ setInterval(function() {
     var div = $('#my-div-id');
     div.load(location.href + ' #my-div-id');
 }, 10000);
-
 </script>
-
 {% endblock %}

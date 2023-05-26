@@ -2,34 +2,30 @@
 {% block content %}
 {% if qrcodes %}
 <div class="container-sm mt-5 "  style="max-width:960px;" >
-        <div class="col-lg-5 bg-white border border-secondary">
-            <div class="label p-2 ">
-                <h5  class="form-label text-muted"><i class="fa-solid fa-qrcode"></i> QRCODE</h5>
-            </div>
-            <div class="bg-secondary  p-2"></div>
-            <center>
-                <div class="   "  style="max-width:960px;" >
-                    {% for qrcode in qrcodes %}
-
-                    <div class="card "  >
-                        {% if qrcode.QRCODE %}
-                        <img class="img-fluid" src="{{ qrcode.QRCODE.url }}" alt="QR Code">
-                        {% else %}
-                        No QR Code
-                        {% endif %}
-                        <div class="card-body">
-                            <h3 >{{ qrcode.QRCODE_Name }} </h3>
-                            <small class="float-end"><a href="{% url 'admin_edit_QRCODE' id=qrcode.id %}"><i class="fa-solid fa-pen-nib"></i> Edit</a></small>
-
-                        </div>
-                    </div>
-
-
-                    {% endfor %}
-
-                </div>
-            </center>
+    <div class="col-lg-5 bg-white border border-secondary">
+        <div class="label p-2 ">
+            <h5  class="form-label text-muted"><i class="fa-solid fa-qrcode"></i> QRCODE</h5>
         </div>
+        <div class="bg-secondary  p-2"></div>
+        <center>
+            <div class="   "  style="max-width:960px;" >
+                {% for qrcode in qrcodes %}
+                <div class="card "  >
+                    {% if qrcode.QRCODE %}
+                    <img class="img-fluid" src="{{ qrcode.QRCODE.url }}" alt="QR Code">
+                    {% else %}
+                    No QR Code
+                    {% endif %}
+                    <div class="card-body">
+                        <h3 >{{ qrcode.QRCODE_Name }} </h3>
+                        <small class="float-end"><a href="{% url 'admin_edit_QRCODE' id=qrcode.id %}"><i class="fa-solid fa-pen-nib"></i> Edit</a></small>
+
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </center>
+    </div>
 </div>
 {% else %}
 <div class="container-sm mt-5 "  style="max-width:960px;" >
@@ -77,13 +73,8 @@
                 </center>
             </form>
         </div>
-
-
-
-
     </div>
 </div>
-
 {% endif %}
 
 

@@ -5,7 +5,7 @@ from . models import Complaint, Rules, ComplaintType, RoomType, Room, Comment, T
 
 
 class ComplaintAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'type', 'description', 'status', 'date', )
+    list_display = ('id', 'user', 'type', 'description', 'status', 'date', 'room' )
 
 
 class RulesAdmin(admin.ModelAdmin):
@@ -21,7 +21,10 @@ class RoomTypeAdmin(admin.ModelAdmin):
 
 
 class RoomAdmin(admin.ModelAdmin):
-    list_display = ('id', 'Floor_Number', 'Room_Status', 'user', 'Room_Type')
+    list_display = ('id', 'Floor_Number', 'Room_Status', 'display_users')
+
+    def display_users(self, obj):
+        return ", ".join([user.username for user in obj.user.all()])
 
 
 class CommentAdmin(admin.ModelAdmin):
@@ -37,7 +40,7 @@ class TenantInfoAdmin(admin.ModelAdmin):
 
 
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('id',  'room', 'room_floor', 'room_type',  'date', 'amount',   'payment_due_date' , 'status',   'tenant', 'admin', )
+    list_display = ('id',  'room', 'room_floor', 'room_type',  'date', 'amount',   'payment_due_date', 'status', 'tenant', 'admin', )
 
 
 class ExtendStayAdmin(admin.ModelAdmin):
@@ -49,7 +52,7 @@ class NotificationAdmin(admin.ModelAdmin):
 
 
 class FooterAdmin(admin.ModelAdmin):
-    list_display = ('id',  'Contact1',  'Contact2', 'Landline', 'Address', 'Email_us', 'About', 'Facebook',   )
+    list_display = ('id',  'Contact1',  'Contact2', 'Landline', 'Address', 'Email_us', 'About', 'Facebook')
 
 
 class QRCODEPaymentAdmin(admin.ModelAdmin):
@@ -62,11 +65,8 @@ admin.site.register(ComplaintType, ComplaintTypeAdmin)
 admin.site.register(RoomType, RoomTypeAdmin)
 admin.site.register(Room, RoomAdmin)
 admin.site.register(Comment, CommentAdmin)
-
-
 admin.site.register(TenantInfo,TenantInfoAdmin)
 admin.site.register(Agreement, AgreementAdmin)
-
 admin.site.register(Payment, PaymentAdmin)
 admin.site.register(Notification, NotificationAdmin)
 admin.site.register(ExtendStay, ExtendStayAdmin)

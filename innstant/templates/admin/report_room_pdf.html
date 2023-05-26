@@ -8,12 +8,10 @@
     <th scope="col"  >Floor</th>
     <th scope="col"  >Room Type</th>
     <th scope="col"  >Price</th>
-
     <th scope="col"  >Tenant</th>
   </tr>
   </thead>
   <tbody id="firstt">
-
   {% for queryset in queryset %}
   <tr>
     <th scope="row">{{ queryset.id }}</th>
@@ -25,9 +23,7 @@
   {% endfor %}
   </tbody>
 </table>
-
 <br><br>
-
 <table>
   <tbody id="secondt" style="font-size:13px;">
   <tr>
@@ -36,31 +32,25 @@
     <td> </td>
     <td> </td>
   </tr>
-
   </tbody>
 </table>
 <hr>
 {% endblock %}
 
-
-
 <style>
     table { -pdf-keep-with-next: true; }
     p { margin: 0; -pdf-keep-with-next: true; }
     p.separator { -pdf-keep-with-next: false; font-size: 6pt; }
+    thead tr {
+      background-color:#D5D8DC;
+      padding:3px;
+    }
 
-
-
-thead tr {
-  background-color:#D5D8DC;
-  padding:3px;
-}
-
-#firstt tr {
-  background-color: #f1f1f1;
-  padding:3px;
-}
-th {
-  text-align: left;
-}
+    #firstt tr {
+      background-color: #f1f1f1;
+      padding:3px;
+    }
+    th {
+      text-align: left;
+    }
 </style>

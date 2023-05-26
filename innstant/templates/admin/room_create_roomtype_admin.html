@@ -1,16 +1,13 @@
 {% extends 'admin/admin_base.html'%}
 {% load static %}
 {% block content %}
-
 <div class="container-sm mt-5"  style="max-width:960px;">
     <div class="container-sm  bg-body p-0"   >
         <h2 class="card-title m-0 p-3 text-muted ">Create Room Type</h2>
         <div class="bg-secondary p-2"></div>
-
         <div class="container p-3">
             <form class="row g-3" id="submit_form" method="POST" enctype="multipart/form-data" class="form-control form-control-lg ">
                 {% csrf_token %}
-
                 <div class="col-lg-4 ">
                     <div class="label">
                         <label   class="form-label">Name</label>
@@ -29,7 +26,6 @@
                     </div>
                     {{form.Room_Price}}
                 </div>
-
                 <div class="col-12     ">
                     <div class="label">
                         <label   class="form-label">Description</label>
@@ -38,35 +34,21 @@
                           rows="2" cols="1"   onkeypress="auto_grow(this);" onkeyup="auto_grow(this);"
                           style="resize:none; overflow:hidden;" maxlength="500" required name="Room_Description"></textarea>
                 </div>
-
-
                 <div class="col-12 col-lg-4 mt-4">
-
                     <div class="label">
                         <label class="form-label">Upload Image</label>
                     </div>
                     <input class="form-control" type="file" id="formFile" name="Room_Image" required>
                     <p  class="alert alert-danger p-2 mt-2" id="img_error"  style=" display: none;" >File is not an image</p>
                 </div>
-
-
-
-
-
-
-
                 <div class="col-12 mt-4">
                     <button type="submit" class="btn btn-secondary  ">Create</button>
                 </div>
             </form>
         </div>
-
     </div>
 </div>
-
-
 <script type="text/javascript">
-
 document.getElementById('submit_form').addEventListener('submit', function(event) {
   // Get the selected file from the input field
   var fileInput1 = document.getElementById('formFile');
@@ -81,5 +63,4 @@ document.getElementById('submit_form').addEventListener('submit', function(event
 
 });
 </script>
-
 {% endblock %}

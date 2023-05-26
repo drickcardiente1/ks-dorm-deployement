@@ -22,53 +22,39 @@
                     <span class="text-primary"><strong>{{complaint.date}}</strong></span>
                 </div>
             </div>
-
             <div class="bg-secondary my-3 p-2"></div>
-
-
             <div class="card-text p-3 pb-5">
+{% if complaint.room %}
+    <h5 class="p-0 m-0 mb-2"><span class="badge text-bg-primary rounded">Room {{ complaint.room }}</span></h5>
+{% else %}
+{% endif %}
                 <div class="row g-12">
-                    <div class="col-md-4 m-0 pt-2">
+                    <div class="col-lg-auto m-0 pt-2">
+
                     <span class="text-success fs-5 h4 bg-pr ">
                     {{complaint.type}}
                     </span>
-                    </div>
-                    <div class="col-md-4 ms-auto m-0 pt-2">
-                        <div class=" ">
-                            <span class="me-1">Status:</span>
 
+                    </div>
+                    <div class="col-lg-auto ms-auto m-0 pt-2">
+                        <div class=" ">
                             {% if complaint.status == 'Pending' %}
                             <button type="button" class="btn btn btn-warning   btn-sm"  aria-expanded="false">
                                 {{complaint.status}}
                             </button>
-                            {% elif complaint.status == 'Complete' %}
+                            {% elif complaint.status == 'Resolved' %}
                             <button type="button" class="btn btn-success  btn-sm"  aria-expanded="false">
                                 {{complaint.status}}
                             </button>
-                            {% elif complaint.status == 'Denied' %}
-                            <button type="button" class="btn btn-danger    btn-sm"  aria-expanded="false">
-                                {{complaint.status}}
-                            </button>
                             {% endif %}
-
-
-
                         </div>
-
                     </div>
                 </div>
-
-
-
-
-
-
                 <br>
                 <p class="card-text bg-secondary bg-opacity-10 p-4">
                     <span class="d-block card-text "><small class="text-muted">Description</small></span>
                     <span class="d-block mt-2   fs-6 text-break" style="font-size:15px;">{{complaint.description}}</span>
                 </p>
-
                 <br>
                 <br>
                 {% if not complaint.comments.all %}
@@ -83,19 +69,12 @@
                     <p class=" p-0 m-0 mt-1"> {{ comment.body }} </p>
                 </div>
                 {% endfor %}
-
                 {% endif %}
             </div>
-
-
         </div>
     </div>
-
 </div>
 </span>
-
-
-
 <script>
 var div = $('#my-div-id');
 $.get(location.href, function(data) {
@@ -106,7 +85,5 @@ setInterval(function() {
     var div = $('#my-div-id');
     div.load(location.href + ' #my-div-id');
 }, 2000);
-
 </script>
-
 {% endblock %}

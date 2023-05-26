@@ -1,30 +1,25 @@
 {% extends 'admin/admin_base.html'%}
 {% block content %}
-
 <div class="container-sm mt-5"  style="max-width:960px;  ">
-
-
-
     <form   method="POST" id="submit_form"   >
         {% csrf_token %}
-
         <div class="row  bg-body py-3 py-5 border">
             <div class="col-md-7  mx-auto">
                 <div class="form-floating ">
                     <h1 class="text-muted d-inline "><i class="fa-solid fa-user-plus"></i> New User</h1>
                     <div class="bg-secondary mt-3 p-2"></div>
                 </div>
-        {% if form.errors %}
-        <div class="alert alert-danger">
-            <ul>
-                {% for field in form %}
-                {% for error in field.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for field in form %}
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
                 <div class="form-floating m-1 ">
                     <input type="text" for="floatingPlaintextInput"class="form-control  rounded-0" id="floating1"
                            name="username" maxlength="10" required>
@@ -35,7 +30,6 @@
                            name="first_name" maxlength="15" required>
                     <label for="floating2"  >First Name</label>
                 </div>
-
                 <div class="form-floating m-1 ">
                     <input type="text" for="floatingPlaintextInput"class="form-control rounded-0 text-capitalize" id="floating3"
                            name="last_name" maxlength="15" required>
@@ -56,7 +50,6 @@
                            name="password2" required>
                     <label for="floating6"  >Confirm Password</label>
                 </div>
-
                 <div class="form-floating  m-1 ">
                     {% if form.errors %}
                     {% else %}
@@ -82,20 +75,11 @@
                            name="tenant_age" required>
                     <label for="floating8"  >Age</label>
                 </div>
-
-
-
             </div>
-
-
             <div class="col-md-7 mx-auto ">
                 <div class="form-floating ">
                     <h3 class="text-muted mt-3">Guardian</h3>
-
-
-
                 </div>
-
                 <div class="form-floating m-1 ">
                     <input type="text" for="floatingPlaintextInput"class="form-control rounded-0 text-capitalize" id="floating9"
                            name="guardian_name" required>
@@ -106,8 +90,6 @@
                            name="guardian_contact_number" required>
                     <label for="floating10"  >Contact</label>
                 </div>
-
-
                 <div class="col-auto mt-5 p-4 border">
                     <div class="row">
                         <div class="col ">
@@ -121,29 +103,11 @@
                         </div>
                     </div>
                 </div>
-
-
                 <button class="form-floating  m-1 mt-4 btn btn-secondary px-5  " form="submit_form" type="submit"
                 >Save
                 </button>
             </div>
-
-
         </div>
     </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </div>
 {% endblock %}

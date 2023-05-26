@@ -1,32 +1,13 @@
 {% extends 'admin/admin_base.html'%}
 {% load static %}
 {% block content %}
-
-
-
-
-
-
 <div class="container-sm    py-5  mb-5 bg-body rounded-0" >
-
     <div class="card mb-3 border-0  w-100 p-4" >
-
         <h2 class="d-inline card-title m-0 text-muted ">
-            {% if room.Room_Status == 'Available' %}
             Room {{ room.id }}
-            <span class="badge bg-success float-end">Available</span>
-            {% elif room.Room_Status == 'Occupied' %}
-            Room {{ room.id }}
-            <span class="badge bg-primary float-end">Occupied</span>
-            {% elif room.Room_Status == 'Unavailable' %}
-            Room {{ room.id }}
-            <span class="badge bg-danger float-end">Unavailable</span>
-            {% endif %}
+            <span class="badge bg-primary float-end">Occupied {{user_count}}/{{room.Room_Type.Room_Capacity}}</span>
         </h2>
         <hr>
-
-
-
         {% if messages %}
         <div class="alert alert-success mt-1 mb-2 mb-1" role="alert">
             {% for message in messages %}
@@ -34,7 +15,6 @@
             {% endfor %}
         </div>
         {% endif %}
-
         <div class="row ">
             <div class="col-lg-6 ">
                 {% if not room.Room_Type.Room_Image  %}
@@ -43,26 +23,27 @@
                 <img src=" {{ room.Room_Type.Room_Image.url }}" class="img-thumbnail  border-0 " alt="...">
                 {% endif %}
 
+
+            </div>
+            <div class="col-lg-6 p-0">
+
+
                 <div class="card-body text-start">
                     <div class="row ">
                         <h3><strong> ₱ {{ room.Room_Type.Room_Price|floatformat:2 }} / <small>month</small></strong></h3>
                     </div>
                     <div class="row mt-2 mb-4">
-
-
                         <div class="col-auto">
-                            <h5 class="text-muted">Occupant: </h5>
+                            <h5 class="text-muted">Occupant:</h5>
                         </div>
                         <div class="col-auto">
-                            <h5 class="text-primary">
-                                <a href="{% url 'users_detail_admin' id=room.user.id %}"  style="text-decoration: none;  height:9rem;" >
-                                    {{ room.user.first_name }} {{ room.user.last_name }}
-                                </a>
+                            <h5>
+                                {% for user in room.user.all %}
+                                <span class="badge bg-opacity-10"  style="color:#0E6655; background-color: #D0ECE7;  ">{{ user.get_full_name }}</span>
+                                {% if not forloop.last %}, {% endif %}
+                                {% endfor %}
                             </h5>
                         </div>
-
-
-
                     </div>
                     <div class=" bg-opacity-10 p-3">
                         <div class="row mb-1">
@@ -77,7 +58,6 @@
                                 <input type="text" class="form-control border-0" value="{{ room.Floor_Number }} " readonly >
                             </div>
                         </div>
-
                         <div class="row mb-1">
                             <label  class="col-6 col-form-label">Type</label>
                             <div class="col-6">
@@ -97,181 +77,23 @@
                             <span class="d-block ps-2 pb-2 pt-0 pe-2">  {{ room.Room_Type.Room_Description }}</span>
                         </div>
                     </div>
-
-
-                    {% if room.Room_Status == 'Available' %}
-
-
-                    {% elif room.Room_Status == 'Occupied' %}
-
-                    {% elif room.Room_Status == 'Unavailable' %}
-
-                    {% endif %}
-                </div>
-
-
-
-                <div class="row bg-white p-3   mt-2">
-                    <div class="col ">
-                        <h3>Actions</h3>
-                        <hr>
-
-
-                        <div class="row mb-3 g-3">
-                            <div class="col-lg">
-                                <a class="btn btn-warning" style=" display: block;"   data-bs-toggle="modal" data-bs-target="#exampleModal1">Evict</a>
-                            </div>
-                            <div class="col-lg">
-                                <div class="  text-left text-muted  fw-light ">
-                                    <a class="btn btn-danger" style=" display: block;" data-bs-toggle="modal" data-bs-target="#exampleModal2">Evict + Deactivate </a>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div class="row mb-3 g-3">
-                            <div class="col-lg">
-                                <a class="btn btn-secondary" style=" display: block;"   data-bs-toggle="modal" data-bs-target="#exampleModal3">Cancel Assign</a>
-                            </div>
-                            <div class="col-lg">
-                                <div class="  text-left text-muted  fw-light ">
-
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <hr>
-                        <div class="row">
-                            <div class="col ">
-
-                                {% if payment.status == 'Paid' %}
-                                {% else %}
-                                <a class="btn btn-primary g-3" id ="notif_0" style=" display: none;" href="{% url 'send_email'  id=room.id%}">Send Email</a>
-                                <a class="btn btn-primary g-3" id ="notif_1" style=" display: none;" href="{% url 'send_email_stay_end'  id=room.id%}">Send Email</a>
-                                {% endif %}
-
-                            </div>
-                        </div>
-                        <p class="alert alert-light my-0" id="notif_label "><em>Button to notify users will appear when user have 3 days left.</em></p>
-                    </div>
                 </div>
 
             </div>
 
-
-            <div class="col-md-6 p-0">
-                {% include 'admin/room_occupied_details2_admin.html' %}
-            </div>
         </div>
-    </div>
 
-</div>
+        <div class="row ">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel1">Remove  </h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            {% for payment in payments %}
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <a href="{% url 'payment_admin' id=payment.id %}" style="text-decoration: none;  ">
+                    {% include 'admin/room_occupied_details2_admin.html' %}
+                </a>
             </div>
-            <div class="modal-body border-0">
-          <span style="font-size:14px;">
-              <span class="fw-bold">{{ room.user.first_name }} {{ room.user.last_name }}</span>
-                  <p>You are going to remove tenant from the room.</p>
-          </span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Close</button>
-                <a type="button" class="btn btn-primary rounded-0"   href="{% url 'remove_tenant_admin' id=room.id %}">Confirm</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel2">Remove + Deactivate </h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body border-0">
-          <span style="font-size:14px;">
-              <span class="fw-bold">{{ room.user.first_name }} {{ room.user.last_name }}</span>
-              <ul>
-                  <li>You are going to remove & deactivate tenant.</li>
-                  <li>Make sure to check first if tenant had paid payments before deactivating.</li>
-              </ul>
-          </span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Close</button>
-                <a type="button" class="btn btn-primary rounded-0"   href="{% url 'remove_deactivate_tenant_admin' id=room.id %}">Confirm</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel3">Cancel </h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body border-0">
-          <span style="font-size:14px;">
-              <span class="fw-bold">{{ room.user.first_name }} {{ room.user.last_name }}</span>
-              <ul>
-                  <li>You are going to remove tenant from Room {{ room.id }}.</li>
-                  <li>Payment will also be removed.</li>
-              </ul>
-          </span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Close</button>
-                <a type="button" class="btn btn-primary rounded-0"   href="{% url 'cancel_tenant_admin' id=payment.id %}">Confirm</a>
-            </div>
+            {% empty %}
+            <p>No payments found for this room.</p>
+            {% endfor %}
         </div>
     </div>
 </div>

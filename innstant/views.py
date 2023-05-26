@@ -12,7 +12,7 @@ from django.utils import timezone
 from django.urls import reverse
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.db.models import Sum
+from django.db.models import Sum, Max, Subquery, OuterRef
 from django.conf import settings
 
 from datetime import datetime, timedelta
@@ -20,34 +20,17 @@ from decimal import Decimal
 from datetime import date, timedelta
 
 
-from .forms import ComplaintForm, RuleForm, AddUserForm, CommentForm, TenantInfoForm, AgreementForm,\
+from .forms import ComplaintForm, RuleForm, AddUserForm, CommentForm, TenantInfoForm, AgreementForm, \
     UserProfileForm, RoomForm, RoomTypeForm, ComplaintTypeForm, TenantGuardianInfoForm, TenantDetailForm, \
-    AgreementTenantSignForm, PaymentForm, NotificationForm, FooterForm, EditPaymentForm, QRCODEPaymentForm,\
+    AgreementTenantSignForm, PaymentForm, NotificationForm, FooterForm, EditPaymentForm, QRCODEPaymentForm, \
     ChangePasswordForm
 
 from . models import Complaint, Rules,  Room, User, TenantInfo, Agreement, RoomType, ComplaintType, Payment, \
     ExtendStay, Notification, Footer, QRCODEPayment
 from .filters import FilterUser, FilterPayment
 
-
-# Create your views here.
-import reportlab
-import io
-from django.http import FileResponse
-from reportlab.pdfgen import canvas
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.platypus import Paragraph
-from reportlab.lib.units import inch
-from reportlab.lib.pagesizes import letter
-
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.encoding import smart_str
-from django.core.mail import EmailMessage
-
 import datetime
-from io import BytesIO
-from reportlab.platypus import SimpleDocTemplate, Paragraph, PageBreak
-from reportlab.lib.styles import getSampleStyleSheet
 from .pdf import html2pdf
 from reportlab.lib.units import mm, inch
 PAGESIZE = (140 * mm, 216 * mm)
@@ -207,10 +190,16 @@ def room_status_unavailable_admin(request):
 def room_details_admin(request, id):
     try:
         room = Room.objects.get(id=id)
+        subquery = Payment.objects.filter(tenant__in=room.user.all()).values('tenant').annotate(
+            max_id=Max('id')).values('max_id')
+        payments = Payment.objects.filter(id__in=Subquery(subquery))
+
+        room_user = room.user.count()
+        room_capacity = room.Room_Type.Room_Capacity
+        user_count = room_capacity - room_user
+
     except Room.DoesNotExist:
         return render(request, 'user/error_page.html')
-
-    tenant = User.objects.all().filter(is_active=True)
 
     if request.method == "POST":
         form = PaymentForm(request.POST)
@@ -222,21 +211,29 @@ def room_details_admin(request, id):
 
             # Update room status to "Occupied" if a tenant has taken the room
             if payment.tenant is not None:
-                room.Room_Status = Room.OCCUPIED
-                room.user = payment.tenant
+                room.user.add(payment.tenant)
                 room.save()
 
-            # Create a notification for the tenant
-            notification = Notification.objects.create(tenant=payment.tenant, payment=payment)
-            messages.success(request, 'Room ' + str(room) + ' is now Occupied.')
-            return redirect('room_occupied_details_admin', id=id)
+                # Create a notification for the tenant
+                notification = Notification.objects.create(tenant=payment.tenant, payment=payment)
+                messages.success(request, 'Added ' + payment.tenant.get_full_name() + ' in room ' + str(room.id))
+
+                # Check if room is at full capacity
+                if room.user.count() >= room.Room_Type.Room_Capacity:
+                    room.Room_Status = Room.OCCUPIED
+                    room.save()
+                    messages.success(request, 'Room ' + str(room) + ' is now Occupied.')
+                    return redirect('room_occupied_details_admin', id=id)
+                else:
+                    return redirect('room_details_admin', id=id)
     else:
         form = PaymentForm()
 
     context = {
+        'user_count': user_count,
+        'payments': payments,
         'room': room,
         'form': form,
-        'tenant': tenant
     }
     return render(request, 'admin/room_details_admin.html', context)
 
@@ -246,27 +243,31 @@ def room_details_admin(request, id):
 def room_occupied_details_admin(request, id):
     try:
         room = Room.objects.get(id=id)
-        payment = Payment.objects.filter(room=id).latest('id')
+        user_count = room.user.count()
+        subquery = Payment.objects.filter(tenant__in=room.user.all()).values('tenant').annotate(
+            max_id=Max('id')).values('max_id')
+        payments = Payment.objects.filter(id__in=Subquery(subquery))
 
         extend_button_displayed = False
         try:
-            extend_stay = ExtendStay.objects.get(room=room, tenant=payment.tenant, status='Processing')
+            extend_stay = ExtendStay.objects.get(room=room, tenant__in=room.user.all(), status='Processing')
             if extend_stay.status == 'Processing':
                 extend_button_displayed = True
         except ExtendStay.DoesNotExist:
             pass
 
         if request.method == 'POST':
-            form = EditPaymentForm(request.POST, instance=payment)
+            form = EditPaymentForm(request.POST, instance=payments.latest('id'))
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Payment edited.')
                 return redirect('room_occupied_details_admin', id=id)
         else:
-            form = EditPaymentForm(instance=payment)
+            form = EditPaymentForm(instance=payments.latest('id'))
 
         context = {
-            'payment': payment,
+            'user_count': user_count,
+            'payments': payments,
             'room': room,
             'form': form,
             'extend_button_displayed': extend_button_displayed,
@@ -275,6 +276,7 @@ def room_occupied_details_admin(request, id):
 
     except Room.DoesNotExist:
         return render(request, 'user/error_page.html')
+
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -294,44 +296,44 @@ def room_update_status_available_admin(request, id):
 
 
 @user_passes_test(lambda u: u.is_superuser)
-def remove_tenant_admin(request, id):
+def remove_tenant_admin(request, username, id):
     try:
+        # Use the username parameter to identify the specific user
+        user = User.objects.get(username=username)
         room = Room.objects.get(id=id)
         room.Room_Status = "Available"
-        room.user = None
+        room.user.remove(user)  # Remove the specific user from the room
         room.save()
         # Delete ExtendStay object where extend_stay.room is equal to room.id
         ExtendStay.objects.filter(room=room).delete()
-        return redirect('room_details_admin', id=id)
-    except Room.DoesNotExist:
-        # Handle the case where the room with the provided id does not exist
-        messages.error(request, "The room with the provided ID does not exist.")
+        return redirect('room_details_admin' , id= room.id)
+    except (User.DoesNotExist, Room.DoesNotExist):
+        # Handle the case where the user or room with the provided parameters do not exist
+        messages.error(request, "The user or room with the provided parameters does not exist.")
         return redirect('room_status_all_admin')
 
 
 @user_passes_test(lambda u: u.is_superuser)
-def remove_deactivate_tenant_admin(request, id):
+def remove_deactivate_tenant_admin(request, username, id):
     try:
+        # Use the username parameter to identify the specific user
+        user = User.objects.get(username=username)
         room = Room.objects.get(id=id)
-
-        # Deactivate the related user instance
-        user = room.user
-        if user:
-            user.is_active = False
-            user.save()
-
-        # Update the room instance
         room.Room_Status = "Available"
-        room.user = None
+        room.user.remove(user)  # Remove the specific user from the room
         room.save()
 
-        # Delete the related ExtendStay instances
+        # Deactivate the user
+        user.is_active = False
+        user.save()
+
+        # Delete ExtendStay object where extend_stay.room is equal to room.id
         ExtendStay.objects.filter(room=room).delete()
 
-        return redirect('room_details_admin', id=id)
-    except Room.DoesNotExist:
-        # Handle the case where the room with the provided id does not exist
-        messages.error(request, "The room with the provided ID does not exist.")
+        return redirect('room_details_admin' , id= room.id)
+    except (User.DoesNotExist, Room.DoesNotExist):
+        # Handle the case where the user or room with the provided parameters do not exist
+        messages.error(request, "The user or room with the provided parameters does not exist.")
         return redirect('room_status_all_admin')
 
 
@@ -341,10 +343,17 @@ def cancel_tenant_admin(request, id):
     room = payment.room
     tenant = payment.tenant
     payment.delete()
-    room.Room_Status = "Available"
-    room.user = None
+
+    # Remove the user from the room
+    room.user.remove(tenant)
+
+    # Update the room status to "Available"
+    room.Room_Status = Room.AVAILABLE
+
     room.save()
-    return redirect('room_details_admin', id=room.id)
+
+    # Redirect to the previous page
+    return redirect('room_details_admin' , id= room.id)
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -425,9 +434,12 @@ def complaint_create_admin(request):
     try:
         data = ComplaintType.objects.all()
         form = ComplaintForm(request.POST or None)
+        user = request.user
+        room = Room.objects.filter(user=user).first()
         if form.is_valid():
             instance = form.save(commit=False)
             instance.user = request.user
+            instance.room = room
             instance.save()
             return redirect('complaint_detail_admins',  id=instance.id)
 
@@ -438,7 +450,8 @@ def complaint_create_admin(request):
         context = {
             'form2': form2,
             'form': form,
-            'data': data
+            'data': data,
+            'room': room
         }
         return render(request, 'admin/complaint_create_admin.html', context)
     except Exception as e:
@@ -478,9 +491,8 @@ def complaint_detail_admins(request, id):
 def complaint_pending_admin(request):
     try:
         show_complaint = Complaint.objects.filter(status='Pending').order_by('-date')
-        complete = Complaint.objects.filter(status='Complete').count()
+        resolved = Complaint.objects.filter(status='Resolved').count()
         pending = Complaint.objects.filter(status='Pending').count()
-        denied = Complaint.objects.filter(status='Denied').count()
 
         p = Paginator(show_complaint, 5)
         page_num = request.GET.get('page',1)
@@ -491,9 +503,8 @@ def complaint_pending_admin(request):
             page = p.page(1)
 
         context = {
-            'complete': complete,
+            'resolved': resolved,
             'pending': pending,
-            'denied': denied,
             'show_complaint': page
         }
 
@@ -506,10 +517,9 @@ def complaint_pending_admin(request):
 @login_required(login_url="login",)
 def complaint_complete_admin(request):
     try:
-        show_complaint = Complaint.objects.filter(status='Complete').order_by('-date')
-        complete = Complaint.objects.filter(status='Complete').count()
+        show_complaint = Complaint.objects.filter(status='Resolved').order_by('-date')
+        resolved = Complaint.objects.filter(status='Resolved').count()
         pending = Complaint.objects.filter(status='Pending').count()
-        denied = Complaint.objects.filter(status='Denied').count()
 
         p = Paginator(show_complaint, 5)
         page_num = request.GET.get('page',1)
@@ -519,42 +529,12 @@ def complaint_complete_admin(request):
         except EmptyPage:
             page = p.page(1)
         context = {
-            'complete': complete,
+            'resolved': resolved,
             'pending': pending,
-            'denied': denied,
             'show_complaint': page
         }
 
         return render(request, 'admin/complaint_complete_admin.html', context)
-    except Exception as e:
-        return render(request, 'user/error_page.html', {'error_message': str(e)})
-
-
-@user_passes_test(lambda u: u.is_superuser)
-@login_required(login_url="login",)
-def complaint_denied_admin(request):
-    try:
-        show_complaint = Complaint.objects.filter(status='Denied').order_by('-date')
-        complete = Complaint.objects.filter(status='Complete').count()
-        pending = Complaint.objects.filter(status='Pending').count()
-        denied = Complaint.objects.filter(status='Denied').count()
-
-        p = Paginator(show_complaint, 5)
-        page_num = request.GET.get('page',1)
-
-        try:
-            page = p.page(page_num)
-        except EmptyPage:
-            page = p.page(1)
-
-        context = {
-            'complete': complete,
-            'pending': pending,
-            'denied': denied,
-            'show_complaint': page
-        }
-
-        return render(request, 'admin/complaint_denied_admin.html', context)
     except Exception as e:
         return render(request, 'user/error_page.html', {'error_message': str(e)})
 
@@ -584,15 +564,7 @@ def complaint_status_pen(request, id):
 @user_passes_test(lambda u: u.is_superuser)
 def complaint_status_com(request, id):
     request = Complaint.objects.get(id=id)
-    request.status = "Complete"
-    request.save()
-    return redirect('complaint_detail_admins', id=request.id)
-
-
-@user_passes_test(lambda u: u.is_superuser)
-def complaint_status_den(request, id):
-    request = Complaint.objects.get(id=id)
-    request.status = "Denied"
+    request.status = "Resolved"
     request.save()
     return redirect('complaint_detail_admins', id=request.id)
 
@@ -1117,21 +1089,35 @@ def get_extension_notifications_admin(request):
 
 
 @user_passes_test(lambda u: u.is_superuser)
-def extend_stay_processing(request, id):
+def extend_stay_processing(request, username, id):
     extend_stay = get_object_or_404(ExtendStay, id=id)
     extend_stay.status = ExtendStay.PROCESSING
     extend_stay.save()
+
+    user = extend_stay.tenant
     room = extend_stay.room
-    room_url = reverse('room_occupied_details_admin', args=[room.id])
-    return redirect(room_url)
+    payment = Payment.objects.filter(tenant=user, room=room).latest('id')
+    if payment:
+        return redirect('payment_admin', id=payment.id)
+    else:
+        # Handle the case when no payment is found
+        return redirect('error_page')
 
 
 @user_passes_test(lambda u: u.is_superuser)
-def extend_stay_deny(request, id):
+def extend_stay_deny(request, username, id):
     extend_stay = get_object_or_404(ExtendStay, id=id)
     extend_stay.status = ExtendStay.DENIED
     extend_stay.save()
-    return redirect('notification_extension_admin')
+
+    user = extend_stay.tenant
+    room = extend_stay.room
+    payment = Payment.objects.filter(tenant=user, room=room).latest('id')
+    if payment:
+        return redirect('payment_admin', id=payment.id)
+    else:
+        # Handle the case when no payment is found
+        return redirect('error_page')
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -1140,22 +1126,45 @@ def payment_admin(request, id):
     try:
         payment = Payment.objects.get(id=id)
 
+        room = payment.room
+        room_image_url = room.Room_Type.Room_Image.url if room.Room_Type.Room_Image else None
+
+        extend_button_displayed = False
+        try:
+            extend_stay = ExtendStay.objects.get(room=room, tenant=payment.tenant, status='Processing')
+            if extend_stay.status == 'Processing':
+                extend_button_displayed = True
+        except ExtendStay.DoesNotExist:
+            pass
+
         # Update Notification object to read
         try:
             notification = Notification.objects.get(payment=payment, is_read=False)
             notification.is_read = True
-            notification.save(update_fields=['is_read']) # Only update is_read field
+            notification.save(update_fields=['is_read'])  # Only update is_read field
         except Notification.DoesNotExist:
             pass
 
+        if request.method == 'POST':
+            form = EditPaymentForm(request.POST, instance=payment)
+            if form.is_valid():
+                form.save()
+                # Handle form submission success
+        else:
+            form = EditPaymentForm(instance=payment)
+
         context = {
-            'payment': payment
+            'payment': payment,
+            'room_image_url': room_image_url,
+            'form': form,
+            'extend_button_displayed': extend_button_displayed
         }
 
         return render(request, 'admin/payment_admin.html', context)
 
     except Payment.DoesNotExist:
-        return render(request, 'user/error_page.html', {'error_message': 'The payment you are looking for does not exist.'})
+        return render(request, 'user/error_page.html',
+                      {'error_message': 'The payment you are looking for does not exist.'})
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -1217,7 +1226,7 @@ def extend_stay_admin(request, id):
         notification.save()
 
         messages.success(request, 'Extended stay.')
-        return redirect('room_occupied_details_admin', id=sample.room)
+        return redirect('payment_admin', id=new_payment.id)
 
     return render(request, 'notification_admin.html')
 
